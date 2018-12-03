@@ -5,8 +5,11 @@ The Library was written by Ori Ben-Moshe.
 Copyright (C) 2018, Ori Ben-Moshe, all rights reserved.
 
 The following python modules are needed for the program to function:
+
   -OpenCV Version 2.x+ (including 4.0.0 alpha)
+  
   -Matplotlib
+  
   -numpy
 
 OVL is officially supported for the following python versions: 2.7 and 3.4+
