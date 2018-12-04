@@ -86,23 +86,29 @@ The color object consists of a low hsv bound and a high hsv bound and any color 
 if the color's h value is in the larger that the low bound's h value and smaller oe equal to the high bound h value
 For example:
 ```
-color = [h ,  s  , v ]
-tone1 = [87, 160, 150]
-tone2 = [87, 90, 150]
-green = Color(low=[45, 100, 100], high=[75, 255, 255])
+#  color = [h ,  s  , v ]
+>>> tone1 = [87, 160, 150]
+>>> tone2 = [87, 90, 150]
+>>> green = Color(low=[45, 100, 100], high=[75, 255, 255])
+>>> green.in_range(tone1)
+True
+>>> green.in_range(tone2)
+False
 ```
-in this example `tone1` is within the green color range beacause all of the values are within the bounds declared by 
-the green color object. On the other hand `tone2` is not, beacuse it's v value is below the lower bound.
-Remember all values (h s v) must be in the range.
+In this example `tone1` is within the green color range beacause all of the values are within the bounds declared by 
+the green color object thus it returns `True`. On the other hand `tone2` is not, beacuse it's v value is below the lower bound
+and thus returns `False`.
+>Remember all values (h s v) must be in the range for the color to be in the Color object range.
 
 In the code below only the `color` parameter is displayed beacuse that is only relevant to us currently.
 Even though the following code is valid it is recommended to use a function that also applies filters
 and that can deal with MultiColor objects. (When getting contours for MultiColor objects use [MultiColor.get_contours()]()
+> Note: we are using image in the png format, other formats are supported as well.
 Example image & code:
 
 ```
 v = Vision(..., color=BuiltInColors.green)
-img = 'Drive:/path/to/image/Shapes.png'
+img = '/path/to/image/Shapes.png'
 v.get_contours(img)
 v.display_contours(img)
 
@@ -110,8 +116,166 @@ v.display_contours(img)
 
 Result:
 
+Original Image:
+![](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/Shapes.png)
+
+
+Contours found:
+![](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/ShapesResult.png)
 
 Like in OpenCV for python OVL uses Numpy arrays for images and contours.
+
+### *Applying Filter Functions*
+As we saw in the previous step getting the contours with color detection finds what we want but sometimes it also finds
+objects that we don't want. Thats why Filter Functions exist, to remove contours that don't oblige to the characteristics that
+we are looking for.
+
+For those who are a tad rusty on their python  heres a quick refresh on functions.
+Functions in python are defined as followed.
+Functions like classes, modules and every other piece of data in python is an object.
+A functions object is basically a group of code that can be called.
+so when we call a function without parentheses we are telling python:
+"Here is a bunch of code, don't execute it yet though"
+
+```
+def some_function():
+    print(5)
+b = somefunction  
+```
+
+The variable `b` now holds the function `some_function`
+Filter Functions are literal functions (created with the def keyword in python)
+that are passed to the Vision object without being called.
+So if we now execute the following code:
+
+```
+>>> b()
+5
+```
+
+What basically happened is that we called the variable `b` and the variable `b` holds the function `some_function`
+so python calls the function `some_function`
+
+Using this mechanism we gain a powerful capability, we can call specific functions you the programmer wants,
+when the Vision object needs to.
+
+
+#### *So why are we not calling the functions right away*?
+The Idea is we want the vision object to call these functions for us every time we find contours while going over live footage, a video file a series of images or even 
+not only that we want to be able to call custom made fucntions in addition to existing ones (They located in ovl.Filters)
+
+#### *Filters*
+`Attribute: filters -> a list of function object that take a list of contours and returns one`
+
+Functions provide the Vision object with the guidelines on what characteristics our target object
+(or objects) are.
+Lets look at the result from earlier:
+
+
+![](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/ShapesResult.png)
+
+
+Let's say we want to find only the rectangle, we can use the filter function `Filters.horizontal_rectangle_filter`
+and apply the filter using the `Vision.apply_filter` function on our contours.
+The code:
+```
+v = Vision(... , color=BuiltInColors.green_hsv)  # Define our Vision Object
+
+img = '/path/to/image/Shapes.png'  # Path to our image
+
+v.apply_sample(img=img)  # find contours for the range given
+
+v.apply_filter(Filters.horizontal_rectangle_filter) # apply the horizontal_rectangle_filter
+
+v.display_contours(img)  # display the contours we found
+
+```
+
+The Result:
+![](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/ShapesFiltered.png)
+
+We can see only the rectangle passed the filter and its our final result!
+
+We found what we wanted!
+
+We can do the same thing for the circle using `circle_filter`.
+
+The code:
+```
+v = Vision(... , color=BuiltInColors.green_hsv)  # Define our Vision Object
+
+img = '/path/to/image/Shapes.png'  # Path to our image
+
+v.apply_sample(img=img)  # find contours for the range given
+
+v.apply_filter(Filters.circle_filter) # apply the circle_filter
+
+v.display_contours(img)  # display the contours we found
+
+```
+
+The Result:
+
+![](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/ShapesSecondFiltered.png)
+
+Oh no! Our filter also found the hexagon! But we only wanted the circle!
+In order to find only the circle we need to tighten the range of the defenition of circle
+we do that by changing the parameter given to the filter function (more exaplanations [here]())
+After Changing the `min_area_ratio` parameter this is our result:
+
+![](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/ShapesCircleFiltered.png)
+
+#### *Parameters*
+`Attribute: parameters -> a list of lists that contain additional parameter for the filter functions`
+
+Sometimes we want to set different parameters to filter functions we pass, a different `min_area` limit for an `area_filter`
+A different `min_len_ratio` limit for a `circle_filter`, or some parameter for a custom filter you made.
+In that case we need to pass them through the `parameters` keyword.
+here is the example for a vision object with filter functions and parameters.
+
+```
+Vision(filters=[area_filter, circle_filter], parameters=[[100], [0.8, 0.7]], ...)
+```
+
+Lets look at this one step at a time:
+`filters` takes to filter functions, `area_filter` and `circle_filter`
+but we want to a set specific parameters for our vision.
+
+If we look at the documentation we can see that area filter takes 2 additional parameters
+in addition to the contour list, `min_area` and `max_area`
+Circle filters takes 2 additional parameters as well, `min_area_ratio` and `min_len_ratio`
+Descriptions of these parameters can be found [here]()
+So by passing `[[100], [0.8, 0.7]]` we tell the vision object to call the area filter
+and `circle filter` like so:
+
+```
+contours = area_filter(contours, 100)
+contours = circle_filter(contours, 0.8, 0.7)
+```
+
+by passing custom parameters through `parameters` we can change existing filter functions that come with OVL
+and modify filter functions you or other people built.
+
+Some times we want to sort the final contours in a specific order based on some property of a contour.
+With the Sorters sub module there are 3 built in sorters: `descending_area_sort`, `ascending_area_sort` and `circle_sort`
+
+##### *Making Filter Functions of your own*
+There is a wide diversity of existing filter functions, but sometimes we need something more tailored to our
+specific needs.
+In that case we can create a function ourselves and follow a couple of simple rules:
+
+1.the name of the function must end with 'filter' or 'sort' depending if its a filter or sorter function respectively
+2. the first parameter of the filter function must be a contour_list (doesnt have to be called 'contour_list')
+3. the filter function must return a filter function.
+4. the function must contain the following code at its start:
+```
+    if type(<contour list parameter name>) is not list:
+        <contour list parameter name> = [<contour list parameter name>]
+```
+There are other optional rules for additional features, they are all documented [here]()
+
+### *Get Directions for the Robot*
+
 
 ## The Objects
 There are 3 objects used in the main process 
