@@ -10,3 +10,5 @@ The minimum area ratio between the contour and the straight bounding rectangle.
 
 The Vertical rectangle filter also makes sure the outline approximation of the shape has 4 sides and that the height
 of the Bounding Rectangle is longer than its width.
+
+![](https://github.com/1937Elysium/Ovl-Python/blob/master/Pictures/Vertical%20Rectangle.png)
