@@ -3,7 +3,7 @@
 | Parameter Name | Default value | Types | Value range | Description | 
 | :---: |  :---: | :---: | :---: | :---: |
 | contour_list | No Default | list or ndarray (numpy array)| N/A | The list of the contours that the function filters out |
-| min_area_ratio | 0.9 | float | 0<x<1 | The minimum ratio between the contour and the area of the **straight** bounding rectangle |
+| min_area_ratio | 0.8 | float | 0<x<1 | The minimum ratio between the contour and the area of the **straight** bounding rectangle |
 
 ## *Minimum Area Ratio*
 The minimum area ratio between the contour and the straight bounding rectangle. 
