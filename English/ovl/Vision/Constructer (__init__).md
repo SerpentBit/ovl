@@ -65,8 +65,53 @@ For those of you who stuck around, at this stage we apply our calibration based 
 and the Calibration json file that was returned from the calibration program.
 The code solves the equation in order to find the matching low bound for the current image based on the calibration images
 and the Linear Discriminant analysis preformed on those images.
+The low bound's saturation and/or value are changed to match the specific image.
 
 ### *4. Getting the Contours*
+Before you read this make sure you understand what [contours]() are and how the [hsv color space work]().
+At the time of creating this file OVL only supports color based contour detection and not simply edge detection.
+Future patches will include additional methods of detecting contours.
+
+In OVL Contours are found only by creating a mask of the image where the pixels within a wanted range are white
+and everything else is black. Then contours are then found by edge detection on the image mask (The Image that is only black and white)
+In order to get contours we use the `get_contours` function to get contours from an image.
+Unlike CV2, Color (Ranges of color, not a specific tone) in OVL are defined using the Color and MultiColor Objects.
+Read more about them in their documentations: [Color](), [MultiColor]()
+
+For now just know that they represent a range for color.
+
+>Note: Currently only the Hsv color space is supported, RGB BGR and LAB will be supported in an upcoming patch.
+
+The color object consists of a low hsv bound and a high hsv bound and any color counts as in that range
+if the color's h value is in the larger that the low bound's h value and smaller oe equal to the high bound h value
+For example:
+```
+color = [h ,  s  , v ]
+tone1 = [87, 160, 150]
+tone2 = [87, 90, 150]
+green = Color(low=[45, 100, 100], high=[75, 255, 255])
+```
+in this example `tone1` is within the green color range beacause all of the values are within the bounds declared by 
+the green color object. On the other hand `tone2` is not, beacuse it's v value is below the lower bound.
+Remember all values (h s v) must be in the range.
+
+In the code below only the `color` parameter is displayed beacuse that is only relevant to us currently.
+Even though the following code is valid it is recommended to use a function that also applies filters
+and that can deal with MultiColor objects. (When getting contours for MultiColor objects use [MultiColor.get_contours()]()
+Example image & code:
+
+```
+v = Vision(..., color=BuiltInColors.green)
+img = 'Drive:/path/to/image/Shapes.png'
+v.get_contours(img)
+v.display_contours(img)
+
+```
+
+Result:
+
+
+Like in OpenCV for python OVL uses Numpy arrays for images and contours.
 
 ## The Objects
 There are 3 objects used in the main process 
