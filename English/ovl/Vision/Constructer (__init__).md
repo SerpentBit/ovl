@@ -309,11 +309,10 @@ Vision(..., roborio_name='roboRIO-1937-FRC'
 | Directions Functions | None | directions_function | directions | Public | directions function object | N/A |
 | Image Width | width | 320 | width | Public | int | x > 0 |
 | Image Height | height | 240 | height | Public | int | x > 0 |
-| Color Range | color | N\A | color | Public | Color or MultiColor | N/A |
-| Amount of target Contours | target_amount | 1
-|| 
-| Camera | 
-| Network Socket | Not passed | N\A | socket | Public | socket | N/A|
+| Color Range | color | No default | color | Public | Color or MultiColor | N/A |
+| Amount of target Contours | target_amount | 1 | target_amount | Public | int | x > 1 |
+| Log File path  | log_file | None | log_path |  Public | bool, str, None | N/A |
+
 
 
 
