@@ -220,7 +220,7 @@ The Result:
 
 Oh no! Our filter also found the hexagon! But we only wanted the circle!
 In order to find only the circle we need to tighten the range of the defenition of circle
-we do that by changing the parameter given to the filter function (more exaplanations [here]())
+we do that by changing the parameter given to the filter function (more exaplanations [here](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/Constructer%20(__init__).md#parameters))
 After Changing the `min_area_ratio` parameter this is our result:
 
 ![](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/ShapesCircleFiltered.png)
@@ -264,10 +264,10 @@ There is a wide diversity of existing filter functions, but sometimes we need so
 specific needs.
 In that case we can create a function ourselves and follow a couple of simple rules:
 
-1.the name of the function must end with 'filter' or 'sort' depending if its a filter or sorter function respectively
-2. the first parameter of the filter function must be a contour_list (doesnt have to be called 'contour_list')
-3. the filter function must return a filter function.
-4. the function must contain the following code at its start:
+1. The name of the function must end with 'filter' or 'sort' depending if its a filter or sorter function respectively
+2. The first parameter of the filter function must be a contour_list (doesnt have to be called 'contour_list')
+3. The filter function must return a filter function.
+4. The function must contain the following code at its start:
 ```
     if type(<contour list parameter name>) is not list:
         <contour list parameter name> = [<contour list parameter name>]
@@ -275,12 +275,15 @@ In that case we can create a function ourselves and follow a couple of simple ru
 There are other optional rules for additional features, they are all documented [here]()
 
 ### *Get Directions for the Robot*
+>Note: These 2 final steps are mainly for FIRST Robotics Competition teams, though they can be modified for other uses
+> and robotics like projects. This does require you to create a custom directions function.
 
-
-## The Objects
-There are 3 objects used in the main process 
-
-
+After we applied all of the filter and found our one and only Contour(s) we can can directions for our robot.
+The basic directions functions (`xy_center_directions`, `y_center_directions` and `x_center_directions`)
+do the same thing for the diffrent axes find the center of the contour (or the center of the between all target contours
+more on that [here]()) and multiply that by the 2000 / width of the image(or height or both depending on the function) .
 ```
-Vision(filters, directions_functions, target amount,
+center of the contour * (2000 / (width / height))  = direction the robot needs to turn/ move to
 ```
+Why is that you might ask? 0 to 2000 are the possible values for this calculation. -1 to 1 are the possible turning factors for 
+
