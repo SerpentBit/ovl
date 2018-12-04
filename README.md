@@ -16,9 +16,7 @@ OVL is officially supported for the following python versions: 2.7 and 3.4+
 
 Installation:
 Using `pip`:
-```
-    python -m pip install ovl
-```
+`python -m pip install ovl`
 Download the files directly:
 
 Documentation for the Library is Available in English and Hebrew.
