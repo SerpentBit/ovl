@@ -34,14 +34,14 @@ Open the camera object and configure it (set) its size to the width and height p
 The camera used is selected by passing the port number.
 
 #### Camera Port
-`Attribute: camera_port=None -> integer >= 0 or str for video files.`
+`Parameter: camera_port=None -> integer >= 0 or str for video files.`
 
 If there is only 1 camera connected to the device pass: `camera_port=0`
 When developing the code on a laptop or PC make sure you are using the port refering to the camera.
 If you have one additional camera connected try changing to `camera_port=1` and making sure you return to 0 when finalizing the code.
 
 #### Width and Height 
-`Attribure: width=240 -> interger > 0, height=240 (in pixels) -> integer > 0`
+`Parameter: width=240 -> interger > 0, height=240 (in pixels) -> integer > 0`
 
 Width and Height parameters passed to the Vision object determine the size (in pixels) images taken by the camera will be
 default is `width=320` and `height=240`
@@ -125,7 +125,7 @@ Contours found:
 
 Like in OpenCV for python OVL uses Numpy arrays for images and contours.
 
-### *Applying Filter Functions*
+### *5.Applying Filter Functions*
 As we saw in the previous step getting the contours with color detection finds what we want but sometimes it also finds
 objects that we don't want. Thats why Filter Functions exist, to remove contours that don't oblige to the characteristics that
 we are looking for.
@@ -226,16 +226,15 @@ After Changing the `min_area_ratio` parameter this is our result:
 ![](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/ShapesCircleFiltered.png)
 
 #### *Parameters*
-`Attribute: parameters -> a list of lists that contain additional parameter for the filter functions`
+`Parameter: parameters -> a list of lists that contain additional parameter for the filter functions`
 
 Sometimes we want to set different parameters to filter functions we pass, a different `min_area` limit for an `area_filter`
 A different `min_len_ratio` limit for a `circle_filter`, or some parameter for a custom filter you made.
 In that case we need to pass them through the `parameters` keyword.
 here is the example for a vision object with filter functions and parameters.
 
-```
-Vision(filters=[area_filter, circle_filter], parameters=[[100], [0.8, 0.7]], ...)
-```
+
+`Vision(filters=[area_filter, circle_filter], parameters=[[100], [0.8, 0.7]], ...)`
 
 Lets look at this one step at a time:
 `filters` takes to filter functions, `area_filter` and `circle_filter`
@@ -274,7 +273,8 @@ In that case we can create a function ourselves and follow a couple of simple ru
 ```
 There are other optional rules for additional features, they are all documented [here]()
 
-### *Get Directions for the Robot*
+### *6.Get Directions for the Robot*
+`Parameters: directions_function-> function object, target_amount -> amount of wanted contours integet > 0`
 >Note: These 2 final steps are mainly for FIRST Robotics Competition teams, though they can be modified for other uses
 > and robotics like projects. This does require you to create a custom directions function.
 
@@ -286,4 +286,34 @@ more on that [here]()) and multiply that by the 2000 / width of the image(or hei
 center of the contour * (2000 / (width / height))  = direction the robot needs to turn/ move to
 ```
 Why is that you might ask? 0 to 2000 are the possible values for this calculation. -1 to 1 are the possible turning factors for 
+motors in the WPILib API So the more the object is to the right side of the image it means the robot is in an angle to the left
+and needs to turn to the right and vice versa.
+
+It is reccommended to create your own directions function depending on your needs.
+There are many useful functions in the ContourMixin submodule, you can find it [here]().
+Additional rescoures can be found [here](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html)
+
+### *7.Sending the data to the RoboRIO*
+`Parameters: roborio_name -> str  ip or hostname, port -> int 0 to 65535, failed_value -> str`
+Sending data to the RoboRIO is done by using the function `send_to_roborio`, but before we send we need to connect to it.
+The connection is a udp socket. You can connect using a hostname or an IP.
+
+```
+Vision(..., roborio_name='roboRIO-1937-FRC'
+```
+### *Parameter Recap*
+
+| Name | Parameter Name | Default Value | Attribute Name | Encapsulation |  Value Types | Possible Range |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |  
+| Filter Function list | None | filters | filters | Private | list of function objects | N/A |
+| Directions Functions | None | directions_function | directions | Public | directions function object | N/A |
+| Image Width | width | 320 | width | Public | int | x > 0 |
+| Image Height | height | 240 | height | Public | int | x > 0 |
+| Color Range | color | N\A | color | Public | Color or MultiColor | N/A |
+| Amount of target Contours | target_amount | 1
+|| 
+| Camera | 
+| Network Socket | Not passed | N\A | socket | Public | socket | N/A|
+
+
 
