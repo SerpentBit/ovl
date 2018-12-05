@@ -299,8 +299,23 @@ Sending data to the RoboRIO is done by using the function `send_to_roborio`, but
 The connection is a udp socket. You can connect using a hostname or an IP.
 
 ```
-Vision(..., roborio_name='roboRIO-1937-FRC'
+Vision(..., roborio_name='roboRIO-1937-FRC', port=61937)
 ```
+
+The code written above is an example for udp connection with the RoboRIO Controller, currently only udp connections are
+supported, in an upcoming patch more diverse connection types for non-FRC Uses as well.\
+
+## *A bit about connections*
+Netork connections work like real like addresses: Your the street you live in, your house number, country and city
+are the IP address or in the Roborio's case the host name - basically a name identifiying the RoboRIO in the network.
+Port is essentially the apartment number in the building you live in, many connections can occur at once, so the port number
+is the identifier of the application. Wondering what number to pick? It's pretty arbitrary I recommend 6+ your team's number
+as you can see in the example above `roboRIO-1937-FRC` is how Elysium's roboRIO is called. Port is 6**1937**.
+
+In an upcoming patch more connection types will be available - mainly for non-FRC Teams, Bluetooth, tcp and more.
+Default will always remain udp with a hostname to find the roborio as OVL's main purpose is FRC.
+
+
 ### *Parameter Recap*
 
 | Name | Parameter Name | Default Value | Attribute Name | Encapsulation |  Value Types | Possible Range |
