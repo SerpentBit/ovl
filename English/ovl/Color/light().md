@@ -19,4 +19,4 @@ The Function returns a **copy** of the changed value
 >>> m
 [20 100 100] [37 255 255], [40 75 100] [75 255 255] 
 ```
-As we can see the original object does not change, light returns a copy.
+As we can see the original object does not change, `light()` returns a copy.
