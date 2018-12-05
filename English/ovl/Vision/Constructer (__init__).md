@@ -274,7 +274,7 @@ In that case we can create a function ourselves and follow a couple of simple ru
 There are other optional rules for additional features, they are all documented [here]()
 
 ### *6.Get Directions for the Robot*
-`Parameters: directions_function-> function object, target_amount -> amount of wanted contours integet > 0`
+`Parameters: directions_function-> function object, target_amount (amount of wanted contours) -> integer > 0`
 >Note: These 2 final steps are mainly for FIRST Robotics Competition teams, though they can be modified for other uses
 > and robotics like projects. This does require you to create a custom directions function.
 
