@@ -294,8 +294,9 @@ There are many useful functions in the ContourMixin submodule, you can find it [
 Additional rescoures can be found [here](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html)
 
 ### *7.Sending the data to the RoboRIO*
-`Parameters: roborio_name -> str  ip or hostname, port -> int 0 to 65535, failed_value -> str`
-Sending data to the RoboRIO is done by using the function `send_to_roborio`, but before we send we need to connect to it.
+`Parameters: connection_dst -> str  ip or hostname, port -> int 0 to 65535, failed_value -> str`
+`table -> tuple of the table and the key (TableName, Key) default is ('SmartDashboard', 'VisionResult') `
+Sending data to the RoboRIO is done by using the function `send_to_destination`, but before we send we need to connect to it.
 The connection is a udp socket. You can connect using a hostname or an IP.
 
 ```
@@ -303,14 +304,19 @@ Vision(..., roborio_name='roboRIO-1937-FRC', port=61937)
 ```
 
 The code written above is an example for udp connection with the RoboRIO Controller, currently only udp connections are
-supported, in an upcoming patch more diverse connection types for non-FRC Uses as well.\
+supported, in an upcoming patch more diverse connection types for non-FRC Uses as well.
+
+When connecting with a static IP (using networktables) and will publish to the table parameter, table is a 
+
 
 ## *A bit about connections*
 Netork connections work like real like addresses: Your the street you live in, your house number, country and city
 are the IP address or in the Roborio's case the host name - basically a name identifiying the RoboRIO in the network.
 Port is essentially the apartment number in the building you live in, many connections can occur at once, so the port number
 is the identifier of the application. Wondering what number to pick? It's pretty arbitrary I recommend 6+ your team's number
-as you can see in the example above `roboRIO-1937-FRC` is how Elysium's roboRIO is called. Port is 6**1937**.
+as you can see in the example above `10.19.37.2` is Elysium's roboRIO static IP (Set yours to `10.XX.XX.2` when XXXX us your
+tean number). For example if your team number 1234 your static ip should be `10.12.34.2` Port is 6**1937**.
+
 
 In an upcoming patch more connection types will be available - mainly for non-FRC Teams, Bluetooth, tcp and more.
 Default will always remain udp with a hostname to find the roborio as OVL's main purpose is FRC.
@@ -327,6 +333,7 @@ Default will always remain udp with a hostname to find the roborio as OVL's main
 | Color Range | color | No default | color | Public | Color or MultiColor | N/A |
 | Amount of target Contours | target_amount | 1 | target_amount | Public | int | x > 1 |
 | Log File path  | log_file | None | log_path |  Public | bool, str, None | N/A |
+|Connection destination|connection_dst|None|connection_dst|Public|str|N/A|
 
 
 
