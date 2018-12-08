@@ -10,7 +10,7 @@
 | color | (0,0,0) (RGB for black)| tuple (int, int, int)| (0 to 255, 0 to 255, 0 to 255) depends on color space| The starting color of the rectangle|
 |gradient | ('2*x', '2*x', '2*x')| tuple (str, str, str)| N/A| The grade of the shape, see [Grade]()|
 
-
+</br>
 
 ## *Gradient*
 Gradient is a tuple that defines the change in color for every pixel in the shape.
@@ -36,6 +36,7 @@ All of the functions available are:
 |()| parentheses| 3*(x-2)| subtracts 2 from x and then multiplies by 3|
 |fact()| factorial| fact(x)| the factorial of x|
 
+</br>
 
 ## Grade Codes
 Grade codes determine where the gradient starts
@@ -53,6 +54,7 @@ there are 8 blur codes:
 |GRADE_NE|Gradient from the top right corner|7|
 |GRADE_CENTER|Gradient from the center of the shape|8|
 
+</br>
 
 
 Code example:
@@ -61,6 +63,7 @@ img = white_image(width=320, height=240)  # create a blank white image
 g = ('0.75*x', '0.75*x', '0.75*x')
 gradient_rectangle(img, (50, 50), (100, 100), angle=25, color=(0, 25, 0), gradient=g, grade=ovl.Drawing.GRADE_NW)
 ```
+</br>
 
 Result:
 
