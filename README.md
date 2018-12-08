@@ -20,3 +20,6 @@ Using `pip`:
 Download the files directly:
 
 Documentation for the Library is Available in English and Hebrew.
+
+Code will be published 20:00 CET December 9th on PyPI and on this depository.
+
