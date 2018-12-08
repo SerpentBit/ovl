@@ -4,8 +4,8 @@
 | Parameter Name | Default value | Types | Value range | Description | 
 | :---: | :---: | :---: | :---: | :---: |
 |image |No default | str, ndarray (numpy array) | N/A  | The image on which the circle should be drawn |
-| start_point | No default | tuple (int, int) | (0 to image width, 0 to image height)| The center of the circle|
-|dimesions| No Default | int| 0 to half the smaller dimension | The radius of the circle|
+| center | No default | tuple (int, int) | (0 to image width, 0 to image height)| The center of the circle|
+|radius| No Default | int| 0 to half the smaller dimension | The radius of the circle|
 | tanget_angle| 360 (random value)| float (angle in degrees) |  0 to 359| The angle of rotation from which the gradient starts|
 | color | (0,0,0) (RGB for black)| tuple (int, int, int)| (0 to 255, 0 to 255, 0 to 255) depends on color space| The starting color of the circle|
 |gradient | ('2*x', '2*x', '2*x')| tuple (str, str, str)| N/A| The grade of the shape, see [Grade](https://github.com/1937Elysium/Ovl-Python/new/master/English/ovl/Drawing#gradient)|
