@@ -29,7 +29,7 @@ All of the functions available are:
 |*| multiplication| 2*x| pixel times 2|
 | / | division| x/3| x divided by 3|
 |%| modulus| x%2| the remainder of x divided by 2|
-|**| exponant| x**2| x*x|
+|**| exponent| x**2| x*x|
 |log()| logarithim function| log(x,2) log(x)| log x in base 2 log x in base e|
 |sin()| sine function| sin(30)| sine of 30 (0.5)|
 |cos()| cosine function| cos(-120)| cosine of -120 (-0.5)|
