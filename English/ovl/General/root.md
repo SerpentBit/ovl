@@ -7,7 +7,7 @@
 
 Returns the result (as a 'float') of the `base` rooted by degree which is the same as `base` raised by the (`1/degree`).
 
-Code Example:
+Code Examples:
 ```
 >>> base = 9
 >>> degree = 2
