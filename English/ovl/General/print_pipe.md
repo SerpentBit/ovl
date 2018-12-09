@@ -1,4 +1,4 @@
-# Geometry.calculate_math_expression
+# General.print_pipe
 
 | Parameter Name | Default value | Types | Value range | Description | 
 | :---: | :---: | :---: | :---: | :---: |
