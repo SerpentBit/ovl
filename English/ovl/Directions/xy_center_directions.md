@@ -17,5 +17,5 @@ Exmaple:
 >>> img_size = (320, 160)
 >>> target_amount = 3
 >>> xy_center_directions(contour_list, target_amount, img_size)
-'12000636'
+'12000636' # Returned Width_Value = 1200, Height_Value = 636
 ```
