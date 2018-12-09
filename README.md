@@ -6,7 +6,7 @@ Copyright (C) 2018, Ori Ben-Moshe, all rights reserved.
 
 The following python modules are needed for the program to function:
 
-  -OpenCV Version 2.x+ (including 4.0.0 alpha)
+  -OpenCV Version 2.x+ (including 4.x)
   
   -Matplotlib
   
@@ -19,7 +19,4 @@ Using `pip`:
 `python -m pip install ovl`
 Download the files directly:
 
-Documentation for the Library is Available in English and Hebrew.
-
-Code will be published 20:00 CET December 9th on PyPI and on this depository.
-
+Documentation for the Library is available in English and Hebrew.
