@@ -13,13 +13,13 @@ Returns the `string` after replacing the numbers appearing in it with the given 
 >>> numerical_replace(string, "supermarket", "eggs", "milk", "flour")
 'I went to the supermarket to buy eggs, milk, and flour'
 ```
-</br>
+</br> </br>
 ```
 >>> string = "If 1 = 1 then 0 must equal 5"
 >>> numerical_replace(string, "5")
 'If 1 = 1 then 5 must equal 5'
 ```
-</br>
+</br></br>
 ```
 >>> string = "If 1 = 1 then 0 must equal 3"
 >>> numerical_replace(string, "1", "2", "3", "4")
