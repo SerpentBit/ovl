@@ -5,7 +5,7 @@
 | base | No default | int, float | N/A  | The base number which is rooted by `degree` |
 | degree | No Default | int, float | N/A | The root that `base` is rooted to |
 
-Returns the result of the `base` rooted by degree which is the same as `base` raised by the (1/`degree`) as a `float` .
+Returns the result (as a 'float') of the `base` rooted by degree which is the same as `base` raised by the (`1/degree`).
 
 Code Example:
 ```
