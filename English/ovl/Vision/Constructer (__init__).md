@@ -1,6 +1,6 @@
 # Vision Object Constructer:
 Vision is the main object in the OVL module, the object can interact with the various functions in the module.
-> A Reminder: This documentation is meant for begginers and advanced programmers alike, so there are bound to be
+> A Reminder: This documentation is meant for beginners and advanced programmers alike, so there are bound to be
 >             longer and more descriptive explanations.
 
 The Vision is the object that controls the whole process of vision for your robot,
