@@ -11,7 +11,7 @@ Prints the output which is given in `*args` according to the type of `out`
 Prints the output onto the screen.
 
 `if out is False:`
-The output isn't print at all.
+The output isn't printed at all.
 
 `else:`
 Prints the output onto the screen.
