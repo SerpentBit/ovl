@@ -15,7 +15,7 @@ The following python modules are needed for the program to function:
 OVL is officially supported for the following python versions: 2.7 and 3.4+
 
 Installation:
-Using `pip`:
+Using `pip`: </br>
 `python -m pip install ovl`
 Download the files directly:
 
