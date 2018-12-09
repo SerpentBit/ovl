@@ -5,7 +5,7 @@
 | contour_list | No Default | list or ndarray (numpy array)| N/A | The list of the contours that the function filters out |
 | **kwargs | No Default | N/A | N/A | Does not use any additional paramaters |
 
-Returns the contour list sorted by area from smallest to largest.
+Returns the `contour_list` sorted by area from smallest to largest.
 
 Code example:
 ```
