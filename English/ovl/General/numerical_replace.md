@@ -5,7 +5,7 @@
 | string |No default | string | N/A  | A string built from numbers |
 | *args | No Default | N/A | N/A | The strings that will replace the numbers in the given string |
 
-Returns the `string` after replacing the numbers appearing in it with the given strings in `*args`.
+Returns the `string` after replacing the numbers appearing in it with the given strings in `*args` according to the order.
 
 ## Code Examples:
 ```
