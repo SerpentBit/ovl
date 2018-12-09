@@ -19,4 +19,4 @@ radius = 5
 area = get_circle_area(radius)
 ```
 </br>
-Result: The parameter area holds the value 7.957.
+Result: The `area` holds the value 7.957.
