@@ -4,7 +4,7 @@
 | :---: | :---: | :---: | :---: | :---: |
 |amount_of_sides |No default | int| N/A  | The amount of sides of the regular polygon |
 
-Returns the inner angle of a regular polygon with the given amount of sides.
+Returns the inner angle of a regular polygon with the given `amount_of_sides`.
 
 Code example:
 ```
