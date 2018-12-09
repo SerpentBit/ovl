@@ -8,7 +8,7 @@
 
 Returns the dierction the robot needs to drive based on the average of x values of the centers
  of all contours in `contour_list`. </br>
-If there is an error, the returned value is ![Vision.failed_value](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/Constructer%20(__init__).md)
+If there is an error, the returned value is [Vision.failed_value](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/Constructer%20(__init__).md)
 which is defaulted to '9999'.
 
 Exmaple:
