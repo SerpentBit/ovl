@@ -12,7 +12,7 @@ The full list of functions:
 
 - `degrees2radians` - Returns the given degree value in radians.
 
-- `numerical_replace` - Gets a string which are numbers (e.g: '0 1 2 3') and replaces the string with the given string in *args.
+- `numerical_replace` - Gets a string which contains numbers (e.g: '0 1 2 3') and replaces the string with the given string in *args.
 
 
 The full list of classes:
