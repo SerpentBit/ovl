@@ -5,7 +5,7 @@
 |length |No default | int, float | N/A  | The length of the sides of the polygon |
 |amount_of_sides |No default | int | N/A  | The amount of sides of the polygon |
 
-Returns the area of a polygon with the given amount of sides which are all the given length.
+Returns the area of a regular polygon with a given amount of sides.
 
 Code example:
 ```
