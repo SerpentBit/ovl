@@ -13,12 +13,3 @@ the function returns the contour's area divided by the triangle's area, else, it
 </br>
 
 <b>The triangle may be of any type.</b>
-
-</br>
-</br>
-
-Code example:
-```
-Ori's stuffs
-```
-Result:
