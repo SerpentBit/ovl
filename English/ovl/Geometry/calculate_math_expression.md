@@ -36,6 +36,6 @@ All of the functions available are:
 
 Code example:
 ```
->>> calculate_math_expression("9 ** sin(10x)", 3)
+>>> calculate_math_expression("9 ** sin(10 * x)", 3)
 3
 ```
