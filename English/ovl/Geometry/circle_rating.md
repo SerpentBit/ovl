@@ -10,5 +10,3 @@
 `circle.rating` is a function that receives a contour, finds the smallest circle and straight rectangle that enclose it, 
 uses them in order to find the contour's fill ratio and radius ratio, multiplies each one with its tolerance and multiplies the results.
 The function returns a rating of how close the contour is to being a full circle. The perfect score is one.
-
-Code example?
