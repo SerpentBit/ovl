@@ -19,6 +19,12 @@ img_path = 'C:\Users\USER\Desktop\image.png'
 image = cv2.imread(img_path)
 get_fill_ratio_straight(image)
 ```
+
+</br>
+
 The given image will look like this:
+</br>
+</br>
+
 
 ![](https://github.com/1937Elysium/Ovl-Python/blob/master/Pictures/Sample%20Pictures/fill_ratio.png)
