@@ -15,6 +15,10 @@ finds that rectangle's and the contour's area and returns their ratio. If `rever
 
 Code example:
 ```
-Ori's stuffs
+img_path = 'C:\Users\USER\Desktop\image.png'
+image = cv2.imread(img_path)
+get_fill_ratio_straight(image)
 ```
-Result:
+The given image will look like this:
+
+![](https://github.com/1937Elysium/Ovl-Python/blob/master/Pictures/Sample%20Pictures/fill_ratio.png)
