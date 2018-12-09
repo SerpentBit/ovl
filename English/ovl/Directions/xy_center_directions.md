@@ -7,7 +7,9 @@
 | img_size | No default | tuple(int, int) | N/A | The image the contours were taken from |
 
 Returns the dierction the robot needs to drive based on the average of both x and y values of the centers
-of all contours in `contour_list`.
+ of all contours in `contour_list`. </br>
+If there is an error, the returned value is ![Vision.failed_value](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/Constructer%20(__init__).md)
+which is defaulted to '9999'.
 
 Exmaple:
 ```
