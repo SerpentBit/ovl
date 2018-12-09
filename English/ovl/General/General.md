@@ -1,5 +1,4 @@
-# NEEDS TO BE COMPLETED
-## General
+# General
 
 `General` contains various functions and classes which are used throughout the Ovl Module.
 
@@ -9,26 +8,14 @@ The full list of functions:
 
 - `root` - Raises the given base to the root of the degree.
 
-- `get_calibrated_value` - 
-
 - `radians2degrees` - Returns the given radian value in degrees.
 
 - `degrees2radians` - Returns the given degree value in radians.
 
-- `numerical_replace` - 
-
-- `enumertype` - 
+- `numerical_replace` - Gets a string which are numbers (e.g: '0 1 2 3') and replaces the string with the given string in *args.
 
 
 The full list of classes:
 
-- `ToolClass` - 
-
-- `InvalidCustomError(Exception)` - 
-
-- `VersionError(Exception)` - 
-
-- `ToolError(Exception)` - 
-
-- `Performance` - 
+- `Performance` - Class which maps out execution time of various filtering functions.
 
