@@ -7,10 +7,10 @@
 
 Prints the output which is given in `*args` according to the type of `out`
 
-'if out is None:`
+`if out is None:`
 Prints the output onto the screen.
 
-`If out is False:`
+`if out is False:`
 The output isn't print at all.
 
 `else:`
