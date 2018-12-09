@@ -8,7 +8,7 @@
 
 
 `get_fill_ratio_straight` is a function that takes a contour, finds the smallest, straight rectangle that encloses it, 
-finds that rectangle's and the contour's area and returns their ratio and the rectangles width and height. If `reverse_div` is false, the function returns the contour's area divided by the rectangle's area, else, it returns the rectangle's area divided by the contour's area.
+finds that rectangle's and the contour's area and returns their ratio and the rectangle's width and height. If `reverse_div` is false, the function returns the contour's area divided by the rectangle's area, else, it returns the rectangle's area divided by the contour's area.
 
 </br>
 </br>
