@@ -18,4 +18,4 @@ Exmaple:
 >>> target_amount = 3
 >>> xy_center_directions(contour_list, target_amount, img_size)
 '12000636'
-'''
+```
