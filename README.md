@@ -7,7 +7,7 @@ Copyright (©) 2018, Ori Ben-Moshe, all rights reserved.
 
 The following python module dependencies are needed:
 
-  - OpenCV Version 2.x, 3.x & 4.x
+  - OpenCV Version 2.x, 3.x & 4.x ([for more information on how to install](https://github.com/1937Elysium/Ovl-Python/blob/master/Installing%20Opencv.md))
   
   - matplotlib
   
