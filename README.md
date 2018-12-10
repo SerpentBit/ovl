@@ -7,17 +7,17 @@ Copyright (©) 2018, Ori Ben-Moshe, all rights reserved.
 
 The following python modules are needed for the program to function:
 
-  -OpenCV Version 2.x, 3.x & 4.x
+  - OpenCV Version 2.x, 3.x & 4.x
   
-  -Matplotlib
+  - matplotlib
   
-  -numpy
+  - numpy
   
-  -scipy
+  - scipy
   
-  -sklearn (0.20 for python 2.7 & 3.4)
+  - sklearn (0.20 for python 2.7 & 3.4)
   
-  -pandas
+  - pandas
   
 
 OVL is officially supported for the following python versions: 2.7 and 3.4+
