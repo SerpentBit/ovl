@@ -5,7 +5,7 @@ The Library was written by Ori Ben-Moshe.
 
 Copyright (©) 2018, Ori Ben-Moshe, all rights reserved.
 
-The following python modules are needed for the program to function:
+The following python module dependencies are needed:
 
   - OpenCV Version 2.x, 3.x & 4.x
   
