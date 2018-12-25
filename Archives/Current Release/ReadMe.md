@@ -1,5 +1,5 @@
 # Current Release
 
-Version: 0.1.0
+Version: 0.1.2
 
-Date: 10/12/18
+Date: 25/12/18
