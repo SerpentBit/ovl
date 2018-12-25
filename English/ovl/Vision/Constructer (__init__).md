@@ -326,8 +326,8 @@ Default will always remain udp with a hostname to find the roborio as OVL's main
 
 | Name | Parameter Name | Default Value | Attribute Name | Encapsulation |  Value Types | Possible Range |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |  
-| Filter Function list | None | filters | filters | Private | list of function objects | N/A |
-| Directions Functions | None | directions_function | directions | Public | directions function object | N/A |
+| Filter Function list | filters | [] | filters | Private | list of function objects | N/A |
+| Directions Functions | directions_function | None | directions | Public | directions function object | N/A |
 | Image Width | width | 320 | width | Public | int | x > 0 |
 | Image Height | height | 240 | height | Public | int | x > 0 |
 | Color Range | color | No default | color | Public | Color or MultiColor | N/A |
