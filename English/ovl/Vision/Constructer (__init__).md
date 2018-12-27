@@ -285,42 +285,35 @@ more on that [here]()) and multiply that by the 2000 / width of the image(or hei
 ```
 center of the contour * (2000 / (width / height))  = direction the robot needs to turn/ move to
 ```
-Why is that you might ask? 0 to 2000 are the possible values for this calculation. -1 to 1 are the possible turning factors for 
-motors in the WPILib API So the more the object is to the right side of the image it means the robot is in an angle to the left
-and needs to turn to the right and vice versa.
+Why is that you might ask? 0 to 2000 are the possible values for this calculation. -1 to 1 is the standard set of values.
+If you want a different set of values you may get it by creating your own directions function.
 
 It is reccommended to create your own directions function depending on your needs.
-There are many useful functions in the ContourMixin submodule, you can find it [here]().
+There are many useful functions in the `Geometry` submodule, you can find it [here](https://github.com/1937Elysium/Ovl-Python/tree/master/English/ovl/Geometry).
 Additional rescoures can be found [here](https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html)
 
 ### *7.Sending the data to the RoboRIO*
-`Parameters: connection_dst -> str  ip or hostname, port -> int 0 to 65535, failed_value -> str`
-`table -> tuple of the table and the key (TableName, Key) default is ('SmartDashboard', 'VisionResult') `
-Sending data to the RoboRIO is done by using the function `send_to_destination`, but before we send we need to connect to it.
-The connection is a udp socket. You can connect using a hostname or an IP.
+`Parameters: connection_dst -> str  ip or hostname, port -> int 0 to 65535 or a key in the SmartDashboard table, failed_value -> str`
+Sending data to the RoboRIO (or any other destination) is done by using the function `send_to_destination`,
+but before we send we need to connect to it.
+The connection can be a udp socket, a NetworkTables connection and in the future Serial and BlueTooth connections as well.
+When connecting with a static IP (of the kind 10.xx.xx.2) the NetworkTables protocol will be used,
+And the value will be posted to the key passed through the port parameter to the SmartDashboard table that is shared by all
+components connected to your RoboRIO.
 
 ```
-Vision(..., roborio_name='roboRIO-1937-FRC', port=61937)
+Vision(..., connection_dst='10.19.37.2', port='vision_result')
 ```
 
-The code written above is an example for udp connection with the RoboRIO Controller, currently only udp connections are
-supported, in an upcoming patch more diverse connection types for non-FRC Uses as well.
+The code written above is an example for a networktables connection with a RoboRIO, the `Vision` object will try to connect 
+to the `10.19.37.2` ip via the NetworkTables protocol and then post to the 'SmartDashboard/vision_result' location a string
+with the directions found.
 
-When connecting with a static IP (using networktables) and will publish to the table parameter, table is a 
-
-
-## *A bit about connections*
-Netork connections work like real like addresses: Your the street you live in, your house number, country and city
-are the IP address or in the Roborio's case the host name - basically a name identifiying the RoboRIO in the network.
-Port is essentially the apartment number in the building you live in, many connections can occur at once, so the port number
-is the identifier of the application. Wondering what number to pick? It's pretty arbitrary I recommend 6+ your team's number
-as you can see in the example above `10.19.37.2` is Elysium's roboRIO static IP (Set yours to `10.XX.XX.2` when XXXX us your
-tean number). For example if your team number 1234 your static ip should be `10.12.34.2` Port is 6**1937**.
+NetworkTables uses post string internally so when creating a listener on the RoboRIO make sure you are converting to int.
 
 
-In an upcoming patch more connection types will be available - mainly for non-FRC Teams, Bluetooth, tcp and more.
-Default will always remain udp with a hostname to find the roborio as OVL's main purpose is FRC.
 
+In an upcoming patch more connection types will be available - mainly for non-FRC usage, Bluetooth, tcp and more.
 
 ### *Parameter Recap*
 
@@ -333,7 +326,8 @@ Default will always remain udp with a hostname to find the roborio as OVL's main
 | Color Range | color | No default | color | Public | Color or MultiColor | N/A |
 | Amount of target Contours | target_amount | 1 | target_amount | Public | int | x > 1 |
 | Log File path  | log_file | None | log_path |  Public | bool, str, None | N/A |
-|Connection destination|connection_dst|None|connection_dst|Public|str|N/A|
+|Connection destination|connection_dst|None|connection_dst|Public|str|Hostname, Ipv4 address|
+|Calibration json file path| N/A|None|None|N/A|str|N/A|
 
 
 
