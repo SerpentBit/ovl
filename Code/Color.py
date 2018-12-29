@@ -219,10 +219,15 @@ class Color(object):
         :param high: high hsv limit of the color
         :param low: low hsv limit of the color
         """
+       
         if type(low) is tuple:
             low = list(low)
+        if type(low) is int:
+            low = [low, 100, 100]
         if type(high) is tuple:
             high = list(high)
+        if type(high) is int:
+            high = [high, 255, 255]
         self.__low_bound = array(low)
         self.__high_bound = array(high)
         self.color_space = 'hsv'
