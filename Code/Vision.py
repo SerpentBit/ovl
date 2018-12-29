@@ -1,6 +1,5 @@
 # Copyright 2018 Ori Ben-Moshe - All rights reserved.
 from socket import *
-from numpy import ndarray
 from numpy import copy, vstack, hstack, ndarray
 from Color import Color, BuiltInColors, MultiColor
 from General import *
