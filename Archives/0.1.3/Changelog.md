@@ -8,6 +8,7 @@
 - Updated documentation in Vision and Calibration.
 - Rewritten log_file and color parameters in `Vision`
 - `Vision.get_directions` no longer requires to pass target_amount.
+- Updated `Vision.__str__`
 
 ## Bugfixes:
 - No bugfixes
