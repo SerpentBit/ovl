@@ -1,5 +1,8 @@
 # Version 0.1.3
 
+## Additions:
+- Added a new function to  `Directions`, `alert_found` returns "1" if target was found else "0"
+
 ## Changes:
 - Rewritten `Vision.get_contours` now accepts both `MultiColor` and `Color.
 - Updated documentation in Vision and Calibration.
