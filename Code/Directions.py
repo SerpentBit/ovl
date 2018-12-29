@@ -20,11 +20,18 @@ def validate(contour, target_amount):
     else:
         return True
 
+def alert_directions(contour, targer_amount, img_size=(320, 240)):
+    width, height = img_size
+    if validate(contour, target_amount):
+        return '1'
+    else:
+        return '0'
+    
 
-def xy_center_directions(contour, target_amount, img_size, invert=False):
-    w, h = img_size
-    x_ratio = 2000 / w
-    y_ratio = 2000 / h
+def xy_center_directions(contour, target_amount, img_size=(320, 240), invert=False):
+    width, height = img_size
+    x_ratio = 2000 / width
+    y_ratio = 2000 / height
     if not validate(contour, target_amount):
         return False
     if type(contour) is ndarray:
@@ -44,9 +51,9 @@ def xy_center_directions(contour, target_amount, img_size, invert=False):
     return str(x_res) + str(y_res)
 
 
-def y_center_directions(contour, target_amount, img_size, invert=False):
-    _, h = img_size
-    y_ratio = 2000 / h
+def y_center_directions(contour, target_amount, img_size=(320, 240), invert=False):
+    _, height = img_size
+    y_ratio = 2000 / height
     if not validate(contour, target_amount):
         return False
     if type(contour) is ndarray:
@@ -61,9 +68,9 @@ def y_center_directions(contour, target_amount, img_size, invert=False):
     return y_res * y_ratio
 
 
-def x_center_directions(contour, target_amount, img_size, invert=False):
-    w, _ = img_size
-    x_ratio = 2000 / w
+def x_center_directions(contour, target_amount, img_size=(320, 240), invert=False):
+    width, _ = img_size
+    x_ratio = 2000 / width
     if not validate(contour, target_amount):
         return False
     if type(contour) is ndarray:
