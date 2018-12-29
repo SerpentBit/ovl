@@ -91,14 +91,14 @@ class Vision(object):
     """
     The vision object represents a control object to the whole process of the vision processing
     it receives  a list of filter functions, a directions function, the connection destination address,
-    a UDP port to connect to, list of parameters for the filter functions and 2 vectors.
+    a port (or key) to connect to, list of parameters for the filter functions and 2 LinearDiscriminantAnalysis vectors.
     """
 
-    NT_CONNECTION = 'NT'
-    BT_CONNECTION = 'BT'
-    UDP_CONNECTION = 'UDP'
-    TCP_CONNECTION = 'TCP'
-    SERIAL_PORT = 'SP'
+    NT_CONNECTION = 'NT'  # Network Tables via pynetworktables
+    BT_CONNECTION = 'BT'  # BlueTooth via Socket, Not Impelented
+    UDP_CONNECTION = 'UDP'  # UDP via Socket  
+    TCP_CONNECTION = 'TCP'  # TCP via Socket, Not Impelented
+    SERIAL_PORT = 'SP'  # Serial Port via 
 
     list_of_functions = get_all_functions()
 
@@ -156,11 +156,10 @@ class Vision(object):
 
     def __del__(self):
         if self.camera is not None:
-            if self.camera.isOpen():
-                self.camera.close()
+           self.camera.close()
 
-    def __init__(self, filters=None, directions_function=None, target_amount=1, width=320, height=240,
-                 connection_dst='NOCONNECTION', port=None, **kwargs):
+    def __init__(self,color=None, filters=None, directions_function=None, target_amount=1, width=320, height=240,
+                 connection_dst='NOCONNECTION', port=None, log_file=None, **kwargs):
         """
         Action: The vision object represents a control object to the whole process of the vision processing
         it receives  a list of filter functions, a directions function, the connection destination address,
@@ -169,13 +168,12 @@ class Vision(object):
         :param directions_function: a functions that receives a list or a single contour and returns directions
         :param connection_dst: the connection (ip or hostname) in the network to connect to.
         :param port: the port number for the connection.
-        :param kwargs: The optional key word arguments are: camera_port, color( a Color or MultiColor),
+        :param log_file: a path to a file where output should be displayed
+        :param kwargs: The optional key word arguments are: 
                        parameters for specific parameters for filter functions,
-                       hsv_low_limit(or low) and hsv_high_limit(or high) for specific color testing
-                       for custom ranges.
         """
-        if 'log_file' in kwargs:
-            self.log_path = kwargs['log_file']
+        if log_file is not None:
+            self.log_path = log_file
             if type(self.log_path) not in (str, bool, type(None)):
                 raise TypeError('Invalid log file type, must be a file path, bool or None')
             if self.log_path is False:
@@ -185,6 +183,11 @@ class Vision(object):
 
         self.width = width
         self.height = height
+        if type(width) != int:
+            raise TypeError('The width of images taken must be an integer')
+        if type(height) != int:
+            raise TypeError('The width of images taken must be an integer')
+            
         if filters is None:
             self.__filters = []
         else:
@@ -212,24 +215,20 @@ class Vision(object):
         self.camera = None
         self.camera_port = None
         if 'camera_port' in kwargs:
-            if kwargs['camera_port'] is not None:
+            if type(kwargs['camera_port']) is int:
                 self.camera_setup(kwargs['camera_port'])
         self.directions = directions_function
 
-        if "color" in kwargs:
-            color_parameter = kwargs["color"]
-            if type(color_parameter) is Color:
-                self.color = color_parameter
-                self.low = color_parameter.low
-                self.high = color_parameter.high
-            elif type(color_parameter) is MultiColor:
-                self.color = color_parameter
-            else:
-                raise TypeError("The color parameter must be a Color or MultiRange object,"
-                                "in order to use a color list use the hsv_high_limit and hsv_low_limit")
+         if type(color_parameter) is Color:
+             self.color = color_parameter
+             self.low = color_parameter.low
+             self.high = color_parameter.high
+        elif type(color_parameter) is MultiColor:
+            self.color = color_parameter
         else:
-            raise ValueError('No Color or MultiColor Object given')
-
+            raise print_pipe("The color parameter must be a Color or MultiRange object,"
+                             "in order to use a color list use the hsv_high_limit and hsv_low_limit")
+        # Calibration configuration
         if 'calibration' in kwargs:
             cal_file = kwargs['calibration']
             if type(cal_file) is str:
@@ -247,7 +246,8 @@ class Vision(object):
 
             if 'vwv' in kwargs:
                     self.value_weight_vector = kwargs['vwv']
-
+                    
+        # Value returned if failed to find the target.
         if 'failed_value' in kwargs:
             self.failed_value = kwargs['failed_value']
             if type(self.failed_value) is int:
@@ -255,17 +255,19 @@ class Vision(object):
         else:
             self.failed_value = '9999'
 
-        self.roborio_name = connection_dst
+        # Network related configurations
+        self.hostname = connection_dst
         if connection_dst == 'NOCONNECTION':
-            self.roborio_ip = None
+            self.connection_address = None
             self.network_port = 0
         elif Vision.is_static_ip(connection_dst):
+                self.connection_address= connection_dst
                 NetworkTables.initialize(server=connection_dst)
                 self.socket = NetworkTables.getTable('SmartDashboard')
                 self.connection_type = 'NT'
                 self.network_port = port
         elif connection_dst is None:
-            self.roborio_ip = None
+            self.connection_address = None
         elif Vision.is_valid_ip(connection_dst):
             if 0 < port < 65535:
                 self.network_port = port
@@ -273,7 +275,7 @@ class Vision(object):
                 self.network_port = 0
                 raise TypeError("Invalid port number!")
             try:
-                self.roborio_ip = connection_dst
+                self.connection_address = connection_dst
                 self.socket.bind((connection_dst, port))
             except Exception as e:
                 print_pipe(self.log_path, 'Failed to connect.', e)
@@ -284,9 +286,9 @@ class Vision(object):
                 self.network_port = 0
                 raise TypeError("Invalid port number!")
             try:
-                self.roborio_ip = gethostbyname(connection_dst)
+                self.connection_address = gethostbyname(connection_dst)
             except gaierror:
-                self.roborio_ip = False
+                self.connection_address = False
                 raise ValueError('Cannot Find Roborio, check the connection or the RoboRio name!')
 
     def apply_sorter(self, sorter_function=Sorters.descending_area_sort):
@@ -307,7 +309,7 @@ class Vision(object):
         if self.connection_type == Vision.NT_CONNECTION:
             self.socket.putNumber(self.network_port, data)
         elif self.connection_type == Vision.UDP_CONNECTION:
-            self.socket.sendto(str(data), (self.roborio_ip, self.network_port))
+            self.socket.sendto(str(data), (self.connection_address, self.network_port))
         else:
             pass
 
@@ -363,11 +365,11 @@ class Vision(object):
         all_ratios = []
         for idx, filter_func in enumerate(self.__filters):
             if self.__params is not None:
-                _, r = self.apply_filter(filter_func, apply_results=apply_all, parameters=self.__params[idx])
-                all_ratios.append(r)
+                _, ratio = self.apply_filter(filter_func, apply_results=apply_all, parameters=self.__params[idx])
+                all_ratios.append(ratio)
             else:
-                _, r = self.apply_filter(filter_func, apply_results=apply_all)
-                all_ratios.append(r)
+                _, ratio = self.apply_filter(filter_func, apply_results=apply_all)
+                all_ratios.append(ratio)
 
         return all_ratios
 
@@ -378,12 +380,12 @@ class Vision(object):
         class.
         :param color: a color object of the range to be detected
         :param img: image from which to get the contours
-        :param save: if the contours returned from this function should be saved as v.contours
+        :param save: if the contours returned from this function should be saved as self.contours
         :return: list of all contours matching the range of hsv colours
         :rtype: list
         """
 
-        if color is None:
+        if color is not None:
             c = color
         else:
             c = self.color
@@ -479,7 +481,7 @@ class Vision(object):
                                  self.target_amount,
                                  self.width,
                                  self.height,
-                                 self.roborio_ip,
+                                 self.hostname,
                                  self.network_port,
                                  self.camera_port).replace('#', str(self.failed_value))\
                                                   .replace('$', self.saturation_weight_vector.__repr__)\
@@ -510,22 +512,28 @@ class Vision(object):
         string = 'Vision Recap:\n' \
                  'Filters & custom Parameters: 0\n' \
                  'Color Detection Type: 1\n' \
-                 'Color: 2\n\n' \
-                 'Connection to roborio:\n' \
-                 'IP: 3\n' \
+                 'Color: 2\n' \
+                 'Directions Function:9 \n' \
+                 'Target Amount:8 \n' \
+                 'Connection:\n' \
+                 'Connection Address or IP: 3\n' \
                  'Connection Port: 4\n\n' \
                  'Camera:\n' \
                  'Camera port: 5\n' \
-                 'Image Width & Height: 6, 7\n'
+                 'Image Width & Height: 6, 7\n' \
+                 'Failed Value:\n' \
+                 'Log File:\n'
         return numerical_replace(string,
                                  filters,
                                  color_type,
                                  self.color.__repr__(),
-                                 self.roborio_ip,
+                                 self.connection_address,
                                  self.network_port,
                                  self.camera_port,
                                  self.width,
-                                 self.height)
+                                 self.height,
+                                 self.directions_function.__name__,
+                                 self.target_amount)
 
     def get_directions(self, contours, amount, directions_function=None, sorter=Sorters.descending_area_sort):
         """
