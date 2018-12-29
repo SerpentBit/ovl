@@ -535,7 +535,7 @@ class Vision(object):
                                  self.directions_function.__name__,
                                  self.target_amount)
 
-    def get_directions(self, contours, amount, directions_function=None, sorter=Sorters.descending_area_sort):
+    def get_directions(self, contours, amount=None, directions_function=None, sorter=Sorters.descending_area_sort):
         """
         Action: Calculates the directions based on contours found
         :param contours: final contours after filtering
@@ -546,14 +546,16 @@ class Vision(object):
         :return: a string of the directions (output of the directions function),
                  length depends on the directions function
         """
+        if amount is None:
+            amount = self.target_amount
         if sorter is not None:
             target_contours = sorter(contours)[0:amount]
         else:
             target_contours = contours[0:amount]
         if directions_function is None:
-            return self.directions(target_contours, (self.width, self.height))
+            return self.directions(target_contours, amount, (self.width, self.height))
         else:
-            return directions_function(target_contours, (self.width, self.height))
+            return directions_function(target_contours, amount, (self.width, self.height))
 
     def camera_setup(self, port=0, img_width=None, img_height=None):
         """
