@@ -92,13 +92,13 @@ class Color(object):
     @property
     def low_bound(self):
         if type(self.__low_bound) is ndarray:
-            return self.low_bound.to_list()
+            return self.__low_bound.to_list()
         return self.__low_bound
 
     @property
     def high_bound(self):
-        if type(self.__low_bound) is ndarray:
-            return self.low_bound.to_list()
+        if type(self.__high_bound) is ndarray:
+            return self.__high_bound.to_list()
         return self.__high_bound
 
     @staticmethod
