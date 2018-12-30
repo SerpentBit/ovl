@@ -218,7 +218,7 @@ class Vision(object):
                 self.camera_setup(kwargs['camera_port'])
         self.directions = directions_function
 
-         if type(color_parameter) is Color:
+        if type(color_parameter) is Color:
              self.color = color_parameter
              self.low = color_parameter.low
              self.high = color_parameter.high
