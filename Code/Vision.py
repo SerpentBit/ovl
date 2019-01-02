@@ -214,8 +214,7 @@ class Vision(object):
         self.camera = None
         self.camera_port = None
         if 'camera_port' in kwargs:
-            if type(kwargs['camera_port']) is int:
-                self.camera_setup(kwargs['camera_port'])
+            self.camera_setup(kwargs['camera_port'])
         self.directions = directions_function
 
         if type(color_parameter) is Color:
@@ -561,14 +560,14 @@ class Vision(object):
         Action: Opens up the camera reference and fixates a given width and height to all images taken
         :param img_width: the width of the images to be taken
         :param img_height: the height of the images to be taken
-        :param port: the camera port
+        :param port: the camera port str for network connections int for local USB connections.
         :return: the camera object, also sets self.camera to the object.
         """
         if img_height is None:
             img_height = self.height
         if img_width is None:
             img_width = self.width
-        if type(port) is not int:
+        if type(port) not in [int, str]:
             port = 0
         self.camera_port = port
         robot_cam = cv2.VideoCapture(port)
