@@ -228,12 +228,9 @@ def get_lengths_and_angles(contour, approximation_coefficient=0.02):
     for idx, point in enumerate(vertices):
         if idx == len(approximation) - 1:
             lengths.append(distance_between_points(point, vertices[0]))
-        else:
-            lengths.append(distance_between_points(point, vertices[idx + 1]))
-        if idx == len(approximation) - 1:
             angles.append(cosine_sentence(vertices[idx - 1], point, vertices[0]))
         else:
+            lengths.append(distance_between_points(point, vertices[idx + 1]))
             angles.append(cosine_sentence(vertices[idx - 1], point, vertices[idx + 1]))
-
     return vertices, lengths, angles
 
