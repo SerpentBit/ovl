@@ -76,7 +76,7 @@ In OVL Contours are found only by creating a mask of the image where the pixels 
 and everything else is black. Then contours are then found by edge detection on the image mask (The Image that is only black and white)
 In order to get contours we use the `get_contours` function to get contours from an image.
 Unlike CV2, Color (Ranges of color, not a specific tone) in OVL are defined using the Color and MultiColor Objects.
-Read more about them in their documentations: [Color](), [MultiColor]()
+Read more about them in their documentations: [Color](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Color/Color.md), [MultiColor](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Color/MultiColor.md)
 
 For now just know that they represent a range for color.
 
@@ -243,7 +243,7 @@ but we want to a set specific parameters for our vision.
 If we look at the documentation we can see that area filter takes 2 additional parameters
 in addition to the contour list, `min_area` and `max_area`
 Circle filters takes 2 additional parameters as well, `min_area_ratio` and `min_len_ratio`
-Descriptions of these parameters can be found [here]()
+Descriptions of these parameters can be found [here](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Filters/circle_filter.md)
 So by passing `[[100], [0.8, 0.7]]` we tell the vision object to call the area filter
 and `circle filter` like so:
 
@@ -281,7 +281,7 @@ There are other optional rules for additional features, they are all documented 
 After we applied all of the filter and found our one and only Contour(s) we can can directions for our robot.
 The basic directions functions (`xy_center_directions`, `y_center_directions` and `x_center_directions`)
 do the same thing for the diffrent axes find the center of the contour (or the center of the between all target contours
-more on that [here]()) and multiply that by the 2000 / width of the image(or height or both depending on the function) .
+more on that [here](https://github.com/1937Elysium/Ovl-Python/tree/master/English/ovl/Directions)) and multiply that by the 2000 / width of the image(or height or both depending on the function) .
 ```
 center of the contour * (2000 / (width / height))  = direction the robot needs to turn/ move to
 ```
