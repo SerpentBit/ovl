@@ -16,9 +16,7 @@ The following python module dependencies are needed:
   - scipy
   
   - sklearn (0.20 for python 2.7 & 3.4)
-  
-  - pandas
-  
+ 
 
 OVL is officially supported for the following python versions: 2.7 and 3.4+
 
@@ -27,6 +25,10 @@ Installation:
 Using `pip`:
 </br>
 `python -m pip install ovl`
+
+For a light weight version that does not include the calibration module:
+</br>
+`python -m pip install ovl-light`
 
 Download the files directly:
 
