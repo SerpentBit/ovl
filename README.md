@@ -34,4 +34,5 @@ Download the files directly:
 
 [Current Version](https://github.com/1937Elysium/Ovl-Python/tree/master/Archives/Current%20Release) from the Archives.
 
-Documentation for the Library is available in English and Hebrew.
+Documentation for the Library is available in [English](https://github.com/1937Elysium/Ovl-Python/tree/master/English) and [Hebrew](https://github.com/1937Elysium/Ovl-Python/blob/master/Hebrew/Introduction.md).
+Great sample code (in english) is [here](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/Constructer%20(__init__).md).
