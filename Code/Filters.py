@@ -1,12 +1,33 @@
 # Copyright 2018 Ori Ben-Moshe - All rights reserved.
 import cv2
-import Geometry
-from General import root
+from . import Geometry
+from .General import root
 from sys import version_info
 from numpy import mean, std
 
 if version_info[0] == 3:
     xrange = range
+
+
+def length_filter(contour_list, min_length=50, max_length=76800):
+    """
+    Action: receives a list of contours and removes ones that are not long enough
+            Note: for "open" contours!
+    :param contour_list: list of contours (ndarray) to be filtered
+    :param min_length: minimum length of a contour (in pixels)
+    :param max_length: maximum length of a contour (in pixels)
+    :return: list of filtered contours and list of the lengths
+    """
+    output = []
+    ratio = []
+    if type(contour_list) is not list:
+        contour_list = [contour_list]
+    for current_contour in contour_list:
+        perimeter = cv2.arcLength(current_contour, False)
+        if min_length >= perimeter >= max_length:
+            output.append(current_contour)
+            ratio.append(perimeter)
+    return output, ratio
 
 
 def straight_square_filter(contour_list, min_area_ratio=0.8, min_len_ratio=0.95):
