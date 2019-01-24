@@ -1,8 +1,29 @@
 # Copyright 2018 Ori Ben-Moshe - All rights reserved.
-from General import root, radians2degrees, degrees2radians
+from .General import root, radians2degrees, degrees2radians
 import cv2
 from math import pi, cos as cosinus, sin as sinus, log, tan as tangent, factorial, acos
 from sys import version_info
+
+
+def open_arc_length(contour):
+    """
+    Action: Returns the arc length of an "open" contour
+    :param contour:
+    :return:
+    """
+    return cv2.arcLength(contour, False)
+
+
+def get_approximation_open(contour, approximation_coefficient=0.02):
+    """
+    Action: returns the vertices of the approximation of the contour
+    NOTE: for "open" contours!
+    :param contour: open contour (ndarray)
+    :param approximation_coefficient: approximation coefficient
+    :return: list of vertices
+    """
+    arc = approximation_coefficient * cv2.arcLength(contour, False)
+    return cv2.approxPolyDP(contour, arc, False)
 
 
 def sin(x):
@@ -233,4 +254,3 @@ def get_lengths_and_angles(contour, approximation_coefficient=0.02):
             lengths.append(distance_between_points(point, vertices[idx + 1]))
             angles.append(cosine_sentence(vertices[idx - 1], point, vertices[idx + 1]))
     return vertices, lengths, angles
-
