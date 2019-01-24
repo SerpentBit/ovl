@@ -1,9 +1,9 @@
 # Copyright 2018 Ori Ben-Moshe - All rights reserved.
 from socket import *
 from numpy import copy, vstack, hstack, ndarray
-from Color import Color, BuiltInColors, MultiColor
-from General import *
-import Sorters
+from .Color import Color, BuiltInColors, MultiColor
+from .General import *
+from . import Sorters
 import time
 from matplotlib.pyplot import figure, show, imshow
 import copy
@@ -94,9 +94,9 @@ class Vision(object):
     """
 
     NT_CONNECTION = 'NT'  # Network Tables via pynetworktables
-    BT_CONNECTION = 'BT'  # BlueTooth via Socket, Not Impelented
+    BT_CONNECTION = 'BT'  # BlueTooth via Socket, Not Implemented
     UDP_CONNECTION = 'UDP'  # UDP via Socket  
-    TCP_CONNECTION = 'TCP'  # TCP via Socket, Not Impelented
+    TCP_CONNECTION = 'TCP'  # TCP via Socket, Not Implemented
     SERIAL_PORT = 'SP'  # Serial Port via 
 
     list_of_functions = get_all_functions()
@@ -153,11 +153,7 @@ class Vision(object):
         except error:
             return False
 
-    def __del__(self):
-        if self.camera is not None:
-           self.camera.close()
-
-    def __init__(self,color=None, filters=None, directions_function=None, target_amount=1, width=320, height=240,
+    def __init__(self, color=None, filters=None, directions_function=None, target_amount=1, width=320, height=240,
                  connection_dst='NOCONNECTION', port=None, log_file=None, **kwargs):
         """
         Action: The vision object represents a control object to the whole process of the vision processing
@@ -209,23 +205,23 @@ class Vision(object):
             self.target_amount = target_amount
 
         self.contours = []
-        self.socket = socket(AF_INET, SOCK_DGRAM)
-
         self.camera = None
         self.camera_port = None
         if 'camera_port' in kwargs:
-            self.camera_setup(kwargs['camera_port'])
+            if type(kwargs['camera_port']) is cv2.VideoCapture:
+                self.camera = kwargs['camera_port']
+            else:
+                self.camera_setup(kwargs['camera_port'])
         self.directions = directions_function
-
-        if type(color_parameter) is Color:
-             self.color = color_parameter
-             self.low = color_parameter.low
-             self.high = color_parameter.high
-        elif type(color_parameter) is MultiColor:
-            self.color = color_parameter
+        
+        if type(color) is Color:
+            self.color = color
+            self.low = color.low
+            self.high = color.high
+        elif type(color) is MultiColor:
+            self.color = color
         else:
-            raise print_pipe("The color parameter must be a Color or MultiRange object,"
-                             "in order to use a color list use the hsv_high_limit and hsv_low_limit")
+            raise TypeError("The color parameter must be a Color or MultiRange object")
         # Calibration configuration
         if 'calibration' in kwargs:
             cal_file = kwargs['calibration']
@@ -257,9 +253,9 @@ class Vision(object):
         self.hostname = connection_dst
         if connection_dst == 'NOCONNECTION':
             self.connection_address = None
-            self.network_port = 0
+            self.network_port = port
         elif Vision.is_static_ip(connection_dst):
-                self.connection_address= connection_dst
+                self.connection_address = connection_dst
                 NetworkTables.initialize(server=connection_dst)
                 self.socket = NetworkTables.getTable('SmartDashboard')
                 self.connection_type = 'NT'
@@ -288,8 +284,14 @@ class Vision(object):
             except gaierror:
                 self.connection_address = False
                 raise ValueError('Cannot Find Roborio, check the connection or the RoboRio name!')
+        if 'image_filters' in kwargs and 'image_params' in kwargs:
+            self.image_filters = kwargs['image_filters']
+            self.image_params = kwargs['image_params']
+        else:
+            self.image_filters = []
+            self.image_params = []
 
-    def apply_sorter(self, sorter_function=Sorters.descending_area_sort):
+    def apply_sorter(self, sorter_function=Sorters.dec_area_sort):
         """
         Action: applies a sorter function to the contour list
         :param sorter_function: the sorter function to be applied
@@ -310,6 +312,18 @@ class Vision(object):
             self.socket.sendto(str(data), (self.connection_address, self.network_port))
         else:
             pass
+
+    def get_image(self):
+        """
+        Action: gets an image from self.camera
+        :return: the image, false if failed
+        """
+        if self.camera is None:
+            raise ValueError("No camera connected")
+        ret, img = self.camera.read()
+        if ret:
+            return img
+        return False
 
     def apply_filter(self, filter_function, apply_results=False, parameters=None):
         """
@@ -371,7 +385,76 @@ class Vision(object):
 
         return all_ratios
 
-    def get_contours(self, img, color=None, save=True):
+    def get_contours_mask(self, mask, save=True, return_hierarchy=False):
+        """
+        Actions: gets contours from the given mask
+        :param mask: binary image (mask), a numpy array
+        :param save: if the contours should be saved to self.contours
+        :param return_hierarchy: if the hierarchy should be returned
+        :return: the list of contours
+        """
+        if cv2.__version__.startswith("3."):
+            _, found_contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            if save:
+                self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
+            return found_contours
+        elif cv2.__version__.startswith("4."):
+            _, found_contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            if save:
+                self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
+            return found_contours
+        elif cv2.__version__.startswith("2."):
+            found_contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            if save:
+                self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
+            return found_contours
+        else:
+            raise VersionError("This code works only with version 2, 3 and 4 of openCV!")
+
+    def get_edge_contours(self, img, values=None, save=True, return_hierarchy=False):
+        """
+        Actions: gets contours from the given img using the Canny function
+        :param img: image to be searched, a numpy array
+        :param values: parameters other than the image to be passed to the function.
+        :param save: if the contours should be saved to self.contours
+        :param return_hierarchy: if the hierarchy should be returned
+        :return: the list of contours
+        """
+        if values is None:
+            values = self.color
+        mask = cv2.Canny(img, *values)
+        if cv2.__version__.startswith("3."):
+            _, found_contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            if save:
+                self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
+            return found_contours
+        elif cv2.__version__.startswith("4."):
+            _, found_contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            if save:
+                self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
+            return found_contours
+        elif cv2.__version__.startswith("2."):
+            found_contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            if save:
+                self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
+            return found_contours
+        else:
+            raise VersionError("This code works only with version 2, 3 and 4 of openCV!")
+
+
+    def get_contours(self, img, color=None, save=True, return_hierarchy=False):
         """
         Action: Gets a list of all the contours within the range that
         NOTE: This method is only used for Color objects, for MultiColorRange please refer to the MultiColorRange
@@ -379,10 +462,10 @@ class Vision(object):
         :param color: a color object of the range to be detected
         :param img: image from which to get the contours
         :param save: if the contours returned from this function should be saved as self.contours
+        :param return_hierarchy: if the hierarchy should be returned
         :return: list of all contours matching the range of hsv colours
         :rtype: list
         """
-
         if color is not None:
             c = color
         else:
@@ -413,19 +496,25 @@ class Vision(object):
             img_mask = cv2.inRange(img_in_hsv, c.low, c.high)
 
         if cv2.__version__.startswith("3."):
-            found_contours = cv2.findContours(img_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
+            _, found_contours, hierarchy = cv2.findContours(img_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             if save:
                 self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
             return found_contours
         elif cv2.__version__.startswith("4."):
-            found_contours = cv2.findContours(img_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
+            _, found_contours, hierarchy = cv2.findContours(img_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             if save:
                 self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
             return found_contours
         elif cv2.__version__.startswith("2."):
-            found_contours = cv2.findContours(img_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[0]
+            found_contours, hierarchy = cv2.findContours(img_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             if save:
                 self.contours = found_contours
+            if return_hierarchy:
+                return found_contours, hierarchy
             return found_contours
         else:
             raise VersionError("This code works only with version 2, 3 and 4 of openCV!")
@@ -530,10 +619,10 @@ class Vision(object):
                                  self.camera_port,
                                  self.width,
                                  self.height,
-                                 self.directions_function.__name__,
+                                 self.directions.__name__,
                                  self.target_amount)
 
-    def get_directions(self, contours, amount=None, directions_function=None, sorter=Sorters.descending_area_sort):
+    def get_directions(self, contours=None, amount=None, directions_function=None, sorter=None):
         """
         Action: Calculates the directions based on contours found
         :param contours: final contours after filtering
@@ -546,6 +635,8 @@ class Vision(object):
         """
         if amount is None:
             amount = self.target_amount
+        if contours is None:
+            contours = self.contours
         if sorter is not None:
             target_contours = sorter(contours)[0:amount]
         else:
@@ -620,16 +711,11 @@ class Vision(object):
                 self.apply_all_filters()
             return self.contours, image
 
-        multi_mode = False
         if "color" in kwargs:
             color_object = kwargs["color"]
-            if type(color_object) is MultiColor:
-                multi_mode = True
         elif "hsv_low_limit" in kwargs and "hsv_high_limit" in kwargs:
             color_object = Color(kwargs["hsv_low_limit"], kwargs["hsv_high_limit"])
         else:
-            if type(self.color) is MultiColor:
-                multi_mode = True
             color_object = self.color
 
         if "display" in kwargs:
@@ -752,7 +838,7 @@ class Vision(object):
                         directions = previous_result
                         if print_results:
                             print_pipe(self.log_path, directions)
-                        if send_direction and self.roborio_ip is not None:
+                        if send_direction and self.connection_address is not None:
                             self.send_to_destination(directions)
                 if streak.sum() > 3 and print_results:
                     res = streak.bigger()
@@ -776,6 +862,16 @@ class Vision(object):
                 print_pipe(self.log_path, "Completed 30 frames in ", time.time() - old_time)
             if one_loop:
                 break
+
+    def apply_image_filters(self, img):
+        """
+        Action: applies all given image filters to the given image
+        :param img: the image that the image filters should be applied on (numpy array)
+        :return: the image with the filters applied
+        """
+        for idx, img_filter in enumerate(self.image_filters):
+            img = img_filter(img, *self.image_params[idx])
+        return img
 
     def start(self, **kwargs):
         """
@@ -815,8 +911,8 @@ class Vision(object):
         """
         Action: Translates the Vision object to a Json file for transportability
         :param pass_camera: a bool denoting if the camera parameters (camera port) should be serialized.
-        :param pass_network: a bool denoting if the network parameters and connection information (port, connection type and
-                             destination should be serialized as well.
+        :param pass_network: a bool denoting if the network parameters and connection information
+                            (port, connection type and destination should be serialized as well.
         :param pass_calibration: a bool denoting if the calibration parameters (vectors and means) should be serialized.
         :return: the serialized string in json format.
         """
@@ -846,7 +942,7 @@ class Vision(object):
             translation['camera_port'] = self.camera_port
         if pass_network:
             translation['port'] = self.network_port
-            translation['destination'] = self.roborio_name
+            translation['destination'] = self.connection_address
             translation['connection_type'] = self.connection_type
         if pass_calibration:
             translation['v_vector'] = self.value_weight_vector
