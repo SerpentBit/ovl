@@ -3,7 +3,7 @@ import json
 from numpy import ndarray, array
 import copy
 import cv2
-import General
+from . import General
 from sys import version_info
 
 if version_info[0] is 3:
@@ -92,13 +92,13 @@ class Color(object):
     @property
     def low_bound(self):
         if type(self.__low_bound) is ndarray:
-            return self.__low_bound.to_list()
+            return self.__low_bound.tolist()
         return self.__low_bound
 
     @property
     def high_bound(self):
         if type(self.__high_bound) is ndarray:
-            return self.__high_bound.to_list()
+            return self.__high_bound.tolist()
         return self.__high_bound
 
     @staticmethod
@@ -268,7 +268,7 @@ class Color(object):
         :return: the changed Color object
         """
         point = self.copy()
-        point.apply_vector_low([0, 0, -amount])
+        point = point.apply_vector_low([0, 0, -amount])
         Color.assert_hsv(point.low)
         return point
 
