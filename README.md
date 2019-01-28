@@ -41,4 +41,4 @@ Great sample code (in english) is [here](https://github.com/1937Elysium/Ovl-Pyth
 - Morphological functions
 
 ### Known Issues:
- -  None...yet.
+ -  None...yet. Post in the Issues section if you find one!
