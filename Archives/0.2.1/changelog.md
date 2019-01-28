@@ -2,7 +2,7 @@
 
 ## Main Changes:
  - New Sub-Module - `ImageFilters`
- - New support for curve contours (open/unclosed)
+ - New support for curve contours (open/unclosed), Filters Sorters Vision object and Geometry
  - Get contours using `Cv2.Canny` (Edge detection)
  - Get contours for a binary mask
  - Refactors and parameter changes
@@ -14,6 +14,8 @@
 - Cv2 functions such as GaussianBlur MedianBlur BilateralBlur and BoxFilters can be used as well
 
 ## Additions:
+- `Geometry.line_angle` - returns the angle between a contour (that is a line) and the x axis
+- `Geometry.angle_between_points` - returns the angle in degrees between 2 points and the x axis
 - `Geometry.open_arc_length` - arc length of an unclosed contour
 - `Geometry.get_approximation_open` - get_approximation for unclosed contours
 - `Sorters.inc_length_sort` - sorts unclosed contours from smallest to largest
