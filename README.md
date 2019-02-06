@@ -42,7 +42,4 @@ Great sample code (in english) is [here](https://github.com/1937Elysium/Ovl-Pyth
 
 ### Known Issues:
 If you find a bug please post it in the issues section!
- -  `Vision` cannot receive valid input for edge detection nor no value.
- - Error in calculating angle using `Geometry.line_angle`, false values are returned
- - Camera object can't be passed as parameters for camera_port in `Vision`
- - `__str__` and `__repr__` are not updated
+- `__str__` and `__repr__` are not updated
