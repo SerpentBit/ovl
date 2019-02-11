@@ -2,12 +2,12 @@
 from ovl.Vision import Vision
 from ovl.Color import BuiltInColors
 from ovl.Filters import area_filter
-from ovl.Sorters import descending_area_sort
+from ovl.Sorters import dec_area_sort
 from ovl.Directions import x_center_directions
 from cv2 import GaussianBlur
 
 
-v = Vision(filters=[area_filter, descending_area_sort],
+v = Vision(filters=[area_filter, dec_area_sort],
            # Filter Contours that aren't large enough and then sort them from large to small - our target is the Largest
            color=BuiltInColors.yellow_hsv.dark(50),
            # Find objects that are yellow and increase the V range by 50 (.dark() function) for darker illumination conditions
