@@ -30,6 +30,11 @@ For a light weight version that does not include the calibration sub-module:
 </br>
 `python -m pip install ovl-light`
 
+
+In order to update use the `--update` flag.
+e.g:
+`python -m pip install --upgrade ovl`
+
 Download the files directly:
 
 [Current Version](https://github.com/1937Elysium/Ovl-Python/tree/master/Archives/Current%20Release) from the Archives.
