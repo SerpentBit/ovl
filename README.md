@@ -3,7 +3,7 @@ Python Module for Computer Vision Object Tracking and Detection mainly for the F
 
 The Library was written by Ori Ben-Moshe.
 
-Copyright (©) 2018, Ori Ben-Moshe, all rights reserved.
+Copyright (©) 2018 - 2019, Ori Ben-Moshe, all rights reserved.
 
 The following python module dependencies are needed:
 
@@ -37,9 +37,7 @@ Download the files directly:
 Documentation for the Library is available in [English](https://github.com/1937Elysium/Ovl-Python/tree/master/English) and [Hebrew](https://github.com/1937Elysium/Ovl-Python/blob/master/Hebrew/Introduction.md).
 Great sample code (in english) is [here](https://github.com/1937Elysium/Ovl-Python/blob/master/English/ovl/Vision/Constructer%20(__init__).md).
 
-### Planned Additions:
-- Morphological functions
 
 ### Known Issues:
 If you find a bug please post it in the issues section!
-- `__str__` and `__repr__` are not updated
+- `Vision.json_serialize` and `Vision.json_deserialize` are not updated
