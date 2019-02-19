@@ -1,4 +1,9 @@
 # Ovl-Python (Owl)
+***
+NOTE: pyserial is required to run ovl this path because of a mistake, install it by running `python -m pip install pyserial` this requirement will be removed as soon as possible by another patch today. - 19.2.19 17:08 
+***
+
+
 Python Module for Computer Vision Object Tracking and Detection mainly for the FIRST® Robotics Competition Program
 
 The Library was written by Ori Ben-Moshe.
