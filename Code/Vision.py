@@ -12,8 +12,12 @@ import json
 from networktables import NetworkTables
 from sys import version_info
 from .Camera import Camera
-from serial import Serial
-
+try:
+    from serial import Serial
+    serial_exists = True
+except ImportError:
+    print("The serial module (pyserial) is not installed (or found),\nVision Serial connection is disabled.")
+    serial_exists = False    
 if version_info[0] == 3:
     xrange = range
 
@@ -286,7 +290,7 @@ class Vision(object):
                 self.socket = NetworkTables.getTable('SmartDashboard')
                 self.connection_type = Vision.NT_CONNECTION
                 self.network_port = port
-        elif connection_dst == "@Serial":
+        elif connection_dst == "@Serial" and serial_exists:
             if type(port) in (tuple, set, list):
                 self.socket = Serial(port[0], baudrate=[1])
             elif type(port) is str:
