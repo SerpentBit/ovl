@@ -50,3 +50,4 @@ If you find a bug please post it in the issues section!
 - `Vision.Vision.__str__` and `Vision.Vision.__repr__`
 - `Color.Color.apply_hsv_vector`, `Color.Color.apply_hsv_high`, `Color.Color.apply_hsv_low`, `Color.Color.light()`, `Color.Color.dark()` raise an error even when they shouldn't
 - `Filters.rotated_rectangle_filter` is missing a default parameter
+- `Vision.Vision.camera_setup()` has a recursion error with a `Camera.Camera` object
