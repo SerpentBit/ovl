@@ -47,3 +47,6 @@ Great sample code (in english) is [here](https://github.com/1937Elysium/Ovl-Pyth
 ### Known Issues:
 If you find a bug please post it in the issues section!
 - `Vision.json_serialize` and `Vision.json_deserialize` are not updated
+- `Vision.Vision.__str__` and `Vision.Vision.__repr__`
+- `Color.Color.apply_hsv_vector`, `Color.Color.apply_hsv_high`, `Color.Color.apply_hsv_low`, `Color.Color.light()`, `Color.Color.dark()` raise an error even when they shouldn't
+- `Filters.rotated_rectangle_filter` is missing a default parameter
