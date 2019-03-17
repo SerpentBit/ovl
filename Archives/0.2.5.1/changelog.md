@@ -10,5 +10,6 @@
  - Fixed an error where `Vision.camera_setup` would be stuck recursively
  - `Vision` will now correctly apply all morphological functions passed
  - `ImageFilters.adaptive_brightness` will no longer go out of bounds when image to brighter than wanted
- - `Vision.Display_Image`'s delay can be set, default is no delay (This also affects `Vision.Vision.display_contours`
+ - `Vision.Display_Image`'s delay can be set, default is no delay (This also affects `Vision.Vision.display_contours`)
+ - `Filters.rotated_rectagnle` now has default ratios.
  
