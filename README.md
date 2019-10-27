@@ -2,6 +2,12 @@
 
 Python Module for Computer Vision Object Tracking and Detection mainly for the FIRST® Robotics Competition Program
 
+****
+NOTE:
+The upcoming version will stop support for python 2.7 and 3.4. Official support will be only for python 3.5+!
+
+****
+
 The Library was written by Ori Ben-Moshe.
 
 Copyright (©) 2018 - 2019, Ori Ben-Moshe, all rights reserved.
