@@ -28,5 +28,7 @@ def conditional_contour_filter(single_contour_filter):
     """
 
     def argument_loader(*args, **kwargs):
-        return functools.partial(_loaded_condition, ReversePartial(single_contour_filter, *args, **kwargs))
+        condition = ReversePartial(single_contour_filter, *args, **kwargs)
+        argument_loader.condition = condition
+        return functools.partial(_loaded_condition, condition)
     return argument_loader
