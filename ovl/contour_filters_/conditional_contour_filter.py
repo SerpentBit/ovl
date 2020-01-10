@@ -23,8 +23,9 @@ def conditional_contour_filter(single_contour_filter):
         filters = [area_filter(60)] # sets the minimum area to 60 -> the first parameter passed
         vision = Vision(..., contour_filters=filters, ...)
 
-    :param single_contour_filter:
-    :return:
+    :param single_contour_filter: the function to turn into a contour filter, which loads the parameters to the filter
+    before running it on list of contour filters.
+    :return: the argument loader that wraps the target function
     """
 
     def argument_loader(*args, **kwargs):
