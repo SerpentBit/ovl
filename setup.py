@@ -13,6 +13,7 @@ setup(
     description='A modular and versatile Python package for Computer Vision'
                 ' object detection pipelines Tailored for robotics applications',
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://github.com/1937Elysium/Ovl-Python',
     install_requires=['numpy', 'pynetworktables', 'opencv-python'],
     classifiers=[
