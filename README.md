@@ -1,5 +1,4 @@
-# Ovl-Python (pronounced: Owl)
-
+# Ovl-Python 
 Python Module for Computer Vision Object Tracking and Detection mainly for the FIRST® Robotics Competition Program
 
 *There have been significant changes from the previous version - [changelog](#major-changes-from-previous-patch)*
@@ -33,7 +32,7 @@ The library uses simple yet highly customizable syntax to create
  a vision pipeline using the `Vision` object
 
 
-A pipeline that detects 1 yellow circle:
+A pipeline that detects a yellow circle:
 ```
 import ovl
 
@@ -66,8 +65,17 @@ and classes now have in code documentation.
 This includes code examples, recommended usage reference to further
 documentation and more.
 
+simply use `help` on a class/function:
+```
+help(ovl.Vision)
 
-<a name=changes></a>
+help(ovl.contour_filter)
+
+help(ovl.area_filter)
+```
+
+<br>
+<br>
 
 ## Major changes from previous patch:
 
