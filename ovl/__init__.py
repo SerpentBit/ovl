@@ -23,7 +23,7 @@ from .image_utilities.naming_conventions import *
 from .image_utilities.photo_array import photo_array
 from .math_ import geometry
 from .morphological_functions_.morphological_functions import erosion, dilation
-from .thresholds.canny_edge import CannyEdgeThreshold
+from .thresholds.canny_edge import CannyEdge
 from .thresholds.color_.built_in_colors import *
 from .thresholds.color_.color import Color
 from .thresholds.color_.multi_color import MultiColor
