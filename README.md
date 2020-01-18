@@ -38,18 +38,12 @@ A pipeline that detects 1 yellow circle:
 import ovl
 
 # filter contours that are larger than 200 pixels
-# and are approximately a circle
-# and then sort by size
+# and are approximately a circle and then sort by size
 
-contour_filters = [ovl.area_filter(min_area=200),
-           ovl.circle_filter(min_area_ratio=0.7),
-           ovl.dec_area_sort()] 
+contour_filters = [ovl.area_filter(min_area=200), ovl.circle_filter(min_area_ratio=0.7), ovl.dec_area_sort()] 
 
 threshold = ovl.YELLOW_HSV # Define the wanted color to detect 
-
-# open the first connected camera 
-
-camera = ovl.Camera(0) 
+camera = ovl.Camera(0) # open the first connected camera 
 
 yellow_circle = Vision(threshold=threshold,
                        contour_filters=contour_filters,
@@ -59,7 +53,6 @@ yellow_circle = Vision(threshold=threshold,
 while True:
     image = yellow_circle.get__filtered_image()
     contours, image = yellow_circle.detect(image)
-
     directions = yellow_circle.get_directions(contours, image)
     
     print(directions) # prints out the (x, y) coordinates of the largest target
