@@ -316,11 +316,9 @@ class Vision:
         :param image: image in which the vision should detect an object
         :param verbose: If information about the filtering should be printed
         :param return_ratios: if the ratios from the filters should be returned
-        :return: contours and the filtered image
+        :return: contours and the filtered image and the ratios if return_ratios is true
         """
         image = self.apply_image_filters(image)
         contours = self.find_contours(image)
         contours, ratios = self.apply_all_filters(contours, verbose)
-        if len(contours) > self.target_amount:
-            contours = contours[: self.target_amount]
         return contours, image if not return_ratios else contours, image, ratios
