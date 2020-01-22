@@ -50,7 +50,7 @@ yellow_circle = Vision(threshold=threshold,
                        image_filters=image_filters)
 
 while True:
-    image = yellow_circle.get__filtered_image()
+    image = yellow_circle.get_filtered_image()
     contours, image = yellow_circle.detect(image)
     directions = yellow_circle.get_directions(contours, image)
     
