@@ -1,11 +1,12 @@
 '''
-This pipeline detects red squares 
-It also includes a director object and a connection
-Which simplifies passing data to the target
-
+This pipeline detects red squares calculates directions according to its
+position compared to the cebter of the image and
+returns the directions to move in (1 to -1 where 1 is a hard right and -1 is hard left)
+It also includes connection object
+Which simplifies passing data to the target that acts on the detection
 ******************************************************
 NOTE: this example code uses NetworkTablesConnection
-which is used specifically for the FIRST Robotics Competition
+which is used specifically for,  the FIRST Robotics Competition
 in order to connect to the RoboRIO controller
 You can easily replace it with a different connections
 '''
