@@ -41,5 +41,5 @@ red_square = ovl.Vision(threshold=threshold,
 while True:
     image = red_square.get_filtered_image()
     contours, filtered_image = red_square.detect(image)
-    directions = red_square.get_directions(contours, image)
+    directions = red_square.get_directions(contours, filtered_image)
     red_square.send(directions)
