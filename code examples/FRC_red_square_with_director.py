@@ -16,7 +16,7 @@ import ovl
 # for other ways to connect run the following python code: help(NetworkTablesConnection)
 TEAM_NUMBER = 1937 
 
-threshold = RED_HSV
+threshold = ovl.RED_HSV
 
 contour_filters = [ovl.area_filter(min_area_ratio=150),
                    ovl.straight_rectangle_filter(min_area_ratio=0.7),
@@ -27,7 +27,7 @@ director = ovl.Director(directing_function=ovl.x_center_directions, failed_detec
 
 camera = ovl.Camera(0, image_width=640, image_height=480)
 
-roborio = ovl.NetworkTablesConnection(roborio=TEAM_NUMBER, table_key="SmartDashboard")
+roborio = ovl.NetworkTablesConnection(roborio=TEAM_NUMBER, table_name="SmartDashboard", table_key="vision_directions")
 
 image_filters = [ovl.gaussian_blur((5, 5))]
 
