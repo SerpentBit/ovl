@@ -14,9 +14,11 @@ The following python module dependencies are needed:
 The following python modules are optional for certain features:
 
 
- - NetworkTables (pyNetworkTables) for: NetworkTableConnection
+ - NetworkTables (pyNetworkTables) for `NetworkTableConnection` (installed automatically)
  
- - sklearn (scikit-learn): HSVCalibration
+ - sklearn (scikit-learn) for `HSVCalibration` creation (not needed for use in `Vision`)
+
+ - PySerial (pyserial) for SerialConnection
 
 OVL is officially supported for python 3.5+!
 
