@@ -3,15 +3,20 @@ from typing import Any, Union
 from .connection import Connection
 from ..helpers_.team_number_to_ip import team_number_to_ip
 
+NetworkTables = None
+
 
 class NetworkTablesConnection(Connection):
     """
     Note: In Order to use NetworkTablesConnection you must have pynetworktables installed.
 
-    A connection to Networktables (The FRC network protocol)
+    A connection to NetworkTables (The FRC network protocol)
     NetworkTables are a group of Dictionaries (Hash tables) that are shared by all computers in the network.
     NetworkTablesConnection creates defaults to writing to the Vision table.
     You can then read from /vision/vision_result the result sent.
+    For Additional information about NetworkTables
+    please refer to:
+    https://docs.wpilib.org/en/latest/docs/software/networktables/networktables-intro.html
     """
 
     def __init__(self, roborio: str, table_name: str = "Vision", table_key: str = "vision_result"):
@@ -36,18 +41,43 @@ class NetworkTablesConnection(Connection):
         self.connection = NetworkTables.initialize(roborio)
         self.table_key = table_key
         self.table = NetworkTables.getTable(table_name)
+        self.table_cache = {table_name: self.table}
         self.table_name = table_name
+
+    def get_table(self, table):
+        """
+        Fetches a table by name, if table exists in cache it returns
+        the cached table instead.
+        If table is none it returns the default table (set in the constructor)
+        :param table: the name of the table
+        :return: the table
+        """
+        if table is None:
+            table = self.table
+        elif table in self.table:
+            table = self.table_cache[table]
+        else:
+            table_name = table
+            table = NetworkTables.getTable(table)
+            self.table_cache[table_name] = table
+        return table
 
     def send(self, data, table_key: Union[str, None] = None,
              table: Union[str, None] = None, *args, **kwargs) -> None:
         """
+        A function used to put a value in a given table and key in the connected
+        NetworkTable.
+        For more information about NetworkTables functionality
+        please refer to:
+        https://docs.wpilib.org/en/latest/docs/software/networktables/networktables-intro.html
         :param data: the data to send (post)
         :param table_key: the specific table to read from
-        :param table: the table to receive from (Use "Vision" if you are not sure)
+        :param table: the table to receive from. Examples are SmartDashboard
+                      or Usage.Use "Vision" if you are not sure)
         """
-
         table_key = table_key if table_key else self.table_key
-        return self.table.putValue(table_key, data)
+        table = self.get_table(table)
+        return table.putValue(table_key, data)
 
     def receive(self, table_key: str = None, table: str = None,
                 default_value=None, *args, **kwargs) -> Any:
@@ -57,6 +87,6 @@ class NetworkTablesConnection(Connection):
         :param table: the table to receive from (Use "Vision" if you are not sure)
         :param default_value: the value to return if the given table key does not exist
         """
-        table = table or self.table
+        table = self.get_table(table)
         table_key = table_key or self.table_key
         return table.getValue(table_key, default_value)
