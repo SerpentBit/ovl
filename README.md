@@ -87,6 +87,11 @@ help(ovl.area_filter)
 
 ## Major changes from previous patch:
 
+### Changes from last patch:
+
+ - Fixed `dec_area_sort` no longer returns None
+ - Fixed docstring for contour filters
+ - Added built in colors to Color and Multi Doc string
 ### Dependency changes:
 Now only CV2 and numpy are mandatory dependencies all other are optional:
  - sklearn is only needed for `HSVCalibration`
