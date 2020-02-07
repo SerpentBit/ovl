@@ -20,7 +20,7 @@ def conditional_contour_filter(single_contour_filter):
             return cv2.contourArea(contour) > minimum_area
 
     This function can then be passed to a Vision object:
-        filters = [area_filter(60)] # sets the minimum area to 60 -> the first parameter passed
+        filters = [area_filter(min_area=60)] # sets the minimum area to 60 -> the first parameter passed
         vision = Vision(..., contour_filters=filters, ...)
 
     :param single_contour_filter: the function to turn into a contour filter, which loads the parameters to the filter
