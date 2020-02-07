@@ -8,16 +8,39 @@ from ..threshold import Threshold
 
 class MultiColor(Threshold):
     """
-    A Threshold that uses multiple
+    Multi Color is like the Color object but it allows for the use of multiple ranges
+    a main use is for representing the red color range.
+
+    Example Code:
+        1| orange = [[10, 100, 100], [18, 255, 255]]
+        2| green = [[45, 100, 100], [75, 255, 255]]
+        3|
+        4| orange_and_green = MultiColor([orange, green])
+
+    There are multiple built in "battery included" pre-made color object
+    for instant use in testing and tuning
+    List of colors:
+      Red (MultiColorObject) : Red (low) + Red (high)
+      Red (Low): [0, 100, 100], [8, 255, 255]
+      Red (High): [172, 100, 100], [179, 255, 255]
+      Note: in order to find red, use both ranges (low and high) and use the some of both results.
+      Blue: [105, 100, 100], [135, 255, 255]
+      Green: [45, 100, 100], [75, 255, 255]
+      Yellow: [20, 100, 100], [55, 255, 255]
+      Orange: [10, 100, 100], [18, 255, 255]
+      Grey: [0, 0, 0], [179, 50, 195]
+      Black: [0, 0, 0], [179, 255, 30]
+      White: [0, 0, 200], [179, 20, 255]
+      Teal: [110, 100, 100], [130, 255, 255]
+      Purple: [135, 100, 100], [165, 255, 255]
     """
+
     def __init__(self, colors):
         """
         :param colors: A list of Color objects or tuple that can be turned into a color object
         Example:
               MultiColor([Color([15, 50, 50], [45, 255, 125]),
-                         (75, 100),
-                         [[155, 50, 50], 175],
-                         [[105, 175, 25], [115, 255, 255]])
+                         [[105, 175, 25], [115, 255, 255]]])
          These are different ways to create ranges of colors
          """
         self.colors = colors
@@ -55,4 +78,4 @@ class MultiColor(Threshold):
         return ', '.join([str(color) for color in self.colors])
 
     def __repr__(self):
-        return'MultiColor(0)'.format([repr(i) for i in self.colors])
+        return 'MultiColor(0)'.format([repr(i) for i in self.colors])
