@@ -49,7 +49,7 @@ def dec_area_sort(contour_list):
     """
     if type(contour_list) is not list:
         return [contour_list]
-    return sorted(contour_list, key=lambda x: cv2.contourArea(x)).reverse()
+    return sorted(contour_list, key=lambda x: cv2.contourArea(x), reverse=True)
 
 
 @contour_filter
