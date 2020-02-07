@@ -9,7 +9,7 @@ from .contour_filter import contour_filter
 @contour_filter
 def image_center_filter(contour_list, image_dimensions=(320, 240), max_dist=0.7):
     """
-     Filters out contours that their center is not close enough to the center of the image
+    Filters out contours that their center is not close enough to the center of the image
     :param contour_list: a list of contours to be filtered
     :param image_dimensions: the size of the image(width, height)
     :param max_dist: the maximum percent of difference
@@ -34,8 +34,8 @@ def image_center_filter(contour_list, image_dimensions=(320, 240), max_dist=0.7)
 @contour_filter
 def distance_filter(contour_list, point, min_dist=0, max_dist=50):
     """
-     filters out contours that their center is not close enough
-            to the given (x, y) point
+    Filters out contours that their center is not close enough
+    to the given (x, y) point
     :param contour_list: a list of contours to be filtered
     :param point: the point from which the contours should be filtered a tuple (or list) of 2 numbers.
     :param max_dist: the maximum distance from the point in pixels
@@ -58,8 +58,8 @@ def distance_filter(contour_list, point, min_dist=0, max_dist=50):
 @contour_filter
 def absolute_distance_filter(contour_list, max_dist=50, min_dist=0, image_dimensions=(320, 240)):
     """
-     filters out contours that their center is not close enough
-            to the center of the image
+    Filters out contours that their center is not close enough
+    to the center of the image
     :param contour_list: a list of contours to be filtered
     :param image_dimensions: the size of the image(width, height)
     :param max_dist: the maximum distance from the center in pixels
@@ -83,8 +83,8 @@ def absolute_distance_filter(contour_list, max_dist=50, min_dist=0, image_dimens
 @contour_filter
 def length_filter(contour_list, min_length=50, max_length=76800):
     """
-     receives a list of contours and removes ones that are not long enough
-            Note: for "open" contours!
+    Receives a list of contours and removes ones that are not long enough
+    Note: for "open" contours only!
     :param contour_list: list of contours (numpy array) to be filtered
     :param min_length: minimum length of a contour (in pixels)
     :param max_length: maximum length of a contour (in pixels)
@@ -105,8 +105,8 @@ def length_filter(contour_list, min_length=50, max_length=76800):
 @contour_filter
 def straight_square_filter(contour_list, min_area_ratio=0.8, min_len_ratio=0.95):
     """
-     receives a list of contours
-    and returns only the ones that are approximately square
+    Receives a list of contours and returns
+    only the ones that are approximately square
     Relation checked is [minimum ratio < (Circle radius / width * height * (square root of 2)) < maximum ratio]
     :param contour_list: List of Contours to filter
     :type contour_list: List
@@ -136,7 +136,7 @@ def straight_square_filter(contour_list, min_area_ratio=0.8, min_len_ratio=0.95)
 @contour_filter
 def rotated_square_filter(contour_list, min_area_ratio=0.8, min_ratio=0.95, max_ratio=1.05):
     """
-     receives a list of contours
+    Receives a list of contours
     and returns only the ones that are approximately square
     Relation checked is [minimum ratio < (Circle radius / width * height * (square root of 2)) < maximum ratio]
     :param contour_list: List of Contours to filter
@@ -171,7 +171,7 @@ def rotated_square_filter(contour_list, min_area_ratio=0.8, min_ratio=0.95, max_
 @contour_filter
 def vertical_rectangle_filter(contour_list, min_area_ratio=0.):
     """
-     receives a list of contours
+    Receives a list of contours
     and returns only the ones that are approximately a vertical rectangle
     :param contour_list: List of Contours to filter
     :type contour_list: List
@@ -195,7 +195,7 @@ def vertical_rectangle_filter(contour_list, min_area_ratio=0.):
 @contour_filter
 def horizontal_rectangle_filter(contour_list, min_area_ratio=0.8):
     """
-     receives a list of contours and returns only those that are approximately a horizontal rectangle
+    Receives a list of contours and returns only those that are approximately a horizontal rectangle
     :param contour_list: List of Contours to filter
     :type contour_list: List
     :param min_area_ratio
@@ -264,7 +264,7 @@ def straight_rectangle_filter(contour_list, min_area_ratio=0.8):
 @contour_filter
 def rotated_rectangle_filter(contour_list, min_area_ratio=0.8):
     """
-    receives a list of contours and returns only those that are approximately a rectangle regardless
+    Receives a list of contours and returns only those that are approximately a rectangle regardless
     of the angle of rotation.
     :param contour_list: List of Contours to filter
     :param min_area_ratio: the minimum ratio between the contour area and the bounding shape
@@ -285,10 +285,13 @@ def rotated_rectangle_filter(contour_list, min_area_ratio=0.8):
 
 
 @contour_filter
-def triangle_filter(contour_list, min_area_ratio=0.8):
+def triangle_filter(contour_list, min_area_ratio=0.8, approximation_coefficient=0.02):
     """
     Receives a list of contours and returns only those that are approximately
-    triangle
+    triangle and have 3
+    :param approximation_coefficient: the approximation coefficient affects
+    how the contour's perimeter is approximated, the larger the number is (out of 1) the more the approximation of
+    the contour is a line
     :param contour_list: the list of contours to be filtered
     :param min_area_ratio: the minimum ratio between the area of the contour and the bounding triangle
     :return: the filtered list
@@ -300,7 +303,7 @@ def triangle_filter(contour_list, min_area_ratio=0.8):
     for current_contour in contour_list:
         fill_ratio = triangle_fill_ratio(current_contour)
         peri = cv2.arcLength(current_contour, True)
-        approximation = cv2.approxPolyDP(current_contour, 0.02 * peri, True)
+        approximation = cv2.approxPolyDP(current_contour, approximation_coefficient * peri, True)
         if fill_ratio > min_area_ratio and len(approximation) == 3:
             ratio_list.append(fill_ratio)
             output_list.append(current_contour)
@@ -310,7 +313,7 @@ def triangle_filter(contour_list, min_area_ratio=0.8):
 @contour_filter
 def circle_filter(contour_list, min_area_ratio=0.7):
     """
-    filters out contour which are not approximately circle.
+    Filters out contour which are not approximately circle.
     :param contour_list: list of contours (numpy arrays) to be filtered
     :param min_area_ratio: minimum ratio between the area of the enclosing
                          circle and the contour (contour /enclosing circle)
