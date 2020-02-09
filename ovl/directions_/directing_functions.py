@@ -11,7 +11,7 @@ def xy_center_directions(contours, image: ndarray):
     :param image: the image from which it was found
     :return: the director
     """
-    width, height, _ = image.shape
+    height, width, _ = image.shape
     x, y = geometry.contour_average_center(contours)
     x /= width / 2
     y /= height / 2
@@ -26,7 +26,7 @@ def y_center_directions(contour, image: ndarray):
     :param image: the image from which it was found
     :return: the direction to move in the y axis (-1 to 1)
     """
-    _, height, _ = image.shape
+    height, _, _ = image.shape
     _, y = geometry.contour_average_center(contour)
     y /= height / 2
     return y - 1
@@ -39,7 +39,7 @@ def x_center_directions(contour, image: ndarray):
     :param image: the image from which it was found
     :return: the direction to move in the y axis (-1 to 1)
     """
-    width, _, _ = image.shape
+    _, width, _ = image.shape
     x, _ = geometry.contour_average_center(contour)
     x /= width / 2
     return x - 1
