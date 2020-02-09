@@ -1,4 +1,6 @@
 # Copyright 2018 - 2019 Ori Ben-Moshe - All rights reserved.
+from functools import reduce
+
 import cv2
 import numpy as np
 import typing
@@ -252,18 +254,28 @@ def contour_center(contour: np.ndarray) -> Tuple[float, float]:
         area = float(moments['m00'])
         center_x, center_y = moments['m10'] / area, moments['m01'] / area
     except ZeroDivisionError:
-        raise ValueError('Contour given is too small!')
+        raise ValueError('Contour given is too small!,'
+                         'try using area_filter to remove small contours (try min_area=20)')
     return center_x, center_y
 
 
-def contour_average_center(contours: List[np.ndarray]) -> Tuple[float, float]:
+def _contour_center_sum(point_sum, contour):
     """
-    Calculates the average x,y for a list of contours
-    :param contours:
-    :return:
+    Helper function for contour_average_center
     """
-    centers = map(contour_center, contours)
-    return tuple(np.average(np.array(centers), axis=0))
+    def _average_point_reduce(first_point, second_point):
+        return first_point[0] + second_point[0], first_point[1] + second_point[1]
+    current_contour_center = contour_center(contour)
+    return _average_point_reduce(point_sum, current_contour_center)
+
+
+def contour_average_center(contours) -> Tuple[float, float]:
+    """
+    Calculates the average center of a list of contours
+    :param contours: the list of contours
+    :return: the average center  (x,y)
+    """
+    return reduce(_contour_center_sum, contours, (0, 0))
 
 
 def regular_polygon_angle(side_amount: int) -> float:
