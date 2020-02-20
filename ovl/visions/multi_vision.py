@@ -1,7 +1,7 @@
 import numpy as np
-from typing import Union, List, Any, Generator, Tuple
+from typing import Union, List, Any, Generator, Tuple, Dict
 
-from .vision import Vision
+from ..helpers_.types import VisionLike
 from .ambient_vision import AmbientVision
 from ..connections.connection import *
 from ..connections.network_location import NetworkLocation
@@ -20,13 +20,16 @@ class MultiVision:
             multi_vision.send(directions)
             ovl.display_contours(image)
     """
-    def __init__(self, vision_list: List[Union[Vision, AmbientVision, Any]], update_connection: Connection,
+
+    def __init__(self, visions: Union[List[VisionLike], Dict[Any, VisionLike]], update_connection: Connection,
                  update_location: Union[NetworkLocation, None] = None, default_vision=0):
-        self.current = vision_list[default_vision]
+        self.current = visions[default_vision]
         self.index = default_vision
-        self.vision_list = vision_list
+        self.visions = visions
         self.connection = update_connection
         self.update_location = update_location
+        self.switch_functions = {list: self._list_switch_vision,
+                                 dict: self._dict_switch_vision}
 
     def __enter__(self):
         return self
@@ -49,25 +52,49 @@ class MultiVision:
         """
         return self.current.send(data=data, *args, **kwargs)
 
-    def switch_vision(self, index: int) -> None:
+    def set_vision(self, index):
         """
-        Switches the current vision to the one given
+        Sets the current to the given index
+        :param index: the index to set
+        :return: the index
         """
-        self.index = int(index)
-        if index > len(self.vision_list) or index < 0:
-            return
-        self.current = self.vision_list[self.index]
+        self.current = self.visions[self.index]
+        self.index = index
+        return index
+
+    def _dict_switch_vision(self, index: int):
+        """
+        Switches the current vision to the one given if the visions container is a list
+        """
+        return index in self.visions
+
+    def _list_switch_vision(self, index: Any):
+        """
+        Switches the current vision to the one given if the visions container is a dictionary
+        """
+        return 0 <= index < len(self.visions)
+
+    def switch_vision(self, index: Any):
+        """
+        Switches the
+        :param index: the index of the new vision, can be an int if the container of the visions
+        is a list or any immutable object if it is a dictionary
+        :return: the index set (the index given if it is valid and
+        """
+        if self.switch_functions[type(self.visions)](index):
+            self.set_vision(index)
+            return index
+        return self.index
 
     def update_current(self) -> int:
         """
-        Switches the current vision according to the value read from the update location given
+        Reads the updated current vision from the update network location
+        and then updates the current vision
         :return: the index received
         """
         new_idx = self.connection.receive_from_location(network_location=self.update_location or {})
-        if type(new_idx) is int:
-            self.switch_vision(new_idx)
-            return new_idx
-        return self.index
+        self.switch_vision(new_idx)
+        return new_idx
 
     def start(self, yield_ratios=False) -> Generator[Tuple[List[np.ndarray], np.ndarray, Any], None, None]:
         """
