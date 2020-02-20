@@ -272,7 +272,6 @@ class Vision:
         self.camera_port = source
         if ovl_camera:
             robot_cam = Camera(source=source, image_width=image_width, image_height=image_height)
-            robot_cam.start()
         else:
             robot_cam = cv2.VideoCapture(source)
             if image_width != -1:
