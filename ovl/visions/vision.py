@@ -320,4 +320,4 @@ class Vision:
         image = self.apply_image_filters(image)
         contours = self.find_contours(image)
         contours, ratios = self.apply_all_filters(contours, verbose)
-        return contours, image if not return_ratios else contours, image, ratios
+        return (contours, image, ratios) if return_ratios else (contours, image)
