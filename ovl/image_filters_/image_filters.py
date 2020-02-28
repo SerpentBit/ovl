@@ -80,6 +80,30 @@ def change_brightness(image, change=25, hsv_image=False):
 
 
 @image_filter
+def rotate_image(image, angle=180):
+    """
+    Rotates an image by a given amount of degrees.
+    Note that the rotated image's dimensions will most likely stay the same if the angle is not 90, -90 or 180
+    :param image: the image to be rotated
+    :param angle: the angle to rotate in (positive is to the left, negative to the right)
+    :return: the rotated image
+    """
+    angle = angle % 360
+    shortcut_angles = {
+        90: rotate90_left,
+        -90: rotate90_right,
+        180: rotate180,
+        -180: rotate180
+    }
+    if angle in shortcut_angles:
+        return shortcut_angles[angle]()(image)
+    elif angle == 0:
+        return image
+    else:
+        return rotate_by_angle()(image, angle)
+
+
+@image_filter
 def rotate_by_angle(image, angle):
     """
     Rotates the given image by a given angle
@@ -124,7 +148,6 @@ def rotate90_right(image):
     return cv2.warpAffine(image, rotation_matrix, (height, width))
 
 
-@image_filter
 def rotate180(image):
     """
     Return a copy of the image rotated 180 degrees
@@ -138,18 +161,19 @@ def rotate180(image):
 
 
 @image_filter
-def non_local_mean_denoising(image, h, h_color, template_window_size, search_window_size):
+def non_local_mean_denoising(image, h, h_color, template_window_size, search_window_size, destination=None):
     parameters = {"h": h,
                   "hColor": h_color,
                   "templateWindowSize": template_window_size,
                   "seasonWindowSize": search_window_size,
+                  "dst": destination
                   }
-    return cv2.fastNlMeansDenoisingColored(image[:],
+    return cv2.fastNlMeansDenoisingColored(image,
                                            **remove_none_values(parameters))
 
 
 @image_filter
-def gaussian_blur(image, kernel_size=(3, 3), sigma_x=None, sigma_y=None, border_type=None):
+def gaussian_blur(image, kernel_size=(3, 3), sigma_x=5, sigma_y=None, border_type=None):
     parameters = {"ksize": kernel_size,
                   "sigmaX": sigma_x,
                   "sigmaY": sigma_y,
