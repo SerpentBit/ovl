@@ -52,6 +52,7 @@ class NetworkTablesConnection(Connection):
         :param table: the name of the table
         :return: the table
         """
+        from networktables import NetworkTables
         if table is None:
             table = self.table
         elif table in self.table:
