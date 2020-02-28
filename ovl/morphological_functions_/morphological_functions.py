@@ -1,12 +1,13 @@
 import cv2
 
-from ..image_filters_.kernels import rectangle_kernel, is_odd_size
+from ..image_filters_ import kernels
 from ..image_filters_.image_filter import image_filter
+from ..helpers_.remove_none_values import remove_none_values
 
 
 @image_filter
-def erosion(mask, kernel=None, iterations=None, destination=None,
-            anchor=None, border_type=None, border_values=None):
+def erosion(mask, kernel=None, iterations=1, destination=None,
+            anchor=None, border_type=None, border_value=None):
     """
      a copy of cv2.erode with default kernel of 5 by 5
     (a logical operation on the binary mask,
@@ -21,27 +22,28 @@ def erosion(mask, kernel=None, iterations=None, destination=None,
     :param iterations: Number of times the function should be applied
     :param destination: where the new image should be saved
     :param anchor: position of the anchor within the element
-    :param border_values: border value in case of a constant border
+    :param border_value: border value in case of a constant border
     :param border_type: Pixel extrapolation technique for the border of the image
     see: https://docs.opencv.org/3.4.2/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5
     :return: the eroded binary mask
     """
-    kernel = kernel or rectangle_kernel((5, 5))
-    if not is_odd_size(kernel):
-        raise ValueError("Received an invalid kernel: {} of type {}".format(kernel, type(kernel)))
-
+    if isinstance(kernel, tuple):
+        kernel = kernels.rectangle_kernel(kernel)
+    arguments = {
+        "iterations": iterations,
+        "dst": destination,
+        "anchor": anchor,
+        "borderType": border_type,
+        "borderValue": border_value
+    }
     return cv2.erode(mask,
                      kernel,
-                     dst=destination,
-                     anchor=anchor,
-                     iterations=iterations,
-                     borderValue=border_values,
-                     borderType=border_type)
+                     **remove_none_values(arguments))
 
 
 @image_filter
-def dilation(mask, kernel=None, iterations=None, destination=None,
-             anchor=None, border_type=None, border_values=None):
+def dilation(mask, kernel=(5, 5), iterations=1, destination=None,
+             anchor=None, border_type=None, border_value=None):
     """
      a copy of cv2.dilate with default kernel of 5 by 5
     (a logical operation on the binary mask,
@@ -56,19 +58,21 @@ def dilation(mask, kernel=None, iterations=None, destination=None,
     :param iterations: Number of times the function should be applied
     :param destination: where the new image should be saved
     :param anchor: position of the anchor within the element
-    :param border_values: border value in case of a constant border
+    :param border_value: border value in case of a constant border
     :param border_type: sets the technique the pixels, that exceed the boundaries of the image for the use
-                        of the kernel, are determined with (if they should mirror, copy
-    see: https://docs.opencv.org/3.4.2/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5
+                        of the kernel, are determined with (if they should mirror, copy)
+    See: https://docs.opencv.org/3.4.2/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5
     :return: the dilated binary mask
     """
-    kernel = kernel or rectangle_kernel((5, 5))
-    if not is_odd_size(kernel):
-        raise ValueError("Received an invalid kernel: {} of type {}".format(kernel, type(kernel)))
+    if isinstance(kernel, tuple):
+        kernel = kernels.rectangle_kernel(kernel)
+    arguments = {
+        "iterations": iterations,
+        "dst": destination,
+        "anchor": anchor,
+        "borderType": border_type,
+        "borderValue": border_value
+    }
     return cv2.dilate(mask,
                       kernel,
-                      dst=destination,
-                      anchor=anchor,
-                      iterations=iterations,
-                      borderValue=border_values,
-                      borderType=border_type)
+                      **remove_none_values(arguments))
