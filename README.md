@@ -1,7 +1,7 @@
 # Ovl-Python 
 Python Module for Computer Vision Object Tracking and Detection mainly for the FIRST® Robotics Competition Program
 *You can follow up on changes in for the current version in the [changelog folder](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs)*
-*There have been significant changes from the previous version - [changelog](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs/0.2.5.2_to_2020.1.1)*
+*There have been significant changes from the previous version - [changelog](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs/0.2.5.5)*
 
 ### Dependencies:
 
@@ -20,7 +20,7 @@ The following python modules are optional for certain features:
 
  - PySerial (pyserial) for `SerialConnection`
 
-OVL is officially supported for python 3.5+!
+OVL is officially supported for python 3.5+ only!
 
 Installation:
 
