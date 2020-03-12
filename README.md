@@ -1,7 +1,9 @@
 # Ovl-Python 
+ ![ovl logo](https://user-images.githubusercontent.com/45563197/76566629-d4301300-64b5-11ea-9868-40ecde73dcaa.png)
+
 Python Module for Computer Vision Object Tracking and Detection mainly for the FIRST® Robotics Competition Program
 *You can follow up on changes in for the current version in the [changelog folder](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs)*
-*There have been significant changes from the previous version - [changelog](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs/0.2.5.5)*
+*There have been significant changes from the previous version - [changelog](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs/2020.1.5)*
 
 ### Dependencies:
 
@@ -73,7 +75,7 @@ documentation and more.
 
 There are multiple code examples [here](https://github.com/1937Elysium/Ovl-Python/tree/master/code%20examples)
 
-Simply use `help` on a class/function:
+Simply use the built-in `help` on a class/function:
 ```
 help(ovl.Vision)
 
