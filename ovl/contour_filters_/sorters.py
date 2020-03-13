@@ -1,8 +1,20 @@
 # Copyright 2018 - 2019 Ori Ben-Moshe - All rights reserved.
 import cv2
+import warnings
 
 from ..math_ import geometry
 from .contour_filter import contour_filter
+
+
+@contour_filter
+def area_sort(contour_list, descending_sort=True):
+    """
+    Sorts the list of contours by contour sort, default is from large to small
+    :param contour_list: the list of contours to be sorted, list of ndarrays
+    :param descending_sort: a flag that reverses the sort order set to
+    :return: the sorted contour list
+    """
+    return sorted(contour_list, key=lambda contour: cv2.contourArea(contour), reverse=descending_sort)
 
 
 @contour_filter
@@ -47,6 +59,7 @@ def dec_area_sort(contour_list):
     :type contour_list: List or one contour (numpy array)
     :return: the contour list sorted.
     """
+    warnings.warn("dec_area_sort is deprecated, use area_sort() instead", DeprecationWarning)
     if type(contour_list) is not list:
         return [contour_list]
     return sorted(contour_list, key=lambda x: cv2.contourArea(x), reverse=True)
@@ -54,6 +67,7 @@ def dec_area_sort(contour_list):
 
 @contour_filter
 def inc_area_sort(contour_list):
+    warnings.warn("inc_area_sort is deprecated, use area_sort(descending_sort=False) instead", DeprecationWarning)
     """
      sorts the list of contours from the smallest to the largest based on area of the contour
     :param contour_list: List of Contours to filter
