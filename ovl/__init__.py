@@ -5,10 +5,7 @@ from .connections import *
 from .connections.network_location import NetworkLocation
 from .connections.network_tables_connection import NetworkTablesConnection
 from .connections.serial_connection import SerialConnection
-from .contour_filters_.conditional_contour_filter import conditional_contour_filter
-from .contour_filters_.contour_filter import contour_filter
-from .contour_filters_.contour_filters import *
-from .contour_filters_.sorters import *
+from .contour_filters_ import *
 from .directions_.directing_functions import *
 from .directions_.direction_monitors.direction_monitor import DirectionMonitor
 from .directions_.direction_monitors.stop_if_close_monitor import StopIfCloseMonitor
@@ -32,4 +29,4 @@ from .visions.ambient_vision import AmbientVision
 from .visions.multi_vision import MultiVision
 from .visions.vision import Vision
 
-__version__ = '2020.1.4'
+__version__ = '2020.1.6'
