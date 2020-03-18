@@ -11,7 +11,17 @@ class AmbientVision:
     """
     A Mash of 2 vision objects that extends one of the visions at a time.
     The visions are swapped every main_amount of update_vision calls.
-    This makes the "ambient_vision" run in the background once every multiple frames
+    This makes the "ambient_vision" run in the background once every multiple frames.
+
+    An example will be as follows:
+    vision1 = Vision(....)
+    vision2 = Vision(....)
+
+    vision_controller = AmbientVision(main_vision=vision1, ambient_vision=vision2, main_amount=3)
+
+    while True:
+        image = vision_controller.get_image()
+        contours, image = vision_controller.detect(image)
     """
 
     def __init__(self, main_vision: vision.Vision, ambient_vision: vision.Vision,
@@ -19,9 +29,13 @@ class AmbientVision:
         self._main_vision = main_vision
         self._ambient_vision = ambient_vision
         self.main_amount = main_amount
-        self._counter = 0
-        self._current_vision = main_vision
         self._is_ambient = start_ambient
+        if start_ambient:
+            self._counter = 0
+            self._current_vision = main_vision
+        else:
+            self._counter = main_amount
+            self._current_vision = ambient_vision
 
     @property
     def main_vision(self) -> vision.Vision:
@@ -99,7 +113,7 @@ class AmbientVision:
         return self._current_vision.find_contours(image, threshold, return_hierarchy)
 
     def detect(self, image: np.ndarray, verbose=False
-               ) -> Tuple[List[np.ndarray], List[float], np.ndarray]:
+               ) -> Tuple[List[np.ndarray], np.ndarray]:
         """
         Gets contours and applies all filters and returns the result,
         thus detecting the object according to the specifications in the vision,
@@ -109,6 +123,26 @@ class AmbientVision:
         :return: contours, ratio list (from the filter functions) and the filtered image
         """
         return self._current_vision.detect(image, verbose=verbose)
+
+    def send(self, data, *args, **kwargs):
+        """
+        Sends a given value to the current vision's connection object
+        :param data: the data to be sent
+        :param args: any other parameters to the specific connection object
+        :param kwargs:
+        :return: Whatever the underlying connection object returns, usually the parameter data
+        """
+        return self._current_vision.send(data, *args, **kwargs)
+
+    def get_directions(self, contours, image, sorter=None):
+        """
+        Returns the directions for the given image and contours using the current vision
+        :param contours: the final contours detected.
+        :param image: the image where the contours were detected in.
+        :param sorter: a sorter function that can be added to be applied before getting directions
+        :return: the directions
+        """
+        return self._current_vision.get_directions(contours, image, sorter)
 
     def update_vision(self):
         """

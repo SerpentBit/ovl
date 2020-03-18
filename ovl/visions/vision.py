@@ -1,4 +1,3 @@
-# Copyright 2018 - 2019 Ori Ben-Moshe - All rights reserved.
 from functools import reduce
 import time
 import math
