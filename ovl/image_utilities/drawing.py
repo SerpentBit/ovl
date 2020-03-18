@@ -220,7 +220,7 @@ def gradient_rectangle(image, start_point, dimensions, color=(0, 0, 0), grade=-1
     if angle == 360:
         angle = round(uniform(0, 359), 2)
     if grade == -1:
-        grade = choice(list_of_grades)
+        grade = choice(GRADES)
 
     def draw_straight(point, code):
         x_val, y_val = point[0], point[1]
