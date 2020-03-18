@@ -1,6 +1,6 @@
-'''
+"""
 This pipeline detects red squares calculates directions according to its
-position compared to the cebter of the image and
+position compared to the center of the image and
 returns the directions to move in (1 to -1 where 1 is a hard right and -1 is hard left)
 It also includes connection object
 Which simplifies passing data to the target that acts on the detection
@@ -9,21 +9,24 @@ NOTE: this example code uses NetworkTablesConnection
 which is used specifically for,  the FIRST Robotics Competition
 in order to connect to the RoboRIO controller
 You can easily replace it with a different connections
-'''
+"""
 
 import ovl
 
-# for other ways to connect run the following python code: help(NetworkTablesConnection)
-TEAM_NUMBER = 1937 
+# for other ways to connect to your RoboRIO run the following python code: help(NetworkTablesConnection)
+import ovl.contour_filters_.shape_filters.straight_rectangle_filter
+
+TEAM_NUMBER = "1937"
 
 threshold = ovl.RED_HSV
 
 contour_filters = [ovl.area_filter(min_area_ratio=150),
-                   ovl.straight_rectangle_filter(min_area_ratio=0.7),
-                   ovl.dec_area_sort()]
+                   ovl.contour_filters_.shape_filters.straight_rectangle_filter.straight_rectangle_filter(min_area_ratio=0.7),
+                   ovl.area_sort()]
 
-director = ovl.Director(directing_function=ovl.x_center_directions, failed_detection=9999,
-                        target_amount=1,)
+director = ovl.Director(directing_function=ovl.x_center_directions,
+                        failed_detection=9999,
+                        target_amount=1)
 
 camera = ovl.Camera(0, image_width=640, image_height=480)
 

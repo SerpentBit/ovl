@@ -2,9 +2,10 @@ import ovl
 
 # filter contours that are larger than 200 pixels
 # and are approximately a circle and then sort by size
+import ovl.contour_filters_.shape_filters.circle_filter
 
 contour_filters = [ovl.area_filter(min_area=200),
-                   ovl.circle_filter(min_area_ratio=0.7),
+                   ovl.contour_filters_.shape_filters.circle_filter.circle_filter(min_area_ratio=0.7),
                    ovl.dec_area_sort()]
 
 image_filters = [ovl.gaussain_blur()]
