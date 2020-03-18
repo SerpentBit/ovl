@@ -1,5 +1,3 @@
-# Copyright 2018-2019 Ori Ben-Moshe - All rights reserved.
-
 from ..math_.geometry import *
 from ..math_.geometry import distance_between_points as dbp, distance_from_frame as dff
 from .contour_filter import contour_filter
