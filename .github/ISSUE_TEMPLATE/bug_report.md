@@ -26,14 +26,10 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. ]
- - Version [e.g. 22]
+**System (please complete the following information):**
+ - OS: [e.g. Raspbian]
+ - Version [e.g. Stretch]
 
-**Coprocesser (please complete the following information):**
- - Device: [e.g. Raspberry PI 3 B+]
- - OS: [e.g. Stretch]
- - Version [e.g. 22]
 
 **Additional context**
 Add any other context about the problem here.
