@@ -1,7 +1,7 @@
 import cv2
 
-from ovl import contour_filter, contour_lengths_and_angles, regular_polygon_angle, polygon_area
-
+from ..contour_filter import contour_filter
+from ...math_ import geometry
 
 @contour_filter
 def polygon_filter(contour_list, side_amount=6, min_angle_ratio=0.7,
@@ -27,9 +27,9 @@ def polygon_filter(contour_list, side_amount=6, min_angle_ratio=0.7,
     if type(contour_list) is not list:
         contour_list = [contour_list]
     for current_contour in contour_list:
-        vertices, lengths, angles = contour_lengths_and_angles(current_contour, approximation_coefficient)
+        vertices, lengths, angles = geometry.contour_lengths_and_angles(current_contour, approximation_coefficient)
         if len(vertices) == side_amount:
-            target_angle = regular_polygon_angle(side_amount)
+            target_angle = geometry.regular_polygon_angle(side_amount)
             average_length = round(sum(lengths) / float(len(lengths)), 3)
             average_angle = round(sum(angles) / float(len(lengths)), 3)
             for length in lengths:
@@ -41,7 +41,7 @@ def polygon_filter(contour_list, side_amount=6, min_angle_ratio=0.7,
                         break
                 else:
                     if not 1 - ((((target_angle - average_angle) ** 2) ** 0.5) / target_angle) < min_angle_ratio:
-                        ratios = cv2.contourArea(current_contour) / polygon_area(average_length, side_amount)
+                        ratios = cv2.contourArea(current_contour) / geometry.polygon_area(average_length, side_amount)
                         if min_area_ratio <= ratios <= 1 / min_area_ratio:
                             ratio_append(ratios)
                             output_append(current_contour)

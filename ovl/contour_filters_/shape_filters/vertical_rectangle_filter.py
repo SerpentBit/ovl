@@ -1,6 +1,7 @@
 import cv2
 
-from ovl import contour_filter, rectangle_fill_ratio_straight
+from ..contour_filter import contour_filter
+from ...math_.geometry import rectangle_fill_ratio_straight
 
 
 @contour_filter

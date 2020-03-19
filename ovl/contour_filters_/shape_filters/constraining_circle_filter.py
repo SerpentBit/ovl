@@ -1,6 +1,7 @@
 import cv2
 
-from ovl import contour_filter, circle_fill_ratio
+from ..contour_filter import contour_filter
+from ...math_.geometry import circle_fill_ratio
 
 
 @contour_filter
