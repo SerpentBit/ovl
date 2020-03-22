@@ -1,0 +1,24 @@
+## 2020.1.6 Changelog
+### Changes from last patch:
+
+### Additions:
+ 
+ - New sorter function, `area_sort`, sorts a list by contour size.
+   <br>Can be reversed in order. `inc_area_sort` and `dec_area_sort` are now deprecated.
+ - Ambient vision now has a send and get_directions functions, which use the current vision's send and get directions.
+
+
+### Changes:
+
+ - Reorganized contour filters, importing the module now imports all inner filters and decorators
+
+
+###Bug Fixes:
+ 
+ - `start_ambient` argument in `AmbientVision` now correctly makes the initial current vision the ambient Vision
+ - Corrected return type hint of `AmbientVision` 
+ 
+### Docstring updates:
+
+ - Added code example to `AmbientVision`
+ - Corrected doc string return value of all direction functions
