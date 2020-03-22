@@ -2,10 +2,13 @@ import cv2
 
 from ..contour_filter import contour_filter
 from ...math_ import geometry
+from ...helpers_.types import RangedNumber
+
 
 @contour_filter
-def polygon_filter(contour_list, side_amount=6, min_angle_ratio=0.7,
-                   min_area_ratio=0.7, min_len_ratio=0.7, approximation_coefficient=0.02):
+def polygon_filter(contour_list, side_amount=6, min_angle_ratio: RangedNumber(0, 1) = 0.7,
+                   min_area_ratio: RangedNumber(0, 1) = 0.7, min_len_ratio: RangedNumber(0, 1) = 0.7,
+                   approximation_coefficient: RangedNumber(0, 1) = 0.02):
     """
      A filter that Detects regular polygon of n-sides sides
     :param contour_list: the list of contours to be filtered
@@ -24,8 +27,6 @@ def polygon_filter(contour_list, side_amount=6, min_angle_ratio=0.7,
     ratios = []
     output_append = output.append
     ratio_append = ratios.append
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         vertices, lengths, angles = geometry.contour_lengths_and_angles(current_contour, approximation_coefficient)
         if len(vertices) == side_amount:

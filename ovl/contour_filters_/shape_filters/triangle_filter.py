@@ -2,10 +2,12 @@ import cv2
 
 from ..contour_filter import contour_filter
 from ...math_.geometry import triangle_fill_ratio
+from ...helpers_.types import RangedNumber
 
 
 @contour_filter
-def triangle_filter(contour_list, min_area_ratio=0.8, approximation_coefficient=0.02):
+def triangle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.8,
+                    approximation_coefficient: RangedNumber(0, 1) = 0.02):
     """
     Receives a list of contours and returns only those that are approximately
     triangle and have 3
@@ -18,8 +20,6 @@ def triangle_filter(contour_list, min_area_ratio=0.8, approximation_coefficient=
     """
     output_list = []
     ratio_list = []
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         fill_ratio = triangle_fill_ratio(current_contour)
         peri = cv2.arcLength(current_contour, True)

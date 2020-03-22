@@ -2,11 +2,12 @@ import cv2
 
 from ..contour_filter import contour_filter
 from ...math_.geometry import rotating_rectangle_fill_ratio
-
+from ...helpers_.types import RangedNumber
 
 
 @contour_filter
-def rotated_square_filter(contour_list, min_area_ratio=0.8, min_ratio=0.95, max_ratio=1.05):
+def rotated_square_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.8, min_ratio: RangedNumber(0, 1) = 0.95,
+                          max_ratio: RangedNumber(0, 1) = 1.05):
     """
     Receives a list of contours
     and returns only the ones that are approximately square
@@ -21,8 +22,6 @@ def rotated_square_filter(contour_list, min_area_ratio=0.8, min_ratio=0.95, max_
      """
     ratio_list = []
     output_list = []
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         fill_ratio, bounding_width, bounding_height = rotating_rectangle_fill_ratio(current_contour)
         _, enclosing_radius = cv2.minEnclosingCircle(current_contour)

@@ -1,10 +1,12 @@
 from ..math_.geometry import *
 from ..math_.geometry import distance_between_points as dbp, distance_from_frame as dff
 from .contour_filter import contour_filter
+from ..helpers_.types import RangedNumber
 
 
 @contour_filter
-def image_center_filter(contour_list, image_dimensions=(320, 240), max_dist=0.7):
+def image_center_filter(contour_list, image_dimensions: typing.Tuple[int, int] = (320, 240),
+                        max_dist: RangedNumber(0, 1) = 0.7):
     """
     Filters out contours that their center is not close enough to the center of the image
     :param contour_list: a list of contours to be filtered
@@ -15,9 +17,6 @@ def image_center_filter(contour_list, image_dimensions=(320, 240), max_dist=0.7)
     output = []
     ratio = []
     image_center = (image_dimensions[0] / 2 - .5, image_dimensions[1] / 2 - .5)
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
-
     for current_contour in contour_list:
         current_contour_center = contour_center(current_contour)
         distance_ratio = (dbp(current_contour_center, image_center)
@@ -29,10 +28,10 @@ def image_center_filter(contour_list, image_dimensions=(320, 240), max_dist=0.7)
 
 
 @contour_filter
-def distance_filter(contour_list, point, min_dist=0, max_dist=50):
+def distance_filter(contour_list, point: typing.Tuple[int, int], min_dist: float = 0, max_dist: float = 50):
     """
     Filters out contours that their center is not close enough
-    to the given (x, y) point
+    to the given (x, y) point in the image
     :param contour_list: a list of contours to be filtered
     :param point: the point from which the contours should be filtered a tuple (or list) of 2 numbers.
     :param max_dist: the maximum distance from the point in pixels
@@ -41,8 +40,6 @@ def distance_filter(contour_list, point, min_dist=0, max_dist=50):
     """
     output = []
     ratio = []
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         current_contour_center = contour_center(current_contour)
         distance_from_center = dbp(current_contour_center, point)
@@ -66,8 +63,6 @@ def absolute_distance_filter(contour_list, max_dist=50, min_dist=0, image_dimens
     output = []
     ratio = []
     image_center = (image_dimensions[0] / 2 - .5, image_dimensions[1] / 2 - .5)
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         current_contour_center = contour_center(current_contour)
         distance_from_center = dbp(current_contour_center, image_center)
@@ -89,8 +84,6 @@ def length_filter(contour_list, min_length=50, max_length=76800):
     """
     output = []
     ratio = []
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         perimeter = cv2.arcLength(current_contour, False)
         if min_length >= perimeter >= max_length:
@@ -110,8 +103,6 @@ def area_filter(contour_list, min_area=200, max_area=math.inf):
     """
     output_list = []
     ratio_list = []
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         if min_area <= cv2.contourArea(current_contour) <= max_area:
             output_list.append(current_contour)
@@ -120,7 +111,8 @@ def area_filter(contour_list, min_area=200, max_area=math.inf):
 
 
 @contour_filter
-def percent_area_filter(contour_list, minimal_percent=0.002, maximum_percent=1, image_dimensions=(320, 240)):
+def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.002,
+                        maximum_percent: RangedNumber(0, 1) = 1, image_dimensions: Tuple[int, int] = (320, 240)):
     """
     Filters out contours that are not in the specified ratio to the area of the image (1% -> 0.1)
     :param contour_list: list of contours to be filtered (numpy.ndarray)

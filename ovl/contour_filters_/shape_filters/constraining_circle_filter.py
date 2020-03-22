@@ -2,10 +2,12 @@ import cv2
 
 from ..contour_filter import contour_filter
 from ...math_.geometry import circle_fill_ratio
+from ...helpers_.types import RangedNumber
 
 
 @contour_filter
-def constraining_circle_filter(contour_list, min_area_ratio=0.80, min_len_ratio=0.9):
+def constraining_circle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.80,
+                               min_len_ratio: RangedNumber(0, 1) = 0.9):
     """
     Filters out contour which are not approximately circle, also limits by radius ratio (unlike circle_filter).
     :param contour_list: list of contours (numpy arrays) to be filtered
@@ -18,8 +20,6 @@ def constraining_circle_filter(contour_list, min_area_ratio=0.80, min_len_ratio=
     ratios = []
     output_append = output.append
     ratio_append = ratios.append
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         fill_ratio, radius = circle_fill_ratio(current_contour)
         _, _, rectangle_width, rectangle_height = cv2.boundingRect(current_contour)

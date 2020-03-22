@@ -2,10 +2,11 @@ import cv2
 
 from ..contour_filter import contour_filter
 from ...math_.geometry import rectangle_fill_ratio_straight
+from ...helpers_.types import RangedNumber
 
 
 @contour_filter
-def vertical_rectangle_filter(contour_list, min_area_ratio=0.):
+def vertical_rectangle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.7):
     """
     Receives a list of contours
     and returns only the ones that are approximately a vertical rectangle
@@ -16,8 +17,6 @@ def vertical_rectangle_filter(contour_list, min_area_ratio=0.):
      """
     ratio_list = []
     output_list = []
-    if type(contour_list) is not list:
-        contour_list = [contour_list]
     for current_contour in contour_list:
         fill_ratio, contour_width, contour_height = rectangle_fill_ratio_straight(current_contour)
         peri = cv2.arcLength(current_contour, True)
