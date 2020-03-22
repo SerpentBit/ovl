@@ -1,6 +1,9 @@
 from ..partials import keyword_partial
 
 
+CONTOUR_FILTERS = set()
+
+
 def contour_filter(contour_filter_function):
     """
     A decorator function used to make a contour filter function.
@@ -48,4 +51,5 @@ def contour_filter(contour_filter_function):
         C2|
         C3| vision = Vision(..., contour_filters=contour_filters, ...)
     """
+    CONTOUR_FILTERS.add(contour_filter_function)
     return keyword_partial.keyword_partial(contour_filter_function)
