@@ -11,24 +11,26 @@ from ..math_ import image
 
 
 @contour_filter
-def image_center_filter(contour_list, image_dimensions: typing.Tuple[int, int] = (320, 240),
-                        max_dist: RangedNumber(0, 1) = 0.7):
+def image_center_filter(contour_list, image_dimensions: Tuple[int, int] = (320, 240),
+                        min_ratio: RangedNumber(0, 1) = 0.7, max_ratio: RangedNumber(0, 1) = math.inf):
     """
     Filters out contours that their center is not close enough to the center of the image
     :param contour_list: a list of contours to be filtered
     :param image_dimensions: the size of the image(width, height)
-    :param max_dist: the maximum percent of difference
+    :param min_ratio: the minimum ratio between the distance from the image center to the distance from the frame
+    :param max_ratio: the maximum ratio between the distance from the image center to the distance from the frame
     :return: list of contours within the maximum distance from the image center
     """
     output = []
     ratio = []
-    image_center = (image_dimensions[0] / 2 - .5, image_dimensions[1] / 2 - .5)
-    for current_contour in contour_list:
-        current_contour_center = contour_center(current_contour)
-        distance_ratio = (dbp(current_contour_center, image_center)
-                          / float(dff(current_contour_center, image_dimensions)))
-        if distance_ratio >= max_dist:
-            output.append(current_contour)
+    image_center = image.image_center(image_dimensions)
+    for contour in contour_list:
+        current_contour_center = contour_center(contour)
+        distance_from_image_center = distance_between_points(current_contour_center, image_center)
+        distance_from_image_frame = distance_from_frame(current_contour_center, image_dimensions)
+        distance_ratio = distance_from_image_center / distance_from_image_frame
+        if min_ratio <= distance_ratio <= max_ratio:
+            output.append(contour)
             ratio.append(distance_ratio)
     return output, ratio
 
