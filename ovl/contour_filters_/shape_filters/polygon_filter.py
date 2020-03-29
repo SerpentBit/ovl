@@ -1,5 +1,6 @@
 import cv2
 
+import ovl.math_.contours
 from ..contour_filter import contour_filter
 from ...math_ import geometry
 from ...helpers_.types import RangedNumber
@@ -28,7 +29,7 @@ def polygon_filter(contour_list, side_amount=6, min_angle_ratio: RangedNumber(0,
     output_append = output.append
     ratio_append = ratios.append
     for current_contour in contour_list:
-        vertices, lengths, angles = geometry.contour_lengths_and_angles(current_contour, approximation_coefficient)
+        vertices, lengths, angles = ovl.math_.contours.contour_lengths_and_angles(current_contour, approximation_coefficient)
         if len(vertices) == side_amount:
             target_angle = geometry.regular_polygon_angle(side_amount)
             average_length = round(sum(lengths) / float(len(lengths)), 3)

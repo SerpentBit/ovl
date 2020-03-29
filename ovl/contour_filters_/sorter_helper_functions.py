@@ -11,3 +11,9 @@ def contour_and_point_distance(point):
     :return:
     """
     return partial(geometry.distance_between_points, point)
+
+
+def contour_center_and_point_distance(point):
+    def contour_center_distance(contour, second_point):
+        return geometry.distance_between_points(geometry.contour_center(contour), second_point)
+    return partial(contour_center_distance, point)

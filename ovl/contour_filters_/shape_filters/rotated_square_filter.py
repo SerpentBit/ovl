@@ -1,7 +1,7 @@
 import cv2
 
 from ..contour_filter import contour_filter
-from ...math_.geometry import rotating_rectangle_fill_ratio
+from ...math_.shape_fill_ratios import rotating_rectangle_fill_ratio
 from ...helpers_.types import RangedNumber
 
 

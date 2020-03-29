@@ -1,5 +1,5 @@
 from ..contour_filter import contour_filter
-from ...math_.geometry import circle_fill_ratio
+from ...math_.shape_fill_ratios import circle_fill_ratio
 from ...helpers_.types import RangedNumber
 
 

@@ -1,5 +1,6 @@
 from numpy import ndarray
 
+import ovl.math_.contours
 from ..math_ import geometry
 
 
@@ -11,7 +12,7 @@ def xy_center_directions(contours, image: ndarray):
     :return: the normalized screen space x and y coordinates of your final targets
     """
     height, width, _ = image.shape
-    x, y = geometry.contour_average_center(contours)
+    x, y = ovl.math_.contours.contour_average_center(contours)
     x /= width / 2
     y /= height / 2
     return x - 1, y - 1
@@ -26,7 +27,7 @@ def y_center_directions(contours, image: ndarray):
     :return: the normalized screen space y coordinate of your final targets
     """
     height, _, _ = image.shape
-    _, y = geometry.contour_average_center(contours)
+    _, y = ovl.math_.contours.contour_average_center(contours)
     y /= height / 2
     return y - 1
 
@@ -39,7 +40,7 @@ def x_center_directions(contours, image: ndarray):
     :return: the normalized screen space x coordinate of your final targets
     """
     _, width, _ = image.shape
-    x, _ = geometry.contour_average_center(contours)
+    x, _ = ovl.math_.contours.contour_average_center(contours)
     x /= width / 2
     return x - 1
 
@@ -54,7 +55,7 @@ def center_directions(contours, image: ndarray):
     :param contours: the final contours - your targets
     :param image: the image from which it was found
     """
-    return geometry.contour_average_center(contours)
+    return ovl.math_.contours.contour_average_center(contours)
 
 
 def target_amount_directions(contours, image: ndarray):
