@@ -15,7 +15,6 @@ from .display_image.display_image import display_image
 from .exceptions_ import exceptions
 from .hsv_calibration_.hsv_calibration import HSVCalibration
 from .image_filters_.image_filters import *
-from .image_utilities import drawing
 from .image_utilities.naming_conventions import *
 from .image_utilities.photo_array import photo_array
 from .math_ import geometry
