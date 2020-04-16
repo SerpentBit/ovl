@@ -8,6 +8,8 @@ import cv2
 
 
 class Camera:
+    __slots__ = ("stream", "name", "grabbed", "frame", "stopped", "camera_thread", "start_immediately")
+
     def __init__(self, source: Union[str, int, cv2.VideoCapture] = 0,
                  image_width: int = 320, image_height: int = 240, start_immediately=True):
         """
