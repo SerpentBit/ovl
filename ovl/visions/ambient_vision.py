@@ -34,7 +34,7 @@ class AmbientVision:
         vision_controller.update_vision()
 
 
-    you can get the current vision object by
+    you can get the current vision object using vision_controller.current_vision
 
 
     """
@@ -44,7 +44,7 @@ class AmbientVision:
         self.main_vision = main_vision
         self.ambient_vision = ambient_vision
         self.main_amount = main_amount
-        self._is_ambient = start_ambient
+        self.is_ambient = start_ambient
         if start_ambient:
             self.counter = 0
             self.current_vision = main_vision
@@ -67,12 +67,6 @@ class AmbientVision:
     @property
     def directions(self):
         return self.current_vision.director
-
-    def is_ambient(self) -> bool:
-        """
-        Returns true if the current vision is the ambient one
-        """
-        return self._is_ambient
 
     def get_image(self) -> np.ndarray:
         """
