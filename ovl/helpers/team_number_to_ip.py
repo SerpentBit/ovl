@@ -9,8 +9,7 @@ def team_number_to_ip(team_number: typing.Union[str, int]):
     """
 
     team_number = str(team_number)
-    first_numbers = team_number[:-2]
-    second_numbers = team_number[-2:]
+    first_numbers, second_numbers = team_number[:-2], team_number[-2:]
     if first_numbers == "":
         first_numbers = 0
     team_number = "{}.{}".format(first_numbers, second_numbers)

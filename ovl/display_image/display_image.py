@@ -22,13 +22,35 @@ def stitch_images(images):
 
 def show_image(image, window_name, delay):
     cv2.imshow(window_name, image)
-    pressed_key = cv2.waitKey(delay)
-    return pressed_key
+    return cv2.waitKey(delay)
 
 
 def display_image(image, window_name='image', delay=0, resizable=False):
     """
-     The function displays the image whose path is received.
+    The function displays an image
+
+    The function is based on cv2.imread()
+    is able to open both paths and numpy arrays (already opened) images
+
+    When using this function to display images in a loop, delay=0 will cause the loop to stop until
+    a key is pressed.
+
+    .. code-block:: python
+
+        for frame in video_frames:
+            ovl.display_image(frame, delay=1)
+            # the video will play normally in one window
+
+    If delay is 0:
+
+    .. code-block:: python
+
+        for frame in video_frames:
+            ovl.display_image(frame)
+            # the video will freeze until a key is pressed
+
+
+
     :param image: Represents an image path (string), an already open image in the for of a numpy array (ndarray)
                   or a list of images (strings and arrays are valid)
     :param window_name: Name of the Window that displays the images

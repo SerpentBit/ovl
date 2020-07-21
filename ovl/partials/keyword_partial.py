@@ -17,6 +17,8 @@ def keyword_partial(target_function):
 
     For a given function:
 
+    .. code-block:: python
+
         @keyword_partial
         def area_filter(contours, min_area, max_area):
             output_list = []
@@ -32,22 +34,27 @@ def keyword_partial(target_function):
 
     Instead of calling the function like other functions:
 
-        A1| area_filter(list_of_contours, min_area=200, max_area=5000)
+    .. code-block:: python
+
+        area_filter(list_of_contours, min_area=200, max_area=5000)
 
     The function needs to be called as follows:
 
-        B1| activator = area_filter(min_area=200, max_area=5000)
-        B2|
-        B3| final_value = activator(list_of_contours)
+    .. code-block:: python
+
+        activator = area_filter(min_area=200, max_area=5000)
+
+        final_value = activator(list_of_contours)
 
 
     Vision objects use functions that are decorated with keyword_partial (contour_filter, image_filter,
-    you can just pass the result of line B1 to the Vision object
-    like so:
+    you can just pass the activator to the Vision object like so:
 
-        C1| contour_filters = [some_filter(parameter1=5, parameter2=3), ovl.circle_filter(min_area_ratio=0.75)]
-        C2|
-        C3| vision = Vision(...,  contours_filters=contour_filters, ...)
+    .. code-block:: python
+
+       target_filters = [some_filter(parameter1=5, parameter2=3), ovl.circle_filter(min_area_ratio=0.75)]
+
+       vision = Vision(...,  contours_filters=target_filters, ...)
 
     :param target_function: the function to be preloaded
     :return: a function (argument loader) that preloads (passes only some of the arguments)

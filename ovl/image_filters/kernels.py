@@ -4,9 +4,10 @@ import cv2
 
 def validate_odd_size(size):
     """
-     validates that a kernel shape is of odd  ints and of size 2
+    Validates that a kernel shape is of odd  ints and of size 2
+
     :param size: the shape (size) to be checked
-    :return: doesnt raise an error if it's ok.
+    :return: False if size is invalid
     """
     if type(size) not in (list, tuple):
         return False
@@ -20,6 +21,7 @@ def validate_odd_size(size):
 def is_odd_size(size) -> bool:
     """
     Validates that a kernel shape is of odd  ints and of size 2
+
     :param size: the shape (size) to be checked
     :return: doesnt raise an error if it's ok.
     """
@@ -33,14 +35,16 @@ def is_odd_size(size) -> bool:
 
 
 def cross_kernel(size):
-    """
+    r"""
     Returns a cross (ones in a cross) kernel for morphological functions
     Example of a (5,5) cross:
-    | 0 0 1 0 0 |
-    | 0 0 1 0 0 |
-    | 1 1 1 1 1 |
-    | 0 0 1 0 0 |
-    | 0 0 1 0 0 |
+
+    | \| 0 0 1 0 0  \|
+    | \| 0 0 1 0 0  \|
+    | \| 1 1 1 1 1  \|
+    | \| 0 0 1 0 0  \|
+    | \| 0 0 1 0 0  \|
+
     :param size:  a tuple of size 2 of 2 odd integers denoting the size of the kernel
     f.g. (5, 5)
     :return: the numpy.array of the cross shape
@@ -50,15 +54,17 @@ def cross_kernel(size):
 
 
 def rectangle_kernel(size):
-    """
+    r"""
     Returns a rectangle (all ones) kernel for morphological functions
     Example of a (5,5) rectangle:
-    | 1 1 1 1 1 |
-    | 1 1 1 1 1 |
-    | 1 1 1 1 1 |
-    | 1 1 1 1 1 |
-    | 1 1 1 1 1 |
-    :param size:  a tuple of size 2 of 2 odd integers denoting the size of the kernel
+
+    | \| 1 1 1 1 1 \|
+    | \| 1 1 1 1 1 \|
+    | \| 1 1 1 1 1 \|
+    | \| 1 1 1 1 1 \|
+    | \| 1 1 1 1 1 \|
+
+    :param size: a tuple of size 2 of 2 odd integers denoting the size of the kernel
     f.g. (5, 5)
     :return: the numpy.array of the cross shape
     """
@@ -66,14 +72,16 @@ def rectangle_kernel(size):
 
 
 def ellipse_kernel(size):
-    """
+    r"""
     Returns an ellipse (ones in the shape of an ellipse) kernel for morphological functions
     Example of a (5,5) ellipse:
-    | 0 0 1 0 0 |
-    | 1 1 1 1 1 |
-    | 1 1 1 1 1 |
-    | 1 1 1 1 1 |
-    | 0 0 1 0 0 |
+
+    | \| 0 0 1 0 0 \|
+    | \| 1 1 1 1 1 \|
+    | \| 1 1 1 1 1 \|
+    | \| 1 1 1 1 1 \|
+    | \| 0 0 1 0 0 \|
+
     :param size: a tuple of size 2 of 2 odd integers denoting the size of the kernel
     f.g. (5, 5)
     :return: the kernel
@@ -83,14 +91,16 @@ def ellipse_kernel(size):
 
 
 def horizontal_line_kernel(size):
-    """
+    r"""
     Returns an horizontal line (a horizontal line of ones) kernel for morphological functions
     Example of a (5,5) horizontal line:
-    | 0 0 0 0 0 |
-    | 0 0 0 0 0 |
-    | 1 1 1 1 1 |
-    | 0 0 0 0 0 |
-    | 0 0 0 0 0 |
+
+    | \| 0 0 0 0 0 \|
+    | \| 0 0 0 0 0 \|
+    | \| 1 1 1 1 1 \|
+    | \| 0 0 0 0 0 \|
+    | \| 0 0 0 0 0 \|
+
     :param size: a tuple of size 2 of 2 odd integers denoting the size of the kernel
     f.g. (5, 5)
     :return: the kernel
@@ -102,14 +112,15 @@ def horizontal_line_kernel(size):
 
 
 def vertical_line_kernel(size):
-    """
+    r"""
     Returns a vertical line (a vertical line of ones) kernel for morphological functions
     Example of a (5,5) vertical line:
-    | 0 0 1 0 0 |
-    | 0 0 1 0 0 |
-    | 0 0 1 0 0 |
-    | 0 0 1 0 0 |
-    | 0 0 1 0 0 |
+
+    | \| 0 0 1 0 0 \|
+    | \| 0 0 1 0 0 \|
+    | \| 0 0 1 0 0 \|
+    | \| 0 0 1 0 0 \|
+    | \| 0 0 1 0 0 \|
 
     :param size: a tuple of size 2 of 2 odd integers denoting the size of the kernel
     f.g. (5, 5)

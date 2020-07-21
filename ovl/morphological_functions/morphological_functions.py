@@ -1,8 +1,8 @@
 import cv2
 
-from ..image_filters_ import kernels
-from ..image_filters_.image_filter import image_filter
-from ..helpers_.remove_none_values import remove_none_values
+from ..image_filters import kernels
+from ..image_filters.image_filter import image_filter
+from ..helpers.remove_none_values import remove_none_values
 
 
 @image_filter

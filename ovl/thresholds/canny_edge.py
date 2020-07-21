@@ -2,7 +2,7 @@ import cv2
 import json
 import numpy as np
 
-from ..helpers_.remove_none_values import remove_none_values
+from ..helpers.remove_none_values import remove_none_values
 from .threshold import Threshold
 
 
@@ -48,4 +48,4 @@ class CannyEdge(Threshold):
     @staticmethod
     def deserialize_canny_threshold(serialized_canny_threshold: str):
         canny_dictionary = json.loads(serialized_canny_threshold)
-        return CannyEdgeThreshold(**canny_dictionary)
+        return CannyEdge(**canny_dictionary)

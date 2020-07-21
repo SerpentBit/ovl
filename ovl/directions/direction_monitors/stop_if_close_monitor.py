@@ -1,7 +1,7 @@
 import typing
 import numpy as np
 
-from ...math_ import geometry
+from ...math import contours
 from ..direction_monitors.direction_monitor import DirectionMonitor
 
 
@@ -16,7 +16,7 @@ class StopIfCloseMonitor(DirectionMonitor):
                             it depends on your object size, but 40% of the image size is usually enough
                             so for an image the size of 320 x 240 it will be 320 * 240 * 0.4
         :param value_sent: the value returned if the object is close enough
-        :param priority: a boolean that notes if this monitor should take priority (and stop following monitors from
+        :param priority: a boolean that notes if this monitor should take priority (and stop consecutive monitors from
                          being called)
         WARNING: Setting priority to true can cause 'unexpected' behaviour as a result of stopping
         """
@@ -30,6 +30,14 @@ class StopIfCloseMonitor(DirectionMonitor):
 
     def monitor(self, directions: typing.Any, target_contours: typing.List[np.ndarray],
                 image: np.ndarray, mask: np.ndarray) -> typing.Any:
-        if geometry.target_size(target_contours) >= self.minimum_size:
+        """
+
+        :param directions: the directions received from directing function / from the previous direction monitors
+        :param target_contours: the objects found in the image
+        :param image: the image where the objects where found in
+        :param mask:
+        :return:
+        """
+        if contours.target_size(target_contours) >= self.minimum_size:
             return self.value_sent
         return directions

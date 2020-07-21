@@ -18,20 +18,20 @@ class AmbientVision:
 
     An example will be as follows:
 
-    vision1 = Vision(....)
+    .. code-block:: python
 
-    vision2 = Vision(....)
+        vision1 = Vision(....)
 
-    vision_controller = AmbientVision(main_vision=vision1, ambient_vision=vision2, main_amount=3)
+        vision2 = Vision(....)
 
+        vision_controller = AmbientVision(main_vision=vision1, ambient_vision=vision2, main_amount=3)
 
-    while True:
+        while True:
+            image = vision_controller.get_image()
 
-        image = vision_controller.get_image()
+            contours, image = vision_controller.detect(image)
 
-        contours, image = vision_controller.detect(image)
-
-        vision_controller.update_vision()
+            vision_controller.update_vision()
 
 
     you can get the current vision object using vision_controller.current_vision
@@ -168,8 +168,8 @@ class AmbientVision:
         if self.counter < self.main_amount:
             self.counter += 1
             self.current_vision = self.main_vision
-            self._is_ambient = False
+            self.is_ambient = False
         else:
             self.counter = 0
             self.current_vision = self.ambient_vision
-            self._is_ambient = True
+            self.is_ambient = True

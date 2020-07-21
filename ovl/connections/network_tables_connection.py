@@ -1,7 +1,7 @@
 from typing import Any, Union
 
 from .connection import Connection
-from ..helpers_.team_number_to_ip import team_number_to_ip
+from ..helpers.team_number_to_ip import team_number_to_ip
 
 NetworkTables = None
 
@@ -12,6 +12,8 @@ class NetworkTablesConnection(Connection):
 
     A connection to NetworkTables (The FRC network protocol)
     NetworkTables are a group of Dictionaries (Hash tables) that are shared by all computers in the network.
+    In the case of the FRC it is created by the RoboRIO and shared by other
+    computers on the network like: the driver station, any connected co-processor (like a raspberry pi) etc.
     NetworkTablesConnection creates defaults to writing to the Vision table.
     You can then read from /vision/vision_result the result sent.
     For Additional information about NetworkTables
@@ -27,10 +29,12 @@ class NetworkTablesConnection(Connection):
               - roboRIO-1234-FRC.local
               - 10.12.34.2 (10.TE.AM.2)
               - a dynamic ip of the roborio
+
         NOTE: When using static ip (relevant inputs: 1234 and 10.12.34.2)
               make sure both your computer and the roborio are set to have a static ip
               for more information:
               https://docs.wpilib.org/en/latest/docs/networking/networking-introduction/index.html
+
         :param table_name: the table to use as a default "Vision" is recommended
         :param table_key: the key in the table to use as a default
         """
@@ -49,7 +53,9 @@ class NetworkTablesConnection(Connection):
         Fetches a table by name, if table exists in cache it returns
         the cached table instead.
         If table is none it returns the default table (set in the constructor)
-        :param table: the name of the table
+
+        :param table: the name of the table examples: "usage", "SmartDashboard", "vision"
+        if it doesnt exist it is created
         :return: the table
         """
         from networktables import NetworkTables
@@ -63,14 +69,15 @@ class NetworkTablesConnection(Connection):
             self.table_cache[table_name] = table
         return table
 
-    def send(self, data, table_key: Union[str, None] = None,
-             table: Union[str, None] = None, *args, **kwargs) -> None:
+    def send(self, data, table_key: Union[str, Any] = None,
+             table: Union[str, Any] = None, *args, **kwargs) -> None:
         """
         A function used to put a value in a given table and key in the connected
         NetworkTable.
         For more information about NetworkTables functionality
         please refer to:
         https://docs.wpilib.org/en/latest/docs/software/networktables/networktables-intro.html
+
         :param data: the data to send (post)
         :param table_key: the specific table to read from
         :param table: the table to receive from. Examples are SmartDashboard
@@ -83,8 +90,25 @@ class NetworkTablesConnection(Connection):
     def receive(self, table_key: str = None, table: str = None,
                 default_value=None, *args, **kwargs) -> Any:
         """
-        Gets a value from network tables from which to read a value
-        :param table_key: the specific table to read from
+        Gets a value from a specific key and table, can be used to read values shared by
+        all computers in the network.
+
+        Default table and table keys are the ones initialized.
+
+        .. code-block:: python
+
+            import ovl
+
+            TEAM_NUMBER = "1937"
+            connection = ovl.NetworkTablesConnection(TEAM_NUMBER)
+
+            connection.send("hello", table_key="my_key")
+
+            print(connection.receive(table_key="my_key"))
+            # prints "hello"
+
+
+        :param table_key: the specific table to read from, None
         :param table: the table to receive from (Use "Vision" if you are not sure)
         :param default_value: the value to return if the given table key does not exist
         """

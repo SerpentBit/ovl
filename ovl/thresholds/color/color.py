@@ -1,4 +1,3 @@
-# Copyright 2018-2019 Ori Ben-Moshe - All rights reserved.
 import numpy as np
 import copy
 import cv2
