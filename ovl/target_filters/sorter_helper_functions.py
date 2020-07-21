@@ -1,6 +1,7 @@
 from functools import partial
 
-from ..math_ import geometry
+from ..math import contours
+from ..math import geometry
 
 
 def contour_and_point_distance(point):
@@ -15,5 +16,5 @@ def contour_and_point_distance(point):
 
 def contour_center_and_point_distance(point):
     def contour_center_distance(contour, second_point):
-        return geometry.distance_between_points(geometry.contour_center(contour), second_point)
+        return geometry.distance_between_points(contours.contour_center(contour), second_point)
     return partial(contour_center_distance, point)

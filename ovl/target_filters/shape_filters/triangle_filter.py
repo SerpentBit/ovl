@@ -1,8 +1,8 @@
 import cv2
 
 from ..contour_filter import contour_filter
-from ...math_.shape_fill_ratios import triangle_fill_ratio
-from ...helpers_.types import RangedNumber
+from ...math.shape_fill_ratios import triangle_fill_ratio
+from ...helpers.types import RangedNumber
 
 
 @contour_filter
@@ -11,6 +11,7 @@ def triangle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.8,
     """
     Receives a list of contours and returns only those that are approximately
     triangle and have 3
+
     :param approximation_coefficient: the approximation coefficient affects
     how the contour's perimeter is approximated, the larger the number is (out of 1) the more the approximation of
     the contour is a line

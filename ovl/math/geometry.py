@@ -1,13 +1,5 @@
-# Copyright 2018 - 2019 Ori Ben-Moshe - All rights reserved.
-
-import cv2
 import numpy as np
-import typing
 import math
-from typing import Union
-
-from ovl import contour_center
-from ovl.math_.shape_fill_ratios import circle_fill_ratio
 
 
 def y_intersection(line_slope, intercept, x_val):
@@ -30,44 +22,6 @@ def x_intersection(line_slope, intercept, y_val):
     :return:
     """
     return (y_val - intercept) / float(line_slope), y_val if line_slope != 0 else (0, y_val)
-
-
-def horizon_angle(point: Union[np.ndarray, typing.Tuple[int, int]], field_of_view: float, image_width: int) -> float:
-    """
-     returns the angle compared to the center of the image for a given field of view image width and point
-    :param point: the contour or its center
-    :param field_of_view: the horizontal field of view
-    :param image_width: the image width
-    :return: the angle compared to the center of the image , negative left positive right.
-    """
-    point = point[0] if type(point) in (tuple, list, set) else point
-    x_value = contour_center(point)[0] if type(point) is np.ndarray else point
-    angle = math.atan((x_value - (image_width - 1) / 2) / float(focal_length(image_width, field_of_view)))
-    return float(math.degrees(angle))
-
-
-def vertical_angle(point: Union[np.ndarray, typing.Tuple[int, int]], field_of_view: float, image_height: int) -> float:
-    """
-     returns the angle compared to the center of the image for a given field of view image height and point
-    :param point: the x val or center
-    :param field_of_view: the vertical field of view
-    :param image_height: the image height
-    :return: the angle compared to the center of the image , negative up positive down6.
-    """
-    point = point[1] if type(point) in (tuple, list, set) else point
-    y_val = contour_center(point)[1] if type(point) is np.ndarray else point
-    angle = math.atan((y_val - (image_height - 1) / 2) / float(focal_length(image_height, field_of_view)))
-    return float(math.degrees(angle))
-
-
-def focal_length(image_width, field_of_view):
-    """
-    Calculates the focal length in pixels of the camera for a given an image width and field of view
-    :param image_width: width of the image in pixels
-    :param field_of_view:
-    :return: calculates the focal length, a float
-    """
-    return image_width / float((2 * math.tan(math.radians(float(field_of_view / 2)))))
 
 
 def slope(first_point, second_point):
@@ -143,21 +97,6 @@ def polygon_area(side_length, amount_of_sides):
     """
     angle = 180 / amount_of_sides
     return 0.25 * amount_of_sides * (side_length ** 2) * (math.cos(math.radians(angle)) / math.sin(math.radians(angle)))
-
-
-def circle_rating(contour, area_factor=0.9, radius_factor=0.8):
-    """
-     returns a rating of how close is the circle to being a circle
-    :param contour: the contour that its rating is calculated
-    :param area_factor: the factor (p-value) that separates an area ratio that is a circle and one that isn't
-    :param radius_factor: the factor (p-value) that separates an radius ratio that is a circle and one that isn't
-    :return:
-    """
-    fill_ratio, radius = circle_fill_ratio(contour)
-    _, _, width, height = cv2.boundingRect(contour)
-    radius_ratio = ((((radius * 2) ** 2) / float(width) * height) ** 0.5)
-    rating = (radius_ratio * radius_factor) * (fill_ratio * area_factor)
-    return rating
 
 
 def law_of_cosine(first_point, second_point, third_point) -> float:

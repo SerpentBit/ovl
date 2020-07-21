@@ -1,19 +1,18 @@
 import cv2
 
 from ..contour_filter import contour_filter
-from ...math_.shape_fill_ratios import rectangle_fill_ratio_straight
-from ...helpers_.types import RangedNumber
+from ...math.shape_fill_ratios import rectangle_fill_ratio_straight
+from ...helpers.types import RangedNumber
 
 
 @contour_filter
 def straight_square_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.8,
                            min_len_ratio: RangedNumber(0, 1) = 0.95):
     """
-    Receives a list of contours and returns
-    only the ones that are approximately square
+    Receives a list of contours and returns only the ones that are approximately square
     Relation checked is [minimum ratio < (Circle radius / width * height * (square root of 2)) < maximum ratio]
+
     :param contour_list: List of Contours to filter
-    :type contour_list: List
     :param min_len_ratio: maximum ratio between radius and sides of bounding rectangle
     :param min_area_ratio: the minimum ratio between the area of the contour and the area of the bounding shape
     :return: the contour list filtered.

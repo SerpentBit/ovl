@@ -5,7 +5,8 @@ from typing import Tuple
 import cv2
 import numpy as np
 
-from ovl import distance_between_points, law_of_cosine
+from .geometry import distance_between_points, law_of_cosine
+from .shape_fill_ratios import circle_fill_ratio
 
 
 def target_size(contours: typing.List[np.ndarray]) -> float:
@@ -56,8 +57,10 @@ def _contour_center_sum(point_sum, contour):
     """
     Helper function for contour_average_center
     """
+
     def _average_point_reduce(first_point, second_point):
         return first_point[0] + second_point[0], first_point[1] + second_point[1]
+
     current_contour_center = contour_center(contour)
     return _average_point_reduce(point_sum, current_contour_center)
 
@@ -68,7 +71,10 @@ def contour_average_center(contours) -> Tuple[float, float]:
     :param contours: the list of contours
     :return: the average center  (x,y)
     """
-    return reduce(_contour_center_sum, contours, (0, 0))
+    contour_amount = len(contours)
+    point_sum = reduce(_contour_center_sum, contours, (0, 0))
+    average = (point_sum[0] / contour_amount)
+    return average
 
 
 def contour_approximation(contour, approximation_coefficient=0.02):
@@ -99,13 +105,33 @@ def contour_lengths_and_angles(contour, approximation_coefficient=0.02):
         vertices.append(vertex)
 
     for index, point in enumerate(vertices):
-        if index != len(approximation) - 1:
-            current_length = distance_between_points(point, vertices[index + 1])
-            current_angle = law_of_cosine(vertices[index - 1], point, vertices[index + 1])
-        else:
-            current_length = distance_between_points(point, vertices[0])
-            current_angle = law_of_cosine(vertices[index - 1], point, vertices[0])
+        vertex_index = index + 1 if index != len(approximation) - 1 else 0
+        current_length = distance_between_points(point, vertices[vertex_index])
+        current_angle = law_of_cosine(vertices[index - 1], point, vertices[vertex_index])
         lengths.append(current_length)
         angles.append(current_angle)
 
     return vertices, lengths, angles
+
+
+def calculate_normalized_screen_space(contours, image):
+    height, width, _ = image.shape
+    x, y = contour_average_center(contours)
+    x /= width / 2
+    y /= height / 2
+    return x - 1, y - 1
+
+
+def circle_rating(contour, area_factor=0.9, radius_factor=0.8):
+    """
+     returns a rating of how close is the circle to being a circle
+    :param contour: the contour that its rating is calculated
+    :param area_factor: the factor (p-value) that separates an area ratio that is a circle and one that isn't
+    :param radius_factor: the factor (p-value) that separates an radius ratio that is a circle and one that isn't
+    :return:
+    """
+    fill_ratio, radius = circle_fill_ratio(contour)
+    _, _, width, height = cv2.boundingRect(contour)
+    radius_ratio = ((((radius * 2) ** 2) / float(width) * height) ** 0.5)
+    rating = (radius_ratio * radius_factor) * (fill_ratio * area_factor)
+    return rating

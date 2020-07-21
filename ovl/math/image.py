@@ -1,6 +1,7 @@
 import numpy as np
 
-from ovl import contour_center, slope, distance_between_points, y_intersection, x_intersection
+from .contours import contour_center, distance_between_points
+from .geometry import slope, x_intersection, y_intersection
 
 
 def image_center(image_dimensions):
@@ -22,5 +23,5 @@ def distance_from_frame(point, image_dimensions):
     xs = (image_dimensions[0] - 1, 0)
     ys = (image_dimensions[1] - 1, 0)
     y_distances = [distance_between_points(y_intersection(line_slope, intercept, y), point) for y in ys]
-    x_distances = [distance_between_points(x_intersection(slope, intercept, x), point) for x in xs]
+    x_distances = [distance_between_points(x_intersection(line_slope, intercept, x), point) for x in xs]
     return min(y_distances + x_distances)

@@ -2,12 +2,12 @@ from typing import Tuple
 import math
 import cv2
 
-from ..math_.contours import contour_center
-from ..math_.geometry import distance_between_points
-from ..math_.image import distance_from_frame
+from ..math.contours import contour_center
+from ..math.geometry import distance_between_points
+from ..math.image import distance_from_frame
 from .contour_filter import contour_filter
-from ..helpers_.types import RangedNumber
-from ..math_ import image
+from ..helpers.types import RangedNumber
+from ..math import image
 
 
 @contour_filter
@@ -15,6 +15,7 @@ def image_center_filter(contour_list, image_dimensions: Tuple[int, int] = (320, 
                         min_ratio: RangedNumber(0, 1) = 0.7, max_ratio: RangedNumber(0, 1) = math.inf):
     """
     Filters out contours that their center is not close enough to the center of the image
+
     :param contour_list: a list of contours to be filtered
     :param image_dimensions: the size of the image(width, height)
     :param min_ratio: the minimum ratio between the distance from the image center to the distance from the frame
@@ -40,6 +41,7 @@ def distance_filter(contour_list, point: Tuple[int, int], min_dist: float = 0, m
     """
     Filters out contours that their center is not close enough
     to the given (x, y) point in the image
+
     :param contour_list: a list of contours to be filtered
     :param point: the point from which the contours should be filtered a tuple (or list) of 2 numbers.
     :param max_dist: the maximum distance from the point in pixels
@@ -62,6 +64,7 @@ def absolute_distance_filter(contour_list, max_dist=50, min_dist=0, image_dimens
     """
     Filters out contours that their center is not close enough
     to the center of the image
+
     :param contour_list: a list of contours to be filtered
     :param image_dimensions: the size of the image(width, height)
     :param max_dist: the maximum distance from the center in pixels
@@ -85,6 +88,7 @@ def length_filter(contour_list, min_length=50, max_length=76800):
     """
     Receives a list of contours and removes ones that are not long enough
     Note: for "open" contours only!
+
     :param contour_list: list of contours (numpy array) to be filtered
     :param min_length: minimum length of a contour (in pixels)
     :param max_length: maximum length of a contour (in pixels)
@@ -104,6 +108,7 @@ def length_filter(contour_list, min_length=50, max_length=76800):
 def area_filter(contour_list, min_area: float = 200, max_area: float = math.inf):
     """
     Filters contours that are not within the threshold of area (in pixels)
+
     :param max_area: maximum area of a contour (Inclusive) default is no limit (infinity)
     :param min_area: minimum area of a contour (Inclusive) set to 0 for no lower limit.
     :param contour_list: List of Contours to filter
@@ -124,11 +129,11 @@ def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.00
                         maximum_percent: RangedNumber(0, 1) = 1, image_dimensions: Tuple[int, int] = (320, 240)):
     """
     Filters out contours that are not in the specified ratio to the area of the image (1% -> 0.1)
+
     :param contour_list: list of contours to be filtered (numpy.ndarray)
     :param minimal_percent: the minimal ratio between the contour area and the image area
     :param maximum_percent: the maximum ratio between the contour area and the image area
     :param image_dimensions: The (width, height) of the image in pixels,
-    :return:
     """
     output, ratios = [], []
     output_append = output.append
@@ -147,6 +152,15 @@ def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.00
 
 @contour_filter
 def size_ratio_filter(contours, min_ratio: float = 2, max_ratio: float = math.inf, reverse_ratio=False):
+    """
+    Sorts out contours by the ratio between their width and height
+
+    :param contours: the contours to be filtered
+    :param min_ratio: the minimum ratio
+    :param max_ratio: the maximum ratio default
+    :param reverse_ratio: reversed the ratio to be height to width
+    :return: the filtered list
+    """
     output, ratios = [], []
     output_append = output.append
     ratios_append = ratios.append

@@ -1,8 +1,8 @@
 import cv2
 
 from ..contour_filter import contour_filter
-from ...math_.shape_fill_ratios import rotating_rectangle_fill_ratio
-from ...helpers_.types import RangedNumber
+from ...math.shape_fill_ratios import rotating_rectangle_fill_ratio
+from ...helpers.types import RangedNumber
 
 
 @contour_filter
@@ -12,14 +12,13 @@ def rotated_square_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.8
     Receives a list of contours
     and returns only the ones that are approximately square
     Relation checked is [minimum ratio < (Circle radius / width * height * (square root of 2)) < maximum ratio]
+
     :param contour_list: List of Contours to filter
     :param max_ratio: maximum ratio between radius and sides of bounding rectangle
-    :type max_ratio: float
     :param min_ratio: minimum ratio between radius and sides of bounding rectangle
-    :type min_ratio: float
     :param min_area_ratio: minimum ratio between the area of the contours and the bounding shape
     :return: the contour list filtered.
-     """
+    """
     ratio_list = []
     output_list = []
     for current_contour in contour_list:

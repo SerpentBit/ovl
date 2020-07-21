@@ -1,9 +1,9 @@
 import cv2
 
-import ovl.math_.contours
+from ...math.contours import contour_lengths_and_angles
 from ..contour_filter import contour_filter
-from ...math_ import geometry
-from ...helpers_.types import RangedNumber
+from ...math import geometry
+from ...helpers.types import RangedNumber
 
 
 @contour_filter
@@ -12,13 +12,14 @@ def polygon_filter(contour_list, side_amount=6, min_angle_ratio: RangedNumber(0,
                    approximation_coefficient: RangedNumber(0, 1) = 0.02):
     """
      A filter that Detects regular polygon of n-sides sides
+
     :param contour_list: the list of contours to be filtered
     :param side_amount: the amount of sides the wanted polygon has.
     :param min_angle_ratio: the minimum ratio between the each angle and the average angle and the average angle and the
-                            target angle of a shape of side_amount
+    target angle of a shape of side_amount
     :param min_area_ratio: The minimum ratio between the contour's area and the target area
     :param min_len_ratio: The minimum ratio between the length of each side and the average length and
-                          between the average length.
+    between the average length.
     :param approximation_coefficient: the coefficient for the function cv2.approxPolyDP.
     :return: the list of contours (numpy ndarrays) that passed the filter and are regular polygon
     """
@@ -29,7 +30,7 @@ def polygon_filter(contour_list, side_amount=6, min_angle_ratio: RangedNumber(0,
     output_append = output.append
     ratio_append = ratios.append
     for current_contour in contour_list:
-        vertices, lengths, angles = ovl.math_.contours.contour_lengths_and_angles(current_contour, approximation_coefficient)
+        vertices, lengths, angles = contour_lengths_and_angles(current_contour, approximation_coefficient)
         if len(vertices) == side_amount:
             target_angle = geometry.regular_polygon_angle(side_amount)
             average_length = round(sum(lengths) / float(len(lengths)), 3)

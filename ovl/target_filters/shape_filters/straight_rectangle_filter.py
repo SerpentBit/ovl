@@ -1,8 +1,8 @@
 import cv2
 
 from ..contour_filter import contour_filter
-from ...math_.shape_fill_ratios import rectangle_fill_ratio_straight
-from ...helpers_.types import RangedNumber
+from ...math.shape_fill_ratios import rectangle_fill_ratio_straight
+from ...helpers.types import RangedNumber
 
 
 @contour_filter
@@ -16,7 +16,7 @@ def straight_rectangle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) =
     :param min_area_ratio: The minimum ratio between the rectangle and the contour
     :type min_area_ratio: float
     :return: the contour list filtered.
-     """
+    """
     output_list = []
     ratio_list = []
     for current_contour in contour_list:

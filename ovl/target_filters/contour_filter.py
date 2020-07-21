@@ -20,6 +20,8 @@ def contour_filter(contour_filter_function):
 
     For a given function:
 
+    .. code-block:: python
+
         @contour_filter
         def area_filter(contours, min_area, max_area):
             output_list = []
@@ -34,22 +36,28 @@ def contour_filter(contour_filter_function):
 
     Instead of calling the function like other functions:
 
-        A1| some_filter(list_of_contours, 200, 5000)
+    .. code-block:: python
+
+        some_filter(list_of_contours, 200, 5000)
 
     The function needs to be called as follows:
 
-        B1| activator = area_filter(200, 5000)
-        B2|
-        B3| result = activator(list_of_contours)
+    .. code-block:: python
+
+         activator = area_filter(200, 5000)
+
+         result = activator(list_of_contours)
 
 
     Vision objects use functions that are decorated with contour_filter
-    you can just pass the result of line B1 to the Vision object
+    you can just pass the activator to the Vision object
     like so:
 
-        C1| contour_filters = [area(400, 5000), ovl.circle_filter(0.75)]
-        C2|
-        C3| vision = Vision(..., contour_filters=contour_filters, ...)
+     .. code-block:: python
+
+        target_filters = [area(min_area=400, max_area=5000), ovl.circle_filter(min_area_ratio=0.75)]
+
+        vision = Vision(..., target_filters=target_filters, ...)
     """
     CONTOUR_FILTERS.add(contour_filter_function)
     return keyword_partial.keyword_partial(contour_filter_function)
