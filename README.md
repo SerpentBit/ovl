@@ -45,7 +45,7 @@ import ovl
 
 contour_filters = [ovl.area_filter(min_area=200),
                    ovl.circle_filter(min_area_ratio=0.7),
-                   ovl.dec_area_sort()]
+                   ovl.area_sort()]
 
 image_filters = [ovl.gaussain_blur()]
 
