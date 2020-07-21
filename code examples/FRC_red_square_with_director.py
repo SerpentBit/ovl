@@ -10,18 +10,16 @@ which is used specifically for,  the FIRST Robotics Competition
 in order to connect to the RoboRIO controller
 You can easily replace it with a different connections
 """
-
 import ovl
 
-# for other ways to connect to your RoboRIO run the following python code: help(NetworkTablesConnection)
-import ovl.contour_filters_.shape_filters.straight_rectangle_filter
 
+# for other ways to connect to your RoboRIO run the following python code: help(NetworkTablesConnection)
 TEAM_NUMBER = "1937"
 
 threshold = ovl.RED_HSV
 
 contour_filters = [ovl.area_filter(min_area_ratio=150),
-                   ovl.contour_filters_.shape_filters.straight_rectangle_filter.straight_rectangle_filter(min_area_ratio=0.7),
+                   ovl.straight_rectangle_filter(min_area_ratio=0.7),
                    ovl.area_sort()]
 
 director = ovl.Director(directing_function=ovl.x_center_directions,
@@ -38,8 +36,7 @@ red_square = ovl.Vision(threshold=threshold,
                         contour_filters=contour_filters,
                         director=director,
                         camera=camera,
-                        image_filters=image_filters
-                        )
+                        image_filters=image_filters)
 
 while True:
     image = red_square.get_filtered_image()
