@@ -1,5 +1,5 @@
-# Ovl-Python 
- ![ovl logo](https://user-images.githubusercontent.com/45563197/76566629-d4301300-64b5-11ea-9868-40ecde73dcaa.png)
+# OVL - Object Vision Library
+ ![OVL Logo](https://user-images.githubusercontent.com/45563197/76566629-d4301300-64b5-11ea-9868-40ecde73dcaa.png)
 
 Python Module for Computer Vision Object Tracking and Detection mainly for the FIRST® Robotics Competition Program
 *You can follow up on changes in for the current version in the [changelog folder](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs)*
@@ -47,7 +47,7 @@ contour_filters = [ovl.area_filter(min_area=200),
                    ovl.circle_filter(min_area_ratio=0.7),
                    ovl.area_sort()]
 
-image_filters = [ovl.gaussain_blur()]
+image_filters = [ovl.gaussian_blur()]
 
 threshold = ovl.YELLOW_HSV  # Define the wanted color to detect 
 
