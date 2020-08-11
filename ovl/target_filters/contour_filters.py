@@ -125,7 +125,7 @@ def area_filter(contour_list, min_area: float = 200, max_area: float = math.inf)
 
 
 @contour_filter
-def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.002,
+def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.02,
                         maximum_percent: RangedNumber(0, 1) = 1, image_dimensions: Tuple[int, int] = (320, 240)):
     """
     Filters out contours that are not in the specified ratio to the area of the image (1% -> 0.1)
