@@ -5,7 +5,7 @@ from .display_image import *
 from ovl.image_utilities.open_image import open_image
 
 
-def display_contours(image, contours, amount=0, delay=0, window_name="image", color=(0, 255, 0), save_path=None):
+def display_contours(image, contours, amount=0, display_loop=False, window_name="image", color=(0, 255, 0), save_path=None):
     """
     Displays the image with the current_vision list of contours
 
@@ -44,5 +44,5 @@ def display_contours(image, contours, amount=0, delay=0, window_name="image", co
     cv2.drawContours(image_for_display, contours, -1, color, 2)
     if type(save_path) is str:
         cv2.imwrite(save_path, image_for_display)
-    display_image(image_for_display, window_name=window_name, delay=delay)
+    display_image(image_for_display, window_name=window_name, display_loop=delay)
     return image_for_display
