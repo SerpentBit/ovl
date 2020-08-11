@@ -33,7 +33,7 @@ class Vision:
 
 
     """
-    def __init__(self, threshold: Threshold = None, contour_filters: List[types.FunctionType] = None,
+    def __init__(self, threshold: Threshold = None, target_filters: List[types.FunctionType] = None,
                  director: Director = None, width=320, height=240, connection: Connection = None,
                  camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
                  camera_settings: CameraSettings = None, morphological_functions: List[types.FunctionType] = None,
@@ -64,7 +64,7 @@ class Vision:
         self.width = width
         self.height = height
         self.threshold = threshold
-        self.contour_filters = contour_filters or []
+        self.target_filters = target_filters or []
         self.director = director or Director(center_directions, failed_detection=9999, target_amount=1)
         self.connection = connection
         self.image_filters = image_filters or []
