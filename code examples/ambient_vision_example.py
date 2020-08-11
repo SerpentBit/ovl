@@ -26,12 +26,12 @@ ball_director = ovl.Director(ovl.target_amount_directions,
                              target_amount=2)
 
 red_ball_amount_counter = ovl.Vision(threshold=ovl.RED_HSV,
-                                     contour_filters=ball_contour_filters,
+                                     target_filters=ball_contour_filters,
                                      camera=camera,
                                      image_filters=image_filters)
 
 two_blue_hexagons = ovl.Vision(threshold=BLUE,
-                               contour_filters=hexagon_contour_filters,
+                               target_filters=hexagon_contour_filters,
                                camera=camera,
                                image_filters=image_filters)
 
@@ -44,5 +44,3 @@ while True:
     contours, filtered_image = vision_controller.detect(image)
     directions = vision_controller.get_directions(contours, filtered_image)
     print("Directions:", directions)
-
-    vision_controller.send(directions)
