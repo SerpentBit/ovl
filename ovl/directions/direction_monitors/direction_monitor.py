@@ -6,5 +6,5 @@ class DirectionMonitor:
     def priority(self) -> Union[bool, float]:
         return False
 
-    def monitor(self, directions, targets, image, mask):
+    def monitor(self, directions, targets, image):
         raise NotImplementedError("When inheriting DirectionMonitor you must implement it!")

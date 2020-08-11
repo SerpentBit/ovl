@@ -1,5 +1,6 @@
 import typing
 import numpy as np
+from ovl import RangedNumber, image_size
 
 from ...math import contours
 from ..direction_monitors.direction_monitor import DirectionMonitor
@@ -28,14 +29,14 @@ class StopIfCloseMonitor(DirectionMonitor):
     def priority(self):
         return self._priority
 
-    def monitor(self, directions: typing.Any, target_contours: typing.List[np.ndarray],
-                image: np.ndarray, mask: np.ndarray) -> typing.Any:
+    def monitor(self, directions: typing.Any, targets: typing.List[np.ndarray],
+                image: np.ndarray) -> typing.Any:
         """
 
         :param directions: the directions received from directing function / from the previous direction monitors
-        :param target_contours: the objects found in the image
+        :param targets: the objects found in the image
         :param image: the image where the objects where found in
-        :param mask:
+        :param mask: the binary image of the
         :return:
         """
         if contours.target_size(target_contours) >= self.minimum_size:
