@@ -22,7 +22,7 @@ contour_filters = [ovl.area_filter(min_area_ratio=150),
                    ovl.straight_rectangle_filter(min_area_ratio=0.7),
                    ovl.area_sort()]
 
-director = ovl.Director(directing_function=ovl.x_center_directions,
+director = ovl.Director(directing_function=ovl.xy_center_directions,
                         failed_detection=9999,
                         target_amount=1)
 
@@ -33,13 +33,13 @@ roborio = ovl.NetworkTablesConnection(roborio=TEAM_NUMBER, table_name="SmartDash
 image_filters = [ovl.gaussian_blur((5, 5))]
 
 red_square = ovl.Vision(threshold=threshold,
-                        contour_filters=contour_filters,
+                        target_filters=contour_filters,
                         director=director,
                         camera=camera,
                         image_filters=image_filters)
 
 while True:
-    image = red_square.get_filtered_image()
+    image = red_square.get_image()
     contours, filtered_image = red_square.detect(image)
     directions = red_square.get_directions(contours, filtered_image)
     red_square.send(directions)

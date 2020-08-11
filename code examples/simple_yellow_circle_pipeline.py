@@ -12,12 +12,12 @@ image_filters = [ovl.gaussian_blur()]
 threshold = ovl.YELLOW_HSV  # Define the wanted color to detect 
 
 yellow_circle = ovl.Vision(threshold=threshold,
-                           contour_filters=contour_filters,
+                           target_filters=contour_filters,
                            camera=0,  # open the first connected camera
                            image_filters=image_filters)
 
 while True:
-    image = yellow_circle.get_filtered_image()
+    image = yellow_circle.get_image()
     contours, filtered_image = yellow_circle.detect(image)
     directions = yellow_circle.get_directions(contours, filtered_image)
 
