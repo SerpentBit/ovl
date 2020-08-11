@@ -11,7 +11,7 @@ class Camera:
                  image_width: int = 320, image_height: int = 240, start_immediately=True):
         """
         Camera connects to and opens a connected camera and on constantly reads image from the camera.
-        ovl.Camers is more real-time oriented and operates at a faster rate than opencv's VideoCapture, but is not
+        ovl.Camera is more real-time oriented and operates at a faster rate than opencv's VideoCapture, but is not
         suited for non-infinite streams
 
         The connected camera can be opened by using a camera number (index), url of ip camera, device file (/dev/video0)
