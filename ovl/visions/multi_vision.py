@@ -155,11 +155,9 @@ class MultiVision:
         """
         while True:
             self.update_current()
-            filtered_image = self.current.get_filtered_image()
-            detection_result = self.current.detect(filtered_image, return_ratios=yield_ratios)
-            contours = detection_result[0]
-            image = detection_result[1]
-            directions = self.current.director.direct(contours, image, self.current.camera_settings)
+            image = self.current.get_image()
+            contours, filtered_image = self.current.detect(image, return_ratios=yield_ratios)
+            directions = self.current.director.direct(contours, filter, self.current.camera_settings)
             if self.is_ambient():
                 self.current.update_vision()
-            yield (directions, *detection_result)
+            yield directions, contours, filtered_image

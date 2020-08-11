@@ -39,10 +39,12 @@ class Vision:
                  camera_settings: CameraSettings = None, morphological_functions: List[types.FunctionType] = None,
                  image_filters: List[types.FunctionType] = None, ovl_camera: bool = False, calibration: str = None):
         """
-        The object that represents the pipeline of processing, detection, direction of values
-        A connection object can be passed
+        The object that represents the pipeline of processing followed by detection and direction of objects
+        A connection object can be passed to pass the pipeline's results to other devices in your setup
+
+
         :param threshold: threshold object, creates the binary mask from a given image
-        :param contour_filters: the list of contour_filter functions that
+        :param target_filters: the list of contour_filter functions that
                                 remove contours that aren't the target(s)
         :param director: a functions that receives a list or a single contour and returns director
         :param width: the width (in pixels) of images taken with the camera
@@ -80,9 +82,10 @@ class Vision:
         self.calibration_path = None
         if calibration:
             self.calibration_path = calibration
-            calibration = json.load(calibration)
-            self.saturation_weight = calibration['saturation'] if 'saturation' in calibration else None
-            self.brightness_weight = calibration['brightness'] if 'brightness' in calibration else None
+            with open(calibration) as calibration:
+                calibration = json.load(calibration)
+                self.saturation_weight = calibration['saturation'] if 'saturation' in calibration else None
+                self.brightness_weight = calibration['brightness'] if 'brightness' in calibration else None
 
     def __repr__(self):
         return str(self)
@@ -163,15 +166,6 @@ class Vision:
             return image if ret else False
         else:
             return output
-
-    def get_filtered_image(self):
-        """
-        Gets an image from self.camera and applies all image filters
-        :return: the image filter applied image
-
-        """
-        output = self.get_image()
-        return self.apply_image_filters(output)
 
     def apply_filter(self, filter_function, contours, verbose=False):
         """

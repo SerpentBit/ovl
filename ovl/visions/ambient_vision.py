@@ -76,18 +76,6 @@ class AmbientVision:
         """
         return self.current_vision.get_image()
 
-    def get_filtered_image(self) -> np.ndarray:
-        """
-        Returns the image from the current vision with
-        all of the image filters applied on it.
-
-        See Vision.get_filtered_image for more information
-
-        :return: the filtered image
-        :rtype: ndarray
-        """
-        return self.current_vision.get_filtered_image()
-
     def apply_image_filters(self, image: np.ndarray) -> np.ndarray:
         """
         Applies all of the image filter of the current vision on the given image
