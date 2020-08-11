@@ -1,8 +1,8 @@
-from typing import Callable, List
+from typing import *
 import math
 
 from .direction_monitors.direction_monitor import *
-from ..camera.camera_settings import *
+from ..camera_.camera_settings import *
 
 
 class Director:

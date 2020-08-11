@@ -11,9 +11,10 @@ class StopIfCloseMonitor(DirectionMonitor):
     A Direction monitor that stops when the target found is large enough (close enough).
     Like other DirectionMonitor objects, it monitors the directions returned.
     """
-    def __init__(self, minimum_size: float, value_sent: typing.Any, priority: bool = False):
+
+    def __init__(self, minimum_size: RangedNumber(0, 1), value_sent: typing.Any, priority: bool = False):
         """
-        :param minimum_size: This is the size in pixels that considers the object "close" enough
+        :param minimum_size: relative size in percent of the size of the image that considers the object "close" enough
                             it depends on your object size, but 40% of the image size is usually enough
                             so for an image the size of 320 x 240 it will be 320 * 240 * 0.4
         :param value_sent: the value returned if the object is close enough
@@ -39,6 +40,6 @@ class StopIfCloseMonitor(DirectionMonitor):
         :param mask: the binary image of the
         :return:
         """
-        if contours.target_size(target_contours) >= self.minimum_size:
+        if contours.target_size(targets) / image_size(image) >= self.minimum_size:
             return self.value_sent
         return directions
