@@ -30,6 +30,7 @@ def center_directions(contours, image: ndarray):
 
     This is the default directions function since it
     doesnt calculate any directions, only finds the center
+
     :param contours: the final contours - your targets
     :param image: the image from which it was found
     """

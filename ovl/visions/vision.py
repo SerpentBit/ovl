@@ -16,7 +16,7 @@ from ..thresholds.threshold import Threshold
 from ..thresholds.color.color import Color
 from ..connections.connection import Connection
 from ..directions.director import Director
-from ..camera.camera_settings import CameraSettings
+from ..camera_.camera_settings import CameraSettings
 from ..connections.network_location import NetworkLocation
 from ..directions.directing_functions import center_directions
 

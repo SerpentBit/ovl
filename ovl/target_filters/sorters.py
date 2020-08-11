@@ -1,7 +1,8 @@
 import cv2
 import warnings
 
-import ovl.math.contours
+from ..math.contours import open_arc_length, circle_rating
+
 from ..math import image
 from .contour_filter import contour_filter
 from .sorter_helper_functions import contour_center_and_point_distance
@@ -85,7 +86,7 @@ def circle_sort(contour_list, area_limit=0.9, radius_limit=0.8):
     :param radius_limit: the radius limit for the circle rating, look at Geometry.circle_rating
     :return: the list sorted by circle rating
     """
-    return sorted(contour_list, key=lambda x: ovl.math.contours.circle_rating(x, area_limit, radius_limit))
+    return sorted(contour_list, key=lambda x: circle_rating(x, area_limit, radius_limit))
 
 
 @contour_filter
@@ -96,7 +97,7 @@ def dec_length_sort(contour_list):
     :param contour_list: List of Contours to filter
     :return: the contour list sorted.
     """
-    return sorted(contour_list, key=ovl.math.contours.open_arc_length).reverse()
+    return sorted(contour_list, key=open_arc_length).reverse()
 
 
 @contour_filter
@@ -107,4 +108,4 @@ def inc_length_sort(contour_list):
     :param contour_list: List of Contours to filter
     :return: the contour list sorted.
     """
-    return sorted(contour_list, key=ovl.math.contours.open_arc_length)
+    return sorted(contour_list, key=open_arc_length)

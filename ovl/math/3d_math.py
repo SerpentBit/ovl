@@ -9,7 +9,8 @@ from ovl import contour_center
 
 def horizon_angle(point: Union[np.ndarray, typing.Tuple[int, int]], field_of_view: float, image_width: int) -> float:
     """
-     returns the angle compared to the center of the image for a given field of view image width and point
+    Returns the angle compared to the center of the image for a given field of view image width and point
+
     :param point: the contour or its center
     :param field_of_view: the horizontal field of view
     :param image_width: the image width
@@ -23,11 +24,12 @@ def horizon_angle(point: Union[np.ndarray, typing.Tuple[int, int]], field_of_vie
 
 def vertical_angle(point: Union[np.ndarray, typing.Tuple[int, int]], field_of_view: float, image_height: int) -> float:
     """
-     returns the angle compared to the center of the image for a given field of view image height and point
+    Returns the angle compared to the center of the image for a given field of view image height and point
+
     :param point: the x val or center
     :param field_of_view: the vertical field of view
     :param image_height: the image height
-    :return: the angle compared to the center of the image , negative up positive down6.
+    :return: the angle compared to the center of the image , negative up positive down.
     """
     point = point[1] if type(point) in (tuple, list, set) else point
     y_val = contour_center(point)[1] if type(point) is np.ndarray else point
@@ -38,6 +40,7 @@ def vertical_angle(point: Union[np.ndarray, typing.Tuple[int, int]], field_of_vi
 def focal_length(image_width, field_of_view):
     """
     Calculates the focal length in pixels of the camera for a given an image width and field of view
+
     :param image_width: width of the image in pixels
     :param field_of_view:
     :return: calculates the focal length, a float

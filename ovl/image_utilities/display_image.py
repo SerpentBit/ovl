@@ -1,3 +1,5 @@
+from typing import List, Union
+
 import cv2
 from numpy import vstack, hstack, ndarray
 
@@ -25,7 +27,8 @@ def show_image(image, window_name, delay):
     return cv2.waitKey(delay)
 
 
-def display_image(image, window_name='image', delay=0, resizable=False):
+def display_image(image: Union[ndarray, str, List[ndarray, str]], window_name='image', display_loop=False,
+                  resizable=False):
     """
     The function displays an image
 
@@ -54,20 +57,18 @@ def display_image(image, window_name='image', delay=0, resizable=False):
     :param image: Represents an image path (string), an already open image in the for of a numpy array (ndarray)
                   or a list of images (strings and arrays are valid)
     :param window_name: Name of the Window that displays the images
-    :param delay: The delay before the image stops
+    :param display_loop: if display is used in a loop should be true, else false
     :param resizable: A boolean that determines whether the image window is resizable or not
     :return: the key pressed while image was displayed
     """
-    if type(image) is str:
+    if isinstance(image, str):
         image = cv2.imread(image)
-    elif type(image) is list:
+    elif isinstance(image, list):
         image = stitch_images(image)
-    elif type(image) is not ndarray:
+    elif not isinstance(image, ndarray):
         raise TypeError("Invalid image given, image must be an image, a path to an image or a list of images")
 
     if resizable:
         cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
 
-    return show_image(image, window_name, delay)
-
-
+    return show_image(image, window_name, display_loop * 1)

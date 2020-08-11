@@ -3,8 +3,8 @@ import cv2
 import json
 from numpy import array
 
-from ..thresholds.color_.color import Color
-from ..thresholds.color_.multi_color import MultiColor
+from ..thresholds.color.color import Color
+from ..thresholds.color.multi_color import MultiColor
 
 LinearDiscriminantAnalysis = None
 
