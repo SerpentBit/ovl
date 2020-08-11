@@ -3,7 +3,6 @@
 
 Python Module for Computer Vision Object Tracking and Detection mainly for the FIRST® Robotics Competition Program
 *You can follow up on changes in for the current version in the [changelog folder](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs)*
-*There have been significant changes from the previous version - [changelog](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs/2020.1.5)*
 
 ### Dependencies:
 
