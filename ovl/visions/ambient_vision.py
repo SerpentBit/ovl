@@ -151,7 +151,7 @@ class AmbientVision:
         Increases the inner counter and swaps the ambient and the main vision
         after the set number of updates (self.main_amount)
 
-        this is used to switch between
+        This is used to switch between the main vision and ambient vision
         """
         if self.counter < self.main_amount:
             self.counter += 1

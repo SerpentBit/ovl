@@ -91,7 +91,7 @@ class Vision:
         return str(self)
 
     def __str__(self):
-        filters = [filter_function.__name__ for filter_function in self.contour_filters]
+        filters = [filter_function.__name__ for filter_function in self.target_filters]
         threshold = self.threshold
         return "Vision: \n Threshold: {} \n Filters: {}".format(threshold, filters)
 
@@ -141,7 +141,7 @@ class Vision:
 
     def send_to_location(self, data, network_location: NetworkLocation, *args, **kwargs):
         """
-
+        A function that sends data to a specific NetworkLocation
         :param data: the data to be sent
         :param network_location: information used to send the data to a specific 'location'
          in the network
@@ -153,6 +153,7 @@ class Vision:
     def get_image(self) -> np.ndarray:
         """
         Gets an image from self.camera and applies image filters
+
         :return: the image, false if failed to get it
 
         """
@@ -201,28 +202,30 @@ class Vision:
             raise TypeError('The contour list must be a list or tuple of 2 lists (contours and ratios)')
         return filtered_contours, ratio
 
-    def apply_all_filters(self, contours: List[np.ndarray], verbose=False
+    def apply_all_filters(self, targets: List[np.ndarray], verbose=False
                           ) -> Tuple[List[np.ndarray], List[float]]:
         """
         Applies all of the filters on a list of contours
-        :param contours: List of contours (numpy arrays) to
+
+        :param targets: List of targets (numpy arrays or bounding boxes) to
         :param verbose: prints out information about filtering process if true (useful for debugging)
         :return: a list of all of the ratios given by the filter function in order.
 
         """
         ratios = []
-        for filter_func in self.contour_filters:
-            contours, ratio = self.apply_filter(filter_func, contours, verbose=verbose)
+        for filter_func in self.target_filters:
+            targets, ratio = self.apply_filter(filter_func, targets, verbose=verbose)
             ratios.append(ratio)
         if verbose:
-            print("After all filters: {}".format(len(contours)))
-        return contours, ratios
+            print("After all filters: {}".format(len(targets)))
+        return targets, ratios
 
     def apply_image_filters(self, image: np.ndarray) -> np.ndarray:
         """
         Applies all given image filters to the given image
         This is used to apply various image filters on your image in a pipeline,
         like blurs, image cropping, contrasting, sharpening, rotations, translations etc.
+
         :param image: the image that the image filters should be applied on (numpy array)
         :return: the image with the filters applied
 
@@ -233,6 +236,7 @@ class Vision:
         """
         Gets a mask (binary image) for a given image and Threshold object
         (uses self.Threshold if given threshold was none)
+
         :param image: the numpy array of the image
         :param threshold: the Threshold object used to create the binary mask
         :return: the binary mask
@@ -287,7 +291,7 @@ class Vision:
                  length depends on the director function
 
         """
-        return self.director.direct(contours, image, camera_settings=self.camera_settings, sorter=sorter)
+        return self.director.direct(contours, image, sorter=sorter)
 
     def camera_setup(self, source=0, image_width=None, image_height=None, ovl_camera=False):
         """
@@ -349,6 +353,7 @@ class Vision:
         """
         Gets contours and applies all filters and returns the result, thus detecting the object according
         to the specifications in the vision
+
         :param image: image in which the vision should detect an object
         :param verbose: If information about the filtering should be printed
         :param return_ratios: if the ratios from the filters should be returned
