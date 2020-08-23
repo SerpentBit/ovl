@@ -37,7 +37,6 @@ class StopIfCloseMonitor(DirectionMonitor):
         :param directions: the directions received from directing function / from the previous direction monitors
         :param targets: the objects found in the image
         :param image: the image where the objects where found in
-        :param mask: the binary image of the
         :return:
         """
         if contours.target_size(targets) / image_size(image) >= self.minimum_size:

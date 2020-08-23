@@ -41,7 +41,7 @@ class Director:
         self.direction_monitors = direction_monitors
         self.failed_detection = failed_detection
 
-    def direct(self, contours: List[np.ndarray], image: np.ndarray, camera_settings=None, sorter=None) -> Any:
+    def direct(self, contours: List[np.ndarray], image: np.ndarray, sorter=None) -> Any:
         """
         Returns the directions using the vision.director for the given contours using the image and camera settings (if
         given).
@@ -55,7 +55,6 @@ class Director:
 
         :param contours: the list of contours (numpy ndarrays) from which to extrapolate target direction
         :param image: the image from which the contours were taken
-        :param camera_settings: The Camera settings, including position and calibration
         :param sorter: A sorter function to be applied on the contours, or None to not apply one
         :return: Depends on the directing function and the direction monitors,
                  usually a number or a string
@@ -69,10 +68,10 @@ class Director:
                 contours = contours[:self.target_amount]
             directions = self.directions(contours, image)
 
-        return self.apply_direction_monitors(directions, contours, image, camera_settings)
+        return self.apply_direction_monitors(directions, contours, image)
 
     def apply_direction_monitors(self, directions: Any, contours: List[np.ndarray],
-                                 image: np.ndarray, camera_settings: CameraSettings) -> Any:
+                                 image: np.ndarray) -> Any:
         """
         Applies the list of direction monitors one after the other
 
@@ -83,12 +82,11 @@ class Director:
         :param directions: the raw directions returned from the directions function
         :param contours: the list of contours that passed all filters
         :param image: the image from which the contours were found
-        :param camera_settings: settings related to the camera, like position or calibration
         :return: the final direction result
         """
         if self.direction_monitors:
             for direction_monitor in self.direction_monitors:
-                directions = direction_monitor.monitor(directions, contours, image, camera_settings)
+                directions = direction_monitor.monitor(directions, contours, image)
                 if direction_monitor.priority:
                     return directions
         return directions
