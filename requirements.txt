@@ -1,0 +1,5 @@
+opencv-python
+pynetworktables
+pyserial
+numpy
+sklearn
