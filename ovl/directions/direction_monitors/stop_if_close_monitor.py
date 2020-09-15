@@ -1,7 +1,8 @@
 import typing
 import numpy as np
-from ovl import RangedNumber, image_size
 
+from ...math.image import image_size
+from ...helpers.types import RangedNumber
 from ...math import contours
 from ..direction_monitors.direction_monitor import DirectionMonitor
 

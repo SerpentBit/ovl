@@ -21,6 +21,7 @@ from .math.default_math_functions import *
 from .math.contours import *
 from .math.shape_fill_ratios import *
 from .math.image import *
+from .math.image import image_size
 from .morphological_functions.morphological_functions import erosion, dilation
 from .thresholds.canny_edge import CannyEdge
 from .thresholds.color.built_in_colors import *
