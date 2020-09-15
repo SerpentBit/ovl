@@ -33,6 +33,7 @@ class Vision:
 
 
     """
+
     def __init__(self, threshold: Threshold = None, target_filters: List[types.FunctionType] = None,
                  director: Director = None, width=320, height=240, connection: Connection = None,
                  camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
@@ -127,7 +128,7 @@ class Vision:
         morphological_functions = morphological_functions or self.morphological_functions
         return reduce(filter_applier, morphological_functions, mask)
 
-    def send(self, data, *args, **kwargs) -> Any:
+    def send(self, data: Any, *args, **kwargs) -> Any:
         """
         Sends data to the destination using self.connection
 
@@ -139,9 +140,10 @@ class Vision:
         """
         return self.connection.send(*args, **kwargs, data=data)
 
-    def send_to_location(self, data, network_location: NetworkLocation, *args, **kwargs):
+    def send_to_location(self, data: Any, network_location: NetworkLocation, *args, **kwargs):
         """
         A function that sends data to a specific NetworkLocation
+
         :param data: the data to be sent
         :param network_location: information used to send the data to a specific 'location'
          in the network
@@ -177,9 +179,9 @@ class Vision:
         refer to it for common use of Vision
 
         :param filter_function: Filter functions are function with a contour list variable that apply some
-            sort of filter on the contours, thus removing ones that don't fit the limit given by the filter.
-            for example: straight_rectangle_filter removes contours that are not rectangles that are parallel
-            to the frame of the picture
+         sort of filter on the contours, thus removing ones that don't fit the limit given by the filter.
+         for example: straight_rectangle_filter removes contours that are not rectangles that are parallel
+         to the frame of the picture
         :param contours: the contours on which the filter should be applied (list of numpy.ndarrays)
         :param verbose: if true_shape does not print anything
         :return: returns the output of the filter function.
@@ -205,7 +207,8 @@ class Vision:
     def apply_all_filters(self, targets: List[np.ndarray], verbose=False
                           ) -> Tuple[List[np.ndarray], List[float]]:
         """
-        Applies all of the filters on a list of contours
+        Applies all of the filters on a list of contours, one after the other.
+        Applies the first filter and passes the output to the second filter,
 
         :param targets: List of targets (numpy arrays or bounding boxes) to
         :param verbose: prints out information about filtering process if true (useful for debugging)
@@ -235,7 +238,7 @@ class Vision:
     def apply_threshold(self, image: np.ndarray, threshold=None) -> np.ndarray:
         """
         Gets a mask (binary image) for a given image and Threshold object
-        (uses self.Threshold if given threshold was none)
+        (uses self.threshold if given threshold was none)
 
         :param image: the numpy array of the image
         :param threshold: the Threshold object used to create the binary mask
@@ -248,7 +251,8 @@ class Vision:
     def find_contours_in_mask(self, mask: np.ndarray, return_hierarchy=False, apply_morphs=True
                               ) -> List[np.ndarray]:
         """
-        Gets contours from the given mask and apply
+        This function is used to find and extract contours (object shapes) from a binary image
+        (image passed through a threshold)
 
         :param mask: binary image (mask), a numpy array
         :param return_hierarchy: if the hierarchy should be returned

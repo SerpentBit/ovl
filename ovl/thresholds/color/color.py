@@ -11,7 +11,8 @@ SERIALIZED_COLOR_KEYS = {"high", "low"}
 
 def validate(value, ceiling):
     """
-     Checks if val is positive and less than the ceiling value.
+    Checks if val is positive and less than the ceiling value.
+
     :param value: The value to be checked (usually an int)
     :param ceiling: The highest value "val" can be. (usually an int)
     :return: True if val is less than ceiling and not negative
@@ -22,7 +23,8 @@ def validate(value, ceiling):
 
 def assert_hsv(hsv_point):
     """
-     Makes sure the hsv point(or vector) given in the parameter has valid values.
+    Makes sure the hsv point(or vector) given in the parameter has valid values.
+
     :param hsv_point: a 3 length list with 3 ints describing a point the hsv color space
     that describe a color limit in a range for a findContour function.
     :return: True if valid False if not.
@@ -34,13 +36,16 @@ def assert_hsv(hsv_point):
 
 class Color(Threshold):
     """
-    Color is a Threshold object( an object that turns an image to a binary image)
+    Color is a Threshold object (an object that turns an image to a binary image
+    - an image with pixels with the value 1 and 0)
     Color object thresholds using 2 HSV color ranges.
+
     Read more about HSV here:
     https://www.lifewire.com/what-is-hsv-in-design-1078068
 
     HSV Ranges in OVL (And in the underlying open-cv (cv2)) are:
     Hue - 0 to 179 (360/2 so divide any regular HSV value you use by 2)
+
         So if Yellow is 40 - 80 (degrees) in regular HSV palette its 20 to 40 in ovl
     Saturation - 0 to 255 (255 is equal to 1 or 100%)
     Value - 0 to 255 (255 is equal to 1 or 100%)
@@ -49,10 +54,13 @@ class Color(Threshold):
         1) Low HSV Range - the lowest acceptable H S V values ([low_H, low_S, low_V])
         2) High HSV Range - the highest acceptable H S V values ([high_H, high_S, high_V])
 
-    Example code:
-        1| low_range = [15, 100, 100]
-        2| high_range = [45, 255, 255]
-        3| color = ovl.Color(low_range, high_range)
+    .. code-block:: python
+
+        low_range = [15, 100, 100]
+        high_range = [45, 255, 255]
+        color = ovl.Color(low_range, high_range)
+
+
 
     The color object can the be passed to a Vision object to threshold binary images
     Threshold object can be used by themselves using the color.convert() method.
@@ -76,6 +84,7 @@ class Color(Threshold):
       Teal: [110, 100, 100], [130, 255, 255]
       Purple: [135, 100, 100], [165, 255, 255]
     """
+
     def validate(self, *args, **kwargs):
         return assert_hsv(self.low_bound) and assert_hsv(self.high_bound)
 
@@ -86,6 +95,7 @@ class Color(Threshold):
          H - 0 - 179
          S - 0 - 255
          V - 0 - 255
+
         :param high: high hsv limit of the color
         :param low: low hsv limit of the color
         """
@@ -106,7 +116,8 @@ class Color(Threshold):
 
     def convert(self, image: np.ndarray) -> np.ndarray:
         """
-         converts a given image to hsv and then thresholds and returns the binary mask
+        Converts a given image to hsv and then thresholds and returns the binary mask
+
         :param image: a BGR image
         :return: binary mask
         :rtype: numpy array
@@ -121,6 +132,7 @@ class Color(Threshold):
         """
         Duplicates the Color object so that changes do not affect the original color
         Useful for modifying BuiltInColors without changing the default
+
         :return: a copy of the color object
         """
         return copy.deepcopy(self)
@@ -140,7 +152,7 @@ class Color(Threshold):
     @property
     def low(self):
         """
-         Returns the low hsv limit of the color.
+        Returns the low hsv limit of the color.
         :return: An uint8 numpy array with the low limit of the color.
         :rtype: uint8 numpy array
         """
