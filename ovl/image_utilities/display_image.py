@@ -27,7 +27,7 @@ def show_image(image, window_name, delay):
     return cv2.waitKey(delay)
 
 
-def display_image(image: Union[ndarray, str, List[ndarray, str]], window_name='image', display_loop=False,
+def display_image(image: Union[ndarray, str, List[Union[ndarray, str]]], window_name='image', display_loop=False,
                   resizable=False):
     """
     The function displays an image
