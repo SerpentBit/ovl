@@ -1,4 +1,5 @@
 import cv2
+from pathlib import Path
 
 from ..helpers.remove_none_values import remove_none_values
 
@@ -14,6 +15,10 @@ def open_image(image_path, flags=None):
     :return: the opened image or a iterator that opens the list of images given
     """
     arguments = {"flags": flags}
+
+    if not Path(image_path).is_file():
+        raise OSError("Given image at path {} does not exist or is not a file!".format(image_path))
+
     image = cv2.imread(image_path, **remove_none_values(arguments))
     if image is None:
         raise ValueError("Couldn't read the image file, Check that {}\n"
