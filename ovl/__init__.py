@@ -1,4 +1,4 @@
-from ovl.camera.camera import Camera
+from .camera.camera import Camera
 from .camera_.camera_calibration import CameraCalibration
 from .camera_.camera_settings import CameraSettings
 from .connections import *
@@ -10,7 +10,7 @@ from .directions.directing_functions import *
 from .directions.direction_monitors.direction_monitor import DirectionMonitor
 from .directions.direction_monitors.stop_if_close_monitor import StopIfCloseMonitor
 from .directions.director import Director
-from ovl.image_utilities.display_image import display_image
+from .image_utilities.display_image import display_image
 from .exceptions import exceptions
 from .hsv_calibration.hsv_calibration import HSVCalibration
 from .image_filters.image_filters import *
@@ -32,4 +32,4 @@ from .visions.ambient_vision import AmbientVision
 from .visions.multi_vision import MultiVision
 from .visions.vision import Vision
 
-__version__ = '2020.1.8'
+__version__ = '2021.1.0'

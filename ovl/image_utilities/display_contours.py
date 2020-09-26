@@ -2,7 +2,7 @@ import copy
 import math
 
 from .display_image import *
-from ovl.image_utilities.open_image import open_image
+from ..image_utilities.open_image import open_image
 
 
 def display_contours(image, contours, amount=0, display_loop=False, window_name="image", color=(0, 255, 0),

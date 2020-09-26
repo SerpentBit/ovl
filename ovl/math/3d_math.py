@@ -4,7 +4,7 @@ from typing import Union
 
 import numpy as np
 
-from ovl import contour_center
+from ..math.contours import contour_center
 
 
 def horizon_angle(point: Union[np.ndarray, typing.Tuple[int, int]], field_of_view: float, image_width: int) -> float:

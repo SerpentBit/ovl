@@ -7,6 +7,7 @@ import numpy as np
 
 from .geometry import distance_between_points, law_of_cosine
 from .shape_fill_ratios import circle_fill_ratio
+from ..image_filters.image_filters import crop_image
 
 
 def target_size(contours: typing.List[np.ndarray]) -> float:
@@ -143,6 +144,34 @@ def circle_rating(contour, area_factor=0.9, radius_factor=0.8):
     """
     fill_ratio, radius = circle_fill_ratio(contour)
     _, _, width, height = cv2.boundingRect(contour)
-    radius_ratio = ((((radius * 2) ** 2) / float(width) * height) ** 0.5)
+    radius_ratio = ((((radius * 2) ** 2) / (float(width) * height)) ** 0.5)
     rating = (radius_ratio * radius_factor) * (fill_ratio * area_factor)
     return rating
+
+
+def crop_contour_region(contour: np.ndarray, image: np.ndarray):
+    """
+    Returns a region of the image where the contour (using its bounding box)
+
+    :param contour: the object found in the image, a numpy array
+    :param image: the image from which the contour was found
+    :return: the image  region that contains the contour
+    """
+    corner_x, corner_y, width, height = cv2.boundingRect(contour)
+    return crop_image(image, (corner_x, corner_y), (width, height))
+
+
+def contour_average_color(contours: typing.List[np.ndarray], image: np.ndarray):
+    """
+    Calculates the average color (in hsv) of all the pixels of a list of contours in the image.
+
+    :param contours: a list of contour(s) detected in the image
+    :param image: the image where the contours where detected, numpy array
+    :return: hsv color (h, s, v) tuple of the average color
+    """
+    hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    mask = np.zeros(image.shape, np.uint8)
+    if isinstance(contours, np.ndarray):
+        contours = [contours]
+    cv2.drawContours(mask, contours, -1, 255, -1)
+    return cv2.mean(hsv, mask)

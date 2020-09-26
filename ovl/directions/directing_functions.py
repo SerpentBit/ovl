@@ -1,6 +1,6 @@
 from numpy import ndarray
 
-from ovl.math import contours as contours_
+from ..math import contours as contours_
 
 
 def xy_center_directions(contours, image: ndarray):
