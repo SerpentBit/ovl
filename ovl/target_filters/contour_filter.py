@@ -20,6 +20,7 @@ def contour_filter(contour_filter_function):
 
     For a given function:
 
+
     .. code-block:: python
 
         @contour_filter

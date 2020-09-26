@@ -7,6 +7,7 @@ from .geometry import slope, x_intersection, y_intersection
 def image_center(image_dimensions):
     """
     Calculates the center pixels of a given image dimension
+
     :param image_dimensions: (width, height) tuple of the size of the image
     :return: the (x, y) center of the image
     """

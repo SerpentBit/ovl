@@ -9,6 +9,7 @@ from .geometry import circle_area
 def rectangle_fill_ratio_straight(contour, reverse_div=False):
     """
     Returns the ratio between the contour and the straight bounding rectangle.
+
     :param contour: The contour to be compared
     :param reverse_div: If the rectangle's area should be divided by the contour.
     :return:  the ratio, the width of the bounding rectangle, the height of the bounding rectangle
@@ -25,6 +26,7 @@ def rectangle_fill_ratio_straight(contour, reverse_div=False):
 def triangle_fill_ratio(contour, triangle=None) -> float:
     """
     Returns the ratio between a given contour and the smallest enclosing rectangle
+
     :param contour: numpy array
     :param triangle: convex hull for the minEnclosingTriangle function, can be ignored
     :return: returns the ratio between the contour and the bounding triangle
@@ -37,7 +39,8 @@ def triangle_fill_ratio(contour, triangle=None) -> float:
 
 def rotating_rectangle_fill_ratio(contour: np.ndarray) -> typing.Tuple[float, float, float]:
     """
-     Returns the ratio between the contour and the smallest bounding rectangle.
+    Returns the ratio between the contour and the smallest bounding rectangle.
+
     :param contour: The contour to be compared
     :return: the ratio, the width of the bounding rectangle, the height of the bounding rectangle
     :rtype: float, float, float
@@ -50,7 +53,8 @@ def rotating_rectangle_fill_ratio(contour: np.ndarray) -> typing.Tuple[float, fl
 
 def circle_fill_ratio(contour: np.ndarray) -> typing.Tuple[float, float]:
     """
-     Returns the ratio between the contour and the smallest enclosing circle.
+    Returns the ratio between the contour and the smallest enclosing circle.
+
     :param contour: The contour to be compared
     :return: the ratio, the radius of the enclosing circle
     :rtype: float

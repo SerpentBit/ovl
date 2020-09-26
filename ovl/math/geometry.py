@@ -2,31 +2,36 @@ import numpy as np
 import math
 
 
-def y_intersection(line_slope, intercept, x_val):
+def y_intersection(line_slope, intercept, x_value):
     """
-     finds the y value of the line (y = mx + b) at point x and returns the point
+    Finds the y value of the line (y = mx + b) at point x and returns the point
+    This basically solves y = mx + b
+
     :param line_slope: slope of the line (m)
     :param intercept: the intercept of the line (b)
-    :param x_val: the value to be used (substituted with x)
+    :param x_value: the value to be used (substituted with x)
     :return: the y value
     """
-    return x_val, line_slope * x_val + intercept
+    return x_value, line_slope * x_value + intercept
 
 
-def x_intersection(line_slope, intercept, y_val):
+def x_intersection(line_slope, intercept, y_value):
     """
-     calculates the x value of which the line according to the given y value
-    :param line_slope:
-    :param intercept:
-    :param y_val:
-    :return:
+    Calculates the x value of which the line according to the given y value
+    This basically solves y = mx + b
+
+    :param line_slope: slope of the line (m)
+    :param intercept: the intercept of the line (b)
+    :param y_value: the value to be used (substituted with x)
+    :return: the y value
     """
-    return (y_val - intercept) / float(line_slope), y_val if line_slope != 0 else (0, y_val)
+    return (y_value - intercept) / float(line_slope), y_value if line_slope != 0 else (0, y_value)
 
 
 def slope(first_point, second_point):
     """
-     returns the slope between 2 points
+    Returns the slope between 2 points
+
     :param first_point: first point (x,y)
     :param second_point: second point (x,y)
     :return: the slope
@@ -49,6 +54,7 @@ def contour_angle_line(contour):
     """
     Returns the angle of the line created by the top-most and
     bottom-most points of a contour
+
     :param contour: the contour, a numpy array
     :return: the angle in degrees
     """
@@ -61,7 +67,8 @@ def contour_angle_line(contour):
 
 def circle_area(radius):
     """
-     calculates the area of a circle with the given radius.
+    Calculates the area of a circle with the given radius.
+
     :param radius: The radius of the circle
     :return: Area of the circle
     """
@@ -70,7 +77,8 @@ def circle_area(radius):
 
 def distance_between_points(first_point, second_point):
     """
-     Calculates the Distance between 2 points. (x^2 + y^2) ^ 0.5
+    Calculates the Distance between 2 points. (x^2 + y^2) ^ 0.5
+
     :param first_point: tuple of x and y value of point 1
     :param second_point: tuple of x and y value of point 2
     :return: Float value of the distance between the 2 points
@@ -81,7 +89,8 @@ def distance_between_points(first_point, second_point):
 
 def regular_polygon_angle(side_amount: int) -> float:
     """
-     returns the inner angle of a polygon with the given amount of sides
+    Returns the inner angle of a polygon with the given amount of sides
+
     :param side_amount: amount of sides the polygon has
     :return:
     """

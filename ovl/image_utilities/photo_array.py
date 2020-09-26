@@ -5,8 +5,9 @@ from .naming_conventions import *
 
 def photo_array(camera, amount, delay=3, name_convention=time_name_convention, path=None):
     """
-     Takes a series of images with a delay between shots and saves them,
-            after every image, press 'y' to save it and 'n' to pass
+    Takes a series of images with a delay between shots and saves them, after every image,
+    press 'y' to save it and 'n' to pass
+
     :param camera: the camera to take images with, ovl.Camera or cv2.VideoCapture
     :param amount: the amount of images to take, must be a positive integer
     :param delay: the delay between images

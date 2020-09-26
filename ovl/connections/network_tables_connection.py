@@ -8,14 +8,18 @@ NetworkTables = None
 
 class NetworkTablesConnection(Connection):
     """
-    Note: In Order to use NetworkTablesConnection you must have pynetworktables installed.
+    Note: In Order to use NetworkTablesConnection you must have pynetworktables installed. (It is automatically installed
+    when installing ovl)
 
-    A connection to NetworkTables (The FRC network protocol)
+    A connection to that uses NetworkTables (The FRC network protocol).
+
     NetworkTables are a group of Dictionaries (Hash tables) that are shared by all computers in the network.
     In the case of the FRC it is created by the RoboRIO and shared by other
     computers on the network like: the driver station, any connected co-processor (like a raspberry pi) etc.
+
     NetworkTablesConnection creates defaults to writing to the Vision table.
     You can then read from /vision/vision_result the result sent.
+
     For Additional information about NetworkTables
     please refer to:
     https://docs.wpilib.org/en/latest/docs/software/networktables/networktables-intro.html
@@ -78,17 +82,16 @@ class NetworkTablesConnection(Connection):
         please refer to:
         https://docs.wpilib.org/en/latest/docs/software/networktables/networktables-intro.html
 
-        :param data: the data to send (post)
+        :param data: the data to send (post to the NetworkTables)
         :param table_key: the specific table to read from
         :param table: the table to receive from. Examples are SmartDashboard
-                      or Usage.Use "Vision" if you are not sure)
+                      or Usage. Use "Vision" if you are not sure)
         """
         table_key = table_key if table_key else self.table_key
         table = self.get_table(table)
         return table.putValue(table_key, data)
 
-    def receive(self, table_key: str = None, table: str = None,
-                default_value=None, *args, **kwargs) -> Any:
+    def receive(self, table_key: str = None, table: str = None, default_value=None, *args, **kwargs) -> Any:
         """
         Gets a value from a specific key and table, can be used to read values shared by
         all computers in the network.

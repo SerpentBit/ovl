@@ -18,7 +18,7 @@ class SerialConnection(Connection):
 
         self.socket = Serial(port, baudrate, *args, **kwargs)
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def close(self):
         self.socket.close()
 
     def send(self, data, *args, **kwargs):

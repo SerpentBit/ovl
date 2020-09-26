@@ -11,24 +11,23 @@ from .shape_fill_ratios import circle_fill_ratio
 
 def target_size(contours: typing.List[np.ndarray]) -> float:
     """
-    Returns the sum of contour areas
+    Returns the sum of contour areas of a list of contours
     """
-    return sum(map(cv2.contourArea, contours))
+    return sum(list(map(cv2.contourArea, contours)))
 
 
 def open_arc_length(contour: np.ndarray) -> float:
     """
-     Returns the arc length of an "open" contour
-    :param contour:
-    :return:
+    Returns the arc length of an "open" contour
     """
     return cv2.arcLength(contour, False)
 
 
 def open_contour_approximation(contour: np.ndarray, approximation_coefficient: float = 0.02):
     """
-     returns the vertices of the approximation of the contour
+    Returns the vertices of the approximation of the contour
     NOTE: for "open" (unclosed shape) contours only!
+
     :param contour: open contour (numpy array)
     :param approximation_coefficient: approximation coefficient
     :return: list of vertices
@@ -39,7 +38,8 @@ def open_contour_approximation(contour: np.ndarray, approximation_coefficient: f
 
 def contour_center(contour: np.ndarray) -> Tuple[float, float]:
     """
-     Returns the coordinates center of a contour
+    Returns the coordinates center of a contour
+
     :param contour: a single contour
     :return: X coordinate of center, Y coordinate of center
     """
@@ -68,6 +68,7 @@ def _contour_center_sum(point_sum, contour):
 def contour_average_center(contours) -> Tuple[float, float]:
     """
     Calculates the average center of a list of contours
+
     :param contours: the list of contours
     :return: the average center  (x,y)
     """
@@ -79,7 +80,8 @@ def contour_average_center(contours) -> Tuple[float, float]:
 
 def contour_approximation(contour, approximation_coefficient=0.02):
     """
-     returns the approximation of the contour
+    Returns the approximation of the contour
+
     :param contour: a numpy array
     :param approximation_coefficient: the coefficient of the contour length approximation
     :return:
@@ -92,6 +94,7 @@ def contour_approximation(contour, approximation_coefficient=0.02):
 def contour_lengths_and_angles(contour, approximation_coefficient=0.02):
     """
     Returns a list of lengths and angles of a given contour.
+
     :param contour: contour (numpy array) to find its
     :param approximation_coefficient:
     :return: returns the list of sides
@@ -114,7 +117,14 @@ def contour_lengths_and_angles(contour, approximation_coefficient=0.02):
     return vertices, lengths, angles
 
 
-def calculate_normalized_screen_space(contours, image):
+def calculate_normalized_screen_space(contours: typing.Union[typing.List[np.ndarray], np.ndarray], image):
+    """
+
+
+    :param contours:
+    :param image:
+    :return:
+    """
     height, width, _ = image.shape
     x, y = contour_average_center(contours)
     x /= width / 2
@@ -124,11 +134,12 @@ def calculate_normalized_screen_space(contours, image):
 
 def circle_rating(contour, area_factor=0.9, radius_factor=0.8):
     """
-     returns a rating of how close is the circle to being a circle
+    Returns a rating of how close is the circle to being a circle
+
     :param contour: the contour that its rating is calculated
     :param area_factor: the factor (p-value) that separates an area ratio that is a circle and one that isn't
     :param radius_factor: the factor (p-value) that separates an radius ratio that is a circle and one that isn't
-    :return:
+    :return: the circle rating for the given contour
     """
     fill_ratio, radius = circle_fill_ratio(contour)
     _, _, width, height = cv2.boundingRect(contour)
