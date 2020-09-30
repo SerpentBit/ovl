@@ -22,20 +22,20 @@ class Director:
     """
 
     def __init__(self, directing_function: Callable, failed_detection: Any = None, target_amount: int = 1,
-                 direction_monitors: List[DirectionModifier] = None):
+                 direction_modifiers: List[DirectionModifier] = None):
         """
         :param directing_function: the function that performs the initial direction calculation
         :param failed_detection: The value returned on a failed detection
         :param target_amount: the target amount to find, if the value is 0
                               the target amount (minimum amount) removed and is infinite
-        :param direction_monitors: list of DirectionMonitor objects that alter the directions to be sent
+        :param direction_modifiers: list of DirectionMonitor objects that alter the directions to be sent
         """
         self.directions = directing_function
         if not isinstance(target_amount, int):
             raise ValueError("Target amount must be an integer, got {} of type {}.".format(target_amount,
                                                                                            type(target_amount)))
         self.target_amount = target_amount if target_amount != 0 else math.inf
-        self.direction_monitors = direction_monitors
+        self.direction_monitors = direction_modifiers
         self.failed_detection = failed_detection
 
     def direct(self, contours: List[np.ndarray], image: np.ndarray, sorter=None) -> Any:
