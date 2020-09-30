@@ -1,7 +1,7 @@
 from typing import Union
 
 
-class DirectionMonitor:
+class DirectionModifier:
     @property
     def priority(self) -> Union[bool, float]:
         return False

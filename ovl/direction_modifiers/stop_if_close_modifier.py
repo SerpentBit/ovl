@@ -1,13 +1,13 @@
 import typing
 import numpy as np
 
-from ...math.image import image_size
-from ...helpers.types import RangedNumber
-from ...math import contours
-from ..direction_monitors.direction_monitor import DirectionMonitor
+from ovl.math.image import image_size
+from ovl.helpers.types import RangedNumber
+from ovl.math import contours
+from ..direction_modifiers.direction_modifier import DirectionModifier
 
 
-class StopIfCloseMonitor(DirectionMonitor):
+class StopIfCloseModifier(DirectionModifier):
     """
     A Direction monitor that stops when the target found is large enough (close enough).
     Like other DirectionMonitor objects, it monitors the directions returned.

@@ -1,7 +1,7 @@
 from typing import *
 import math
 
-from .direction_monitors.direction_monitor import *
+from ..direction_modifiers.direction_modifier import DirectionModifier
 from ..camera_.camera_settings import *
 
 
@@ -19,13 +19,10 @@ class Director:
     - The final result (direction function or failed_detection) is passed to the direction monitors
     - each monitor is applied to the result and its result is passed to the next one
     - then the final result is returned
-
-
-
     """
 
     def __init__(self, directing_function: Callable, failed_detection: Any = None, target_amount: int = 1,
-                 direction_monitors: List[DirectionMonitor] = None):
+                 direction_monitors: List[DirectionModifier] = None):
         """
         :param directing_function: the function that performs the initial direction calculation
         :param failed_detection: The value returned on a failed detection

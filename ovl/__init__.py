@@ -7,12 +7,9 @@ from .connections.network_tables_connection import NetworkTablesConnection
 from .connections.serial_connection import SerialConnection
 from .target_filters import *
 from .directions.directing_functions import *
-from .directions.direction_monitors.direction_monitor import DirectionMonitor
-from .directions.direction_monitors.stop_if_close_monitor import StopIfCloseMonitor
 from .directions.director import Director
 from .image_utilities.display_image import display_image
 from .exceptions import exceptions
-from .hsv_calibration.hsv_calibration import HSVCalibration
 from .image_filters.image_filters import *
 from .image_utilities.naming_conventions import *
 from .image_utilities.photo_array import photo_array
