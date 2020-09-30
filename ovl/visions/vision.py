@@ -4,6 +4,9 @@ import types
 import cv2
 import numpy as np
 from typing import List, Union, Tuple, Any
+
+from ..helpers.vision_detector_arguments import arguments_to_detector
+from ..thresholds.threshold import Threshold
 from ..detectors.detector import Detector
 from ..exceptions.exceptions import InvalidCustomFunctionError, CameraError
 from ..camera.camera import Camera
@@ -42,13 +45,17 @@ class Vision:
     Ambient Vision is another option for using 2 different Vision objects and alternate between the 2.
     """
 
-    def __init__(self, detector: Detector = None, target_filters: List[types.FunctionType] = None,
+    def __init__(self, detector: Detector = None, threshold: Threshold = None,
+                 morphological_functions: List[types.FunctionType] = None,
+                 target_filters: List[types.FunctionType] = None,
                  director: Director = None, width=320, height=240, connection: Connection = None,
                  camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
                  camera_settings: CameraSettings = None, image_filters: List[types.FunctionType] = None,
-                 ovl_camera: bool = False):
+                 ovl_camera: bool = False, haar_classifier: str = None):
         """
-        :param detector: a Detector object responsible
+        :param detector: a Detector object responsible for detecting targets
+        :param threshold: threshold object, creates the binary mask from a given image, this cannot be passed together
+        with detector
         :param target_filters: the list of contour_filter functions that
                                 remove contours that aren't the target(s)
         :param director: a functions that receives a list or a single contour and returns director
@@ -60,7 +67,13 @@ class Vision:
                                 image correction and various direction calculations.
         :param image_filters: a list of image altering functions that are applied on the image.
         :param ovl_camera: a boolean that makes the camera opened to be ovl.Camera instead of cv2.VideoCapture
+        :param haar_classifier:
         """
+        mutually_exclusive_arguments = {"threshold": (threshold, morphological_functions),
+                                        "detector": (detector,),
+                                        "haar_cascade": (haar_classifier,)}
+
+        detector = arguments_to_detector(mutually_exclusive_arguments)
         self.detector = detector
         self.width = width
         self.height = height
@@ -71,6 +84,7 @@ class Vision:
         self.camera = None
         self.camera_port = None
         self.camera_settings = camera_settings
+
         if isinstance(camera, (cv2.VideoCapture, Camera)):
             self.camera = camera
         elif camera is None:
