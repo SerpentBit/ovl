@@ -6,7 +6,7 @@ camera = ovl.Camera(0)
 
 image_filters = [ovl.gaussian_blur((5, 5))]
 
-hexagon_contour_filters = [ovl.area_filter(min_area=300),
+hexagon_contour_filters = [ovl.percent_area_filter(minimal_percent=0.05),
                            ovl.polygon_filter(side_amount=6,
                                               min_area_filter=0.7,
                                               min_len_ratio=0.5,
@@ -17,7 +17,7 @@ ball_contour_filters = [ovl.area_filter(min_area=200),
                         ovl.circle_filter(min_area_ratio=0.65),
                         ovl.area_sort()]
 
-hexagon_director = ovl.Director(ovl.xy_center_directions,
+hexagon_director = ovl.Director(ovl.xy_normalized_directions,
                                 failed_detection=9999,
                                 target_amount=2)
 

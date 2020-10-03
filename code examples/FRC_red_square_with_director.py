@@ -22,7 +22,7 @@ contour_filters = [ovl.area_filter(min_area_ratio=150),
                    ovl.straight_rectangle_filter(min_area_ratio=0.7),
                    ovl.area_sort()]
 
-director = ovl.Director(directing_function=ovl.xy_center_directions,
+director = ovl.Director(directing_function=ovl.xy_normalized_directions,
                         failed_detection=9999,
                         target_amount=1)
 
