@@ -28,7 +28,7 @@ body {
 }
 
 div.document {
-    background-color: #CF5C36;
+    background-color: #1c4e63;
 }
 
 div.documentwrapper {
@@ -60,7 +60,7 @@ div.footer a {
 }
 
 div.related {
-    background-color: #568EA3;
+    background-color: #133f52;
     line-height: 30px;
     color: #ffffff;
 }
@@ -262,7 +262,7 @@ div.viewcode-block:target {
 
 div.code-block-caption {
     color: #efefef;
-    background-color: #CF5C36;
+    background-color: #1c4e63;
 }
 
 .py.method {
