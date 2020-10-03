@@ -15,19 +15,17 @@ import sys
 
 sys.path.insert(0, os.path.abspath('..'))
 
-
 # -- Project information -----------------------------------------------------
 
 project = 'ovl'
-copyright = '2020, Elysium1937'
+copyright = '2018 - 2021, Elysium 1937'
 author = 'Elysium1937'
 
 # The short X.Y version
-version = '1.0'
+version = '2021.1'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0'
-
+release = '2021.1.0'
 
 # -- General configuration ---------------------------------------------------
 
@@ -38,6 +36,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.todo',
+    'sphinx.ext.autosectionlabel'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -55,7 +54,6 @@ language = 'en'
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -67,7 +65,6 @@ html_theme = 'classic'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
 
 # -- Extension configuration -------------------------------------------------
 

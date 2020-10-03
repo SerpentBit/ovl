@@ -2,7 +2,22 @@
  ![OVL Logo](https://user-images.githubusercontent.com/45563197/76566629-d4301300-64b5-11ea-9868-40ecde73dcaa.png)
 
 Python Module for Computer Vision Object Tracking and Detection mainly for the FIRST® Robotics Competition Program
+
+Ovl support complex yet modular computer vision pipelines that are easy to create and modify.
+
+Easy to create and setup for beginners and flexible for pros
+ 
+
 *You can follow up on changes in for the current version in the [changelog folder](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs)*
+
+
+## Documentation
+
+There are multiple code examples [here](https://github.com/1937Elysium/Ovl-Python/tree/master/code%20examples)
+
+Documentation is available [here](https://ovl.readthedocs.io/) 
+
+
 
 ### Dependencies:
 
@@ -17,8 +32,8 @@ The following python modules are optional for certain features:
 
  - NetworkTables (pyNetworkTables) for `NetworkTableConnection` (installed automatically)
  
- - sklearn (scikit-learn) for `HSVCalibration` creation (not needed for use in `Vision`)
-
+ - Requests (requests) for `HTTPConnection`
+ 
  - PySerial (pyserial) for `SerialConnection`
 
 OVL is officially supported for python 3.5+ only!
@@ -46,14 +61,12 @@ contour_filters = [ovl.area_filter(min_area=200),
                    ovl.circle_filter(min_area_ratio=0.7),
                    ovl.area_sort()]
 
-image_filters = [ovl.gaussian_blur()]
-
 threshold = ovl.YELLOW_HSV  # Define the wanted color to detect 
 
 yellow_circle = ovl.Vision(threshold=threshold,
-                           contour_filters=contour_filters,
+                           target_filters=target_filters,
                            camera=0,  # open the first connected camera
-                           image_filters=image_filters)
+                           image_filters=[ovl.gaussian_blur()])
 
 while True:
     image = yellow_circle.get_filtered_image()
@@ -65,26 +78,3 @@ while True:
 
 ```
 There are more code examples and usages [here](https://github.com/1937Elysium/Ovl-Python/tree/master/code%20examples)
-<br>
-<br>
-
-## Documentation
-The Hebrew and English documentation have been removed for being outdated all functions
-and classes now have in code documentation.
-This includes code examples, recommended usage reference to further
-documentation and more.
-
-There are multiple code examples [here](https://github.com/1937Elysium/Ovl-Python/tree/master/code%20examples)
-
-Simply use the built-in `help` on a class/function:
-```
-help(ovl.Vision)
-
-help(ovl.contour_filter)
-
-help(ovl.area_filter)
-```
-
-<br>
-<br>
-

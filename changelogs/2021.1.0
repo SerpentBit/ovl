@@ -1,0 +1,40 @@
+## 2020.1.8 Changelog
+### Changes from last patch: 
+
+### Additions:
+ - New Threshold object BinaryThreshold, can preform binary threshold on an image, supports Otsu binarization.
+ - New Detector Class, responsible for detecting objects in an image,
+   this responsibility has been extracted from `Vision`
+ - New Detector, ThresholdDetector uses a Threshold object to detect contours in an image
+ - New Detector, HaarCascadeDetector, supports haar-cascade descriptor loading for detection of targets
+ - `Camera` now has `Camera.get_image()` for a more convenient way of getting the image. 
+ - new contour_filter, `size_ratio_filter` which filters contours based on the ratio between 
+   the width and height of the straight bounding rectangle 
+ - Added 2 new code examples
+ - crop_contour_region, a function that crops our the region of a contour in an image.
+ 
+### Changes:
+ - morphological functions have been removed from `Vision` and moved to ThresholdDetector
+ - threshold removed from `Vision`, now passed to ThresholdDetector - all related functions moved also to ThresholdDetector
+ - `Vision` now uses detector as the object responsible for target detection.
+ - `display_contours` and `display_image` now use a boolean instead of int for delay; minor performance increase
+ - Rewritten `image_center_filter`, now had min and max ratio distance parameters, also cleaned up function
+ - Cleaned up some sorter functions, should have small performance improvements
+ - Cleaned up many contour filters
+ - contour_filters in `Vision` and vision like are now called target_filters, to be more generic
+ - `Connection.__exit__` now automatically calls `Connection.close`, changed implementations no match it.
+ 
+### Renames:
+ - `Camera.isOpened` -> `Camera.is_opened` 
+ - `Camera.getBackedName` -> `Camera.get_backend_name`
+ - `xy_center_direction` -> `xy_normalized_directions`
+ 
+### Removals:
+ - Drawing has been removed
+ - HsvCalibration has been removed, will be re-added in a later iteration
+ 
+### Documentation:
+ - We now officially have a documentation available at: 
+ - added docs folder containing rst documentation and static docs
+ - Fixed formatting for multiple functions and classes
+ - Added doc-strings for many functions and classes

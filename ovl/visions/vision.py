@@ -257,3 +257,22 @@ class Vision:
             raise CameraError("Camera did not open correctly! Camera source: {}".format(self.camera_port))
         self.camera = camera
         return camera
+
+    def detect(self, image, verbose=False, *args, **kwargs):
+        """
+        This is the function that performs processing detection and filtering on a given image, essentially passing
+        the image through the detection related part of the pipeline
+
+        detect applies image filters, detects objects in the filtered images (using the passed/created detector object)
+        and finally applies all of the target_filters on the image.
+
+        args and kwargs are passed to the detect function (passed to the detect method of the detector)
+
+        :param verbose: passes verbose to apply_target_filters, which prints out information about the target filtering.
+        :param image: image in which the vision should detect an object
+        :return: contours and the filtered image and the ratios if return_ratios is true
+
+        """
+        image = self.apply_image_filters(image)
+        targets = self.detector.detect(image, verbose, *args, **kwargs)
+        return self.apply_target_filters(targets, verbose)

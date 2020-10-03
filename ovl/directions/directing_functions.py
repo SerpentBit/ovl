@@ -3,13 +3,13 @@ from numpy import ndarray
 from ..math import contours as contours_
 
 
-def xy_center_directions(contours, image: ndarray):
+def xy_normalized_directions(contours, image: ndarray):
     """
     Returns the direction the detect objects (contours) are compared to the center
     of the image, this is returned in normalized screen space -1 to 1 (-1 meaning the most left compared to the center,
     and 1 the most right compared to the center and 0 meaning perfectly centered
 
-    xy_center_directions returns x and y center directions,
+    xy_normalized_directions returns x and y center directions,
 
     For example:
     If the center of the targets are the center of the image (width / 2, height / 2)

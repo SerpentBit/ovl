@@ -1,14 +1,6 @@
 ovl.directions package
 ======================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   ovl.directions.direction_monitors
-
 Submodules
 ----------
 

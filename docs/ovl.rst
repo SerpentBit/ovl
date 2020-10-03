@@ -9,10 +9,11 @@ Subpackages
 
    ovl.camera
    ovl.connections
+   ovl.detectors
+   ovl.direction_modifiers
    ovl.directions
    ovl.exceptions
    ovl.helpers
-   ovl.hsv_calibration
    ovl.image_filters
    ovl.image_utilities
    ovl.math

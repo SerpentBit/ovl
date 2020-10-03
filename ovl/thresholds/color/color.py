@@ -153,6 +153,7 @@ class Color(Threshold):
     def low(self):
         """
         Returns the low hsv limit of the color.
+
         :return: An uint8 numpy array with the low limit of the color.
         :rtype: uint8 numpy array
         """
@@ -161,7 +162,8 @@ class Color(Threshold):
     @property
     def high(self):
         """
-         Returns the high hsv limit of the color.
+        Returns the high hsv limit of the color.
+
         :return: An uint8 numpy array with the high limit of the color.
         :rtype: uint8 numpy array
         """

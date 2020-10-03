@@ -12,6 +12,7 @@ Submodules
    ovl.helpers.remove_none_values
    ovl.helpers.team_number_to_ip
    ovl.helpers.types
+   ovl.helpers.vision_detector_arguments
 
 Module contents
 ---------------
