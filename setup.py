@@ -6,7 +6,7 @@ with open("README.md", "r") as read_me:
 setup(
     name='ovl',
     packages=find_packages(),
-    version='2020.1.8',
+    version='2021.1.0',
     license='apache-2.0',
     author='Ori Ben-Moshe',
     author_email='ovl.contact.help@gmail.com',
