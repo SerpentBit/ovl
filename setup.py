@@ -6,12 +6,12 @@ with open("README.md", "r") as read_me:
 setup(
     name='ovl',
     packages=find_packages(),
-    version='2021.1.0',
+    version='2021.1.1',
     license='apache-2.0',
     author='Ori Ben-Moshe',
     author_email='ovl.contact.help@gmail.com',
-    description='A modular and versatile Python package for Computer Vision'
-                ' object detection pipelines Tailored for robotics applications',
+    description='A modular and versatile Python package for computer vision'
+                ' object detection pipelines tailored for robotics applications',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/1937Elysium/Ovl-Python',
@@ -27,6 +27,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Scientific/Engineering :: Image Recognition',
         'Operating System :: POSIX :: Linux',
         'Operating System :: Microsoft :: Windows'
