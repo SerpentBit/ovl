@@ -15,7 +15,7 @@ def _argument_group_to_detector_constructor(argument_group, *args, **kwargs):
 def arguments_to_detector(mutually_exclusive_arguments):
     existing_group = None
     existing_group_name = None
-    for group_name, argument_group in mutually_exclusive_arguments:
+    for group_name, argument_group in mutually_exclusive_arguments.items():
         if any(argument_group):
             if existing_group_name:
                 raise ValueError(

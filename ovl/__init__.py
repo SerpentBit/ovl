@@ -1,6 +1,5 @@
 from .camera.camera import Camera
-from .camera_.camera_calibration import CameraCalibration
-from .camera_.camera_settings import CameraSettings
+from .camera.camera_calibration import CameraCalibration
 from .connections import *
 from .connections.network_location import NetworkLocation
 from .connections.network_tables_connection import NetworkTablesConnection

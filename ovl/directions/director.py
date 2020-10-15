@@ -2,7 +2,7 @@ from typing import *
 import math
 
 from ..direction_modifiers.direction_modifier import DirectionModifier
-from ..camera_.camera_settings import *
+from ..camera.camera_settings import *
 
 
 class Director:

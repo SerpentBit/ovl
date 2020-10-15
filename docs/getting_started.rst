@@ -76,6 +76,10 @@ Filtering is a stage with 3 functions:
 2. In applications that implement some form of pairing or grouping
 3. Sort the targets by some property (size, shape, location in image etc.)
 
+All non-sorter filters can be seen as 
+
+There are many built-in filter functions for many "criteria"
+
 
 
 
@@ -89,35 +93,49 @@ For example, if you want to create a pipeline that detects if a red light or gre
 The information you would get after filtering would be there is an object (in the color red or green) with its center at (x,y) in
 the image or that no object was detected. But this doesnt help use return an answer of:
 
-1. there is a red object
-2. there is a green object
-3. there is no object
+1. there is a red object in the image
+2. there is a green object in the image
+3. there is no object in the image
 
-In order
-
-.. note::
-
-    Remember to consider the case of no detected objects!
-
-There are 2 main objects used in this stage Director and Connection.
+In order to do that we can use the Director object.
 
 The Director object is used to take the result of the Detection and Filtering stages and convert them
 to data that can be used by your application.
 
 The director does 3 things:
+
 1. Select the "target_amount" of targets that are considered to have passed all the stages (this stage can be skipped by passing
 math.inf or 0 - no limit) if there are not enough, return failed value
 
-2. Applies the direction_function on the target and the image - this converts
+2. Applies the direction_function on the target and the image - this converts the raw data (contour, bounding rectangle etc.) to
+a value we can use. Examples for this stage are extracting the center of the target (x,y), calculating the direction to move
+in (calculate center in normalized screen space), counting how many objects are detected etc.
 
 3. `Direction Modifiers <ovl.direction\_modifiers.direction\_modifier>`, these are object that add logical layers
+to the direction calculation, any modification to the final value can be applied here, such as PID, sending a stop value
+in a stop condition etc.
 
 
 .. code-block::
 
     import ovl
 
-    director = ovl.Director(direction_function=ovl.target_amount=2, failed_value=)
+    director = ovl.Director(direction_function=ovl.target_amount=2, failed_value=-1)
+
+    vision = ovl.Vision(..., director=director, ...)
+
+    while True:
+        image = ovl.get_image()
+        targets, filtered_image = ovl.detect(image)
+        directions = vision.direct(targets, filtered_image)
+
+
+In this code example, directions will be the final directions values, the result returned from the directions function
+and applied all of the direction modifiers
+
+After calculating the directions we can send it using a Connection object,
+Connection objects represent another source we send the result of out pipeline to.
+For FRC applications there
 
 
 
