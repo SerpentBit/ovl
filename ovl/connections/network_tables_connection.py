@@ -8,8 +8,8 @@ NetworkTables = None
 
 class NetworkTablesConnection(Connection):
     """
-    Note: In Order to use NetworkTablesConnection you must have pynetworktables installed. (It is automatically installed
-    when installing ovl)
+    Note: In Order to use NetworkTablesConnection you must have pynetworktables installed.
+    (It is automatically installed when installing ovl)
 
     A connection to that uses NetworkTables (The FRC network protocol).
 

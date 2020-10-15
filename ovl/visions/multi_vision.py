@@ -82,7 +82,7 @@ class MultiVision:
         self.index = index
         return index
 
-    def _dict_switch_vision(self, index: int):
+    def _dict_switch_vision(self, index: Any):
         """
         Switches the current vision to the one given if the visions container is a list
 

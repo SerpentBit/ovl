@@ -4,7 +4,7 @@ import types
 
 from . import vision
 from ..connections import connection
-from ..thresholds.threshold import Threshold
+from ..detectors.detector import Detector
 
 
 class AmbientVision:
@@ -57,8 +57,8 @@ class AmbientVision:
         return self.current_vision.connection
 
     @property
-    def threshold(self) -> Threshold:
-        return self.current_vision.threshold
+    def detector(self) -> Detector:
+        return self.current_vision.detector
 
     @property
     def image_filters(self) -> List[types.FunctionType]:
@@ -84,35 +84,7 @@ class AmbientVision:
         """
         return self.current_vision.apply_image_filters(image)
 
-    def apply_morphological_functions(self, mask: np.ndarray) -> np.ndarray:
-        """
-        Applies the current vision's morphological functions on
-        a binary mask (numpy ndarray)
-
-        See Vision.apply_morphological_functions for full description
-        """
-        return self.current_vision.apply_morphological_functions(mask)
-
-    def find_contours_in_mask(self, mask: np.ndarray, save: bool = True,
-                              return_hierarchy: bool = False) -> List[np.ndarray]:
-        """
-        Returns a list of contours from a given binary mask (numpy ndarray),
-        using the current vision
-
-        See Vision.find_contours_in_mask for full description
-        """
-        return self.current_vision.find_contours_in_mask(mask, save, return_hierarchy)
-
-    def find_contours(self, image: np.ndarray, threshold=None, return_hierarchy=False) -> List[np.ndarray]:
-        """
-        Find contours in the given image, using the current vision.
-
-        See Vision.find_contours for full description
-        """
-        return self.current_vision.find_contours(image, threshold, return_hierarchy)
-
-    def detect(self, image: np.ndarray, verbose=False
-               ) -> Tuple[List[np.ndarray], np.ndarray]:
+    def detect(self, image: np.ndarray, verbose=False, *args, **kwargs) -> Tuple[List[np.ndarray], np.ndarray]:
         """
         Gets contours and applies all filters and returns the result,
         thus detecting the object according to the specifications in the vision,
@@ -122,7 +94,7 @@ class AmbientVision:
         :param verbose: if true prints additional information about contour filtering
         :return: contours, ratio list (from the filter functions) and the filtered image
         """
-        return self.current_vision.detect(image, verbose=verbose)
+        return self.current_vision.detect(image, verbose=verbose, *args, **kwargs)
 
     def send(self, data, *args, **kwargs):
         """

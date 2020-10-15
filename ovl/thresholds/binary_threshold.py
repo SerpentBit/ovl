@@ -18,7 +18,8 @@ class BinaryThresholdType(enum.IntEnum):
 
 def is_valid_threshold_type(threshold_type):
     for current_threshold_type in BinaryThresholdType.__members__.values():
-        if threshold_type == current_threshold_type.value or threshold_type == current_threshold_type.value + cv2.THRESH_OTSU:
+        current_type_value = current_threshold_type.value
+        if threshold_type == current_type_value or threshold_type == current_type_value + cv2.THRESH_OTSU:
             return True
     return False
 

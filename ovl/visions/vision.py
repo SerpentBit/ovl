@@ -13,7 +13,7 @@ from ..camera.camera import Camera
 from ..partials.filter_applier import filter_applier
 from ..connections.connection import Connection
 from ..directions.director import Director
-from .camera.camera_settings import CameraSettings
+from ..camera.camera_settings import CameraSettings
 from ..connections.network_location import NetworkLocation
 from ..directions.directing_functions import center_directions
 
