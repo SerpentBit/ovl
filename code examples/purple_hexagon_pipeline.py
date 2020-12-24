@@ -15,11 +15,11 @@ target_filters = [ovl.percent_area_filter(minimal_percent=0.03),
                   ovl.polygon_filter(side_amount=6, min_len_ratio=0.4, min_area_ratio=0.6),
                   ovl.area_sort()]
 
-direction_monitors = [ovl.StopIfCloseModifier(0.6, 5000)]
+direction_monitors = [ovl.StopIfCloseModifier(minimum_size=0.6, value_sent=5000)]
 
 director = ovl.Director(direction_modifiers=direction_monitors,
                         target_amount=6,
-                        failed_detection=9999,
+                        failed_detection="Could not detect!",
                         directing_function=ovl.center_directions)
 
 connection = ovl.SerialConnection(port=SERIAL_PORT)

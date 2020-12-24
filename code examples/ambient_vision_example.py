@@ -18,11 +18,11 @@ ball_contour_filters = [ovl.area_filter(min_area=200),
                         ovl.area_sort()]
 
 hexagon_director = ovl.Director(ovl.xy_normalized_directions,
-                                failed_detection=9999,
+                                failed_detection="Could not detect!",
                                 target_amount=2)
 
 ball_director = ovl.Director(ovl.target_amount_directions,
-                             failed_detection=9999,
+                             failed_detection="Could not detect!",
                              target_amount=2)
 
 red_ball_amount_counter = ovl.Vision(threshold=ovl.RED_HSV,
