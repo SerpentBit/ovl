@@ -10,6 +10,7 @@ from .directions.director import Director
 from .direction_modifiers.direction_modifier import DirectionModifier
 from .direction_modifiers.stop_if_close_modifier import StopIfCloseModifier
 from .image_utilities.display_image import display_image
+from .image_utilities.display_contours import display_contours
 from .exceptions import exceptions
 from .image_filters.image_filters import *
 from .image_utilities.naming_conventions import *
