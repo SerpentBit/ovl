@@ -10,6 +10,7 @@ from .directions.director import Director
 from .direction_modifiers.direction_modifier import DirectionModifier
 from .direction_modifiers.stop_if_close_modifier import StopIfCloseModifier
 from .image_utilities.display_image import display_image
+from .image_utilities.display_contours import display_contours
 from .exceptions import exceptions
 from .image_filters.image_filters import *
 from .image_utilities.naming_conventions import *
@@ -30,4 +31,4 @@ from .visions.ambient_vision import AmbientVision
 from .visions.multi_vision import MultiVision
 from .visions.vision import Vision
 
-__version__ = '2021.1.0'
+__version__ = '2021.1.3'

@@ -6,7 +6,7 @@ It also includes connection object
 Which simplifies passing data to the target that acts on the detection
 ******************************************************
 NOTE: this example code uses NetworkTablesConnection
-which is used specifically for,  the FIRST Robotics Competition
+which is used specifically for, the FIRST Robotics Competition
 in order to connect to the RoboRIO controller
 You can easily replace it with a different connections
 """
@@ -18,13 +18,14 @@ TEAM_NUMBER = "1937"
 
 threshold = ovl.RED_HSV
 
-contour_filters = [ovl.area_filter(min_area_ratio=150),
+contour_filters = [ovl.area_filter(min_area=150),
                    ovl.straight_rectangle_filter(min_area_ratio=0.7),
                    ovl.area_sort()]
 
 director = ovl.Director(directing_function=ovl.xy_normalized_directions,
-                        failed_detection=9999,
+                        failed_detection="Could not detect!",
                         target_amount=1)
+
 
 camera = ovl.Camera(0, image_width=640, image_height=480)
 
@@ -41,5 +42,7 @@ red_square = ovl.Vision(threshold=threshold,
 while True:
     image = red_square.get_image()
     contours, filtered_image = red_square.detect(image)
-    directions = red_square.get_directions(contours, filtered_image)
-    red_square.send(directions)
+    directions = red_square.get_directions(contours, image)
+    print(directions)
+
+    # red_square.send(directions)  # Comment when not running with a connected RoboRIO

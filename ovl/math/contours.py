@@ -73,9 +73,9 @@ def contour_average_center(contours) -> Tuple[float, float]:
     :param contours: the list of contours
     :return: the average center  (x,y)
     """
-    contour_amount = len(contours)
+    contour_amount = float(len(contours))
     point_sum = reduce(_contour_center_sum, contours, (0, 0))
-    average = (point_sum[0] / contour_amount)
+    average = (point_sum[0] / contour_amount, point_sum[1] / contour_amount)
     return average
 
 
@@ -120,11 +120,16 @@ def contour_lengths_and_angles(contour, approximation_coefficient=0.02):
 
 def calculate_normalized_screen_space(contours: typing.Union[typing.List[np.ndarray], np.ndarray], image):
     """
+    This function Calculates the center of the contours and converts it to normalized screen space,
+    Which is the x and y values in relation to the center of the image
+
+    This allows normalized values regardless of image size!
 
 
-    :param contours:
-    :param image:
-    :return:
+
+    :param contours: One Contour or a list of contours which their center should be calculated
+    :param image: the image from which it was found
+    :return: x, y in normalized screen space
     """
     height, width, _ = image.shape
     x, y = contour_average_center(contours)

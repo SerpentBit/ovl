@@ -59,7 +59,7 @@ class Camera:
         if self.stopped:
             return self
         self.stopped = False
-        self.camera_thread = Thread(target=self._update, args=()).start()
+        self.camera_thread = Thread(target=self._update).start()
         return self
 
     def _update(self) -> None:
@@ -145,6 +145,15 @@ class Camera:
     def is_opened(self) -> bool:
         """
         Returns true_shape if the camera is opened, false otherwise
+
+        :return: if the camera is open
+        """
+        return self.stream.isOpened()
+
+    def isOpened(self) -> bool:
+        """
+        Returns true_shape if the camera is opened, false otherwise
+        This function is left to allow it to be used wherever cv2.VideoCapture can be used
 
         :return: if the camera is open
         """

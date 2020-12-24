@@ -4,8 +4,8 @@ import ovl
 # and are approximately a circle and then sort by size
 
 target_filters = [ovl.area_filter(min_area=200),
-                   ovl.circle_filter(min_area_ratio=0.7),
-                   ovl.area_sort()]
+                  ovl.circle_filter(min_area_ratio=0.7),
+                  ovl.area_sort()]
 
 threshold = ovl.YELLOW_HSV  # Define the wanted color to detect
 
