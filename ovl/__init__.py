@@ -31,4 +31,4 @@ from .visions.ambient_vision import AmbientVision
 from .visions.multi_vision import MultiVision
 from .visions.vision import Vision
 
-__version__ = '2021.1.0'
+__version__ = '2021.1.3'
