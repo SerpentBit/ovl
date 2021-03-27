@@ -16,6 +16,9 @@ from ..directions.director import Director
 from ..camera.camera_settings import CameraSettings
 from ..connections.network_location import NetworkLocation
 from ..directions.directing_functions import center_directions
+from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
+
+OMIT_DIMENSION_VALUES = (-1, 0)
 
 
 class Vision:
@@ -47,9 +50,9 @@ class Vision:
 
     def __init__(self, detector: Detector = None, threshold: Threshold = None,
                  morphological_functions: List[types.FunctionType] = None,
-                 target_filters: List[types.FunctionType] = None,
-                 director: Director = None, width=320, height=240, connection: Connection = None,
-                 camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
+                 target_filters: List[types.FunctionType] = None, director: Director = None,
+                 width=DEFAULT_IMAGE_WIDTH, height=DEFAULT_IMAGE_HEIGHT,
+                 connection: Connection = None, camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
                  camera_settings: CameraSettings = None, image_filters: List[types.FunctionType] = None,
                  ovl_camera: bool = False, haar_classifier: str = None):
         """
@@ -248,9 +251,9 @@ class Vision:
             camera = Camera(source=source, image_width=image_width, image_height=image_height)
         else:
             camera = cv2.VideoCapture(source)
-            if image_width != -1:
+            if image_width not in OMIT_DIMENSION_VALUES:
                 camera.set(3, image_width)
-            if image_height != -1:
+            if image_height not in OMIT_DIMENSION_VALUES:
                 camera.set(4, image_height)
 
         if not camera.isOpened():
@@ -260,7 +263,7 @@ class Vision:
 
     def detect(self, image, verbose=False, *args, **kwargs):
         """
-        This is the function that performs processing detection and filtering on a given image, essentially passing
+        This is the function that performs processing, detection and filtering on a given image, essentially passing
         the image through the detection related part of the pipeline
 
         detect applies image filters, detects objects in the filtered images (using the passed/created detector object)
