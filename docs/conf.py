@@ -25,7 +25,7 @@ author = 'Elysium1937'
 version = '2021.1'
 
 # The full version, including alpha/beta/rc tags
-release = '2021.1.0'
+release = '2021.1.4'
 
 # -- General configuration ---------------------------------------------------
 
