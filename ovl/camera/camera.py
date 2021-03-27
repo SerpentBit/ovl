@@ -170,3 +170,12 @@ class Camera:
         :return: returns the backend name of a camera
         """
         return self.stream.getBackendName()
+
+    def getBackendName(self) -> str:
+        """
+        Gets the backend name of the camera using cv2.VideoCapture.getBackendName()
+
+        This Function exists to allow compatibility with opencv's VideoCapture object
+        :return: returns the backend name of a camera
+        """
+        return self.get_backend_name()
