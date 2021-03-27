@@ -276,6 +276,13 @@ class Vision:
         :return: contours and the filtered image and the ratios if return_ratios is true
 
         """
-        image = self.apply_image_filters(image)
-        targets = self.detector.detect(image, verbose, *args, **kwargs)
-        return self.apply_target_filters(targets, verbose)
+        filtered_image = self.apply_image_filters(image)
+        targets = self.detector.detect(filtered_image, verbose, *args, **kwargs)
+        filtered_targets = self.apply_target_filters(targets, verbose)
+        if isinstance(filtered_targets, tuple):
+            targets, ratios = filtered_targets
+            returned_value = (targets, filtered_image, ratios)
+        else:
+            returned_value = (targets, filtered_image)
+
+        return returned_value
