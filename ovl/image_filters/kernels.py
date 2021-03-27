@@ -4,7 +4,7 @@ import cv2
 
 def validate_odd_size(size):
     """
-    Validates that a kernel shape is of odd  ints and of size 2
+    Validates that a kernel shape is of odd ints and of with 2 dimensions
 
     :param size: the shape (size) to be checked
     :return: False if size is invalid

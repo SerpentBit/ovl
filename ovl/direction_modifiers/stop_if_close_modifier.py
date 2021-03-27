@@ -17,7 +17,6 @@ class StopIfCloseModifier(DirectionModifier):
         """
         :param minimum_size: relative size in percent of the size of the image that considers the object "close" enough
                             it depends on your object size, but 40% of the image size is usually enough
-                            so for an image the size of 320 x 240 it will be 320 * 240 * 0.4
         :param value_sent: the value returned if the object is close enough
         :param priority: a boolean that notes if this monitor should take priority (and stop consecutive monitors from
                          being called)
@@ -29,6 +28,11 @@ class StopIfCloseModifier(DirectionModifier):
 
     @property
     def priority(self):
+        """
+        This is a value that determines whether or not it stop consecutive DirectionModifiers
+
+        :return:
+        """
         return self._priority
 
     def monitor(self, directions: typing.Any, targets: typing.List[np.ndarray],
