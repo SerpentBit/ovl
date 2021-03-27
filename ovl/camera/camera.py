@@ -3,12 +3,16 @@ from threading import Thread
 import numpy as np
 import cv2
 
+from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, DEFAULT_CAMERA_SOURCE, \
+    MAX_OPENCV_CAMERA_PROPERTY, MIN_OPENCV_CAMERA_PROPERTY
+
 
 class Camera:
     __slots__ = ("stream", "grabbed", "frame", "stopped", "camera_thread", "start_immediately")
 
-    def __init__(self, source: Union[str, int, cv2.VideoCapture] = 0,
-                 image_width: int = 320, image_height: int = 240, start_immediately=True):
+    def __init__(self, source: Union[str, int, cv2.VideoCapture] = DEFAULT_CAMERA_SOURCE,
+                 image_width: int = DEFAULT_IMAGE_WIDTH, image_height: int = DEFAULT_IMAGE_HEIGHT,
+                 start_immediately=True):
         """
         Camera connects to and opens a connected camera and on constantly reads image from the camera.
         ovl.Camera is more real-time oriented and operates at a faster rate than opencv's VideoCapture, but is not
@@ -138,7 +142,7 @@ class Camera:
         if isinstance(property_id, int):
             raise ValueError("Given Property id {} was not valid, please refer to the documentation: "
                              "https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html".format(property_id))
-        if not 0 <= type(property_id) < 19:
+        if not MIN_OPENCV_CAMERA_PROPERTY <= type(property_id) <= MAX_OPENCV_CAMERA_PROPERTY:
             raise ValueError("Invalid property id ({}), please refer to the documentation".format(property_id))
         return self.stream.get(property_id)
 

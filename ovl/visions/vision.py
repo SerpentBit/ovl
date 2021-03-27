@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from typing import List, Union, Tuple, Any
 
-from ..helpers.vision_detector_arguments import arguments_to_detector
+from ..utils.vision_detector_arguments import arguments_to_detector
 from ..thresholds.threshold import Threshold
 from ..detectors.detector import Detector
 from ..exceptions.exceptions import InvalidCustomFunctionError, CameraError

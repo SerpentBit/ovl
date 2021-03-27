@@ -6,6 +6,7 @@ from ..math.contours import open_arc_length, circle_rating
 from ..math import image
 from .contour_filter import contour_filter
 from .sorter_helper_functions import contour_center_and_point_distance
+from ..utils.constants import DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT
 
 
 @contour_filter
@@ -36,7 +37,7 @@ def distance_sort(contour_list, point):
 
 
 @contour_filter
-def image_center_sort(contour_list, image_dimensions=(320, 240)):
+def image_center_sort(contour_list, image_dimensions=(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT)):
     """
     Sorts the contours from the closest to the center to the farthest.
     NOTE: it is important to area filter before image_center_sort

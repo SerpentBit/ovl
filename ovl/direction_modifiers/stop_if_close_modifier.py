@@ -2,7 +2,7 @@ import typing
 import numpy as np
 
 from ovl.math.image import image_size
-from ovl.helpers.types import RangedNumber
+from ovl.utils.types import RangedNumber
 from ovl.math import contours
 from ..direction_modifiers.direction_modifier import DirectionModifier
 

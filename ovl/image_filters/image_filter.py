@@ -1,5 +1,7 @@
 from ..partials.keyword_partial import keyword_partial
 
+IMAGE_FILTERS = set()
+
 
 def image_filter(image_filter_function):
     """
@@ -42,4 +44,8 @@ def image_filter(image_filter_function):
 
         pipeline = Vision(image_filters=[rotate_by_angle(angle=180)]
     """
-    return keyword_partial(image_filter_function)
+    filter_partial = keyword_partial(image_filter_function)
+    IMAGE_FILTERS.add(filter_partial)
+    return filter_partial
+
+

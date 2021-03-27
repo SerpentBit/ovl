@@ -2,7 +2,7 @@ import cv2
 import json
 import numpy as np
 
-from ..helpers.remove_none_values import remove_none_values
+from ..utils.remove_none_values import remove_none_values
 from .threshold import Threshold
 
 

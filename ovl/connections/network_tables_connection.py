@@ -1,7 +1,7 @@
 from typing import Any, Union
 
 from .connection import Connection
-from ..helpers.team_number_to_ip import team_number_to_ip
+from ..utils.team_number_to_ip import team_number_to_ip
 
 NetworkTables = None
 

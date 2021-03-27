@@ -6,12 +6,13 @@ from ..math.contours import contour_center
 from ..math.geometry import distance_between_points
 from ..math.image import distance_from_frame
 from .contour_filter import contour_filter
-from ..helpers.types import RangedNumber
+from ..utils.types import RangedNumber
+from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
 from ..math import image
 
 
 @contour_filter
-def image_center_filter(contour_list, image_dimensions: Tuple[int, int] = (320, 240),
+def image_center_filter(contour_list, image_dimensions: Tuple[int, int] = (DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT),
                         min_ratio: RangedNumber(0, 1) = 0.7, max_ratio: RangedNumber(0, 1) = math.inf):
     """
     Filters out contours that their center is not close enough to the center of the image
@@ -60,7 +61,8 @@ def distance_filter(contour_list, point: Tuple[int, int], min_dist: float = 0, m
 
 
 @contour_filter
-def absolute_distance_filter(contour_list, max_dist=50, min_dist=0, image_dimensions=(320, 240)):
+def absolute_distance_filter(contour_list, max_dist=50, min_dist=0,
+                             image_dimensions=(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT)):
     """
     Filters out contours that their center is not close enough
     to the center of the image
@@ -126,7 +128,8 @@ def area_filter(contour_list, min_area: float = 200, max_area: float = math.inf)
 
 @contour_filter
 def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.02,
-                        maximum_percent: RangedNumber(0, 1) = 1, image_dimensions: Tuple[int, int] = (320, 240)):
+                        maximum_percent: RangedNumber(0, 1) = 1,
+                        image_dimensions: Tuple[int, int] = (DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT)):
     """
     Filters out contours that are not in the specified ratio to the area of the image (1% -> 0.1)
 

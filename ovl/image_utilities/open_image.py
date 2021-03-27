@@ -1,7 +1,7 @@
 import cv2
 from pathlib import Path
 
-from ..helpers.remove_none_values import remove_none_values
+from ..utils.remove_none_values import remove_none_values
 
 
 def open_image(image_path, flags=None):

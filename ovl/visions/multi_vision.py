@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Union, List, Any, Generator, Tuple, Dict
 
-from ..helpers.types import VisionLike
+from ..utils.types import VisionLike
 from .ambient_vision import AmbientVision
 from ..connections.connection import *
 from ..connections.network_location import NetworkLocation

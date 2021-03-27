@@ -4,9 +4,10 @@ import cv2
 import numpy as np
 
 from .image_filter import image_filter
-from ..helpers.remove_none_values import remove_none_values
+from ..utils.remove_none_values import remove_none_values
 from .kernels import validate_odd_size
-from ..helpers.types import RangedNumber
+from ..utils.types import RangedNumber
+from ..utils.constants import DEFAULT_KERNEL_SIZE
 
 
 def convert_to_hsv(image: np.ndarray) -> np.ndarray:
@@ -20,7 +21,7 @@ def convert_to_hsv(image: np.ndarray) -> np.ndarray:
 
 
 @image_filter
-def sharpen_image(image: np.ndarray, size: tuple = (3, 3)) -> np.ndarray:
+def sharpen_image(image: np.ndarray, size: tuple = DEFAULT_KERNEL_SIZE) -> np.ndarray:
     """
     Sharpens an image by preforming convolution it with a sharpening matrix
 
@@ -183,7 +184,7 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
 
 
 @image_filter
-def gaussian_blur(image, kernel_size=(3, 3), sigma_x=5, sigma_y=None, border_type=None):
+def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=None, border_type=None):
     """
     An image filter version of cv2.gaussianBlur.
 
