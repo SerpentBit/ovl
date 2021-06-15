@@ -19,6 +19,7 @@ from ..directions.directing_functions import center_directions
 from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
 
 OMIT_DIMENSION_VALUES = (-1, 0)
+DEFAULT_FAILED_DETECTION_VALUE = 9999
 
 
 class Vision:
@@ -81,26 +82,30 @@ class Vision:
         self.width = width
         self.height = height
         self.target_filters = target_filters or []
-        self.director = director or Director(center_directions, failed_detection=9999, target_amount=1)
+        self.director = director or Director(center_directions,
+                                             failed_detection=DEFAULT_FAILED_DETECTION_VALUE,
+                                             target_amount=1)
         self.connection = connection
         self.image_filters = image_filters or []
         self.camera = None
         self.camera_port = None
         self.camera_settings = camera_settings
 
-        if isinstance(camera, (cv2.VideoCapture, Camera)):
+        if isinstance(camera, (cv2.VideoCapture, Camera)) or camera is None:
             self.camera = camera
-        elif camera is None:
-            pass
         else:
             self.camera_setup(camera, width, height, ovl_camera=ovl_camera)
+
+    @staticmethod
+    def vision_from_object(vision_loaded):
+        return
 
     def __repr__(self):
         return str(self)
 
     def __str__(self):
         filters = [filter_function.__name__ for filter_function in self.target_filters]
-        return "Vision: \n Detector: {} \n Filters: {}".format(self.detector, filters)
+        return f"Vision: \n Detector: {self.detector} \n Filters: {filters}"
 
     @property
     def target_amount(self):
@@ -174,12 +179,12 @@ class Vision:
 
         """
         if verbose:
-            print('Before "{}": {}'.format(filter_function.__name__, len(contours)))
+            print(f'Before "{filter_function.__name__}": {len(contours)}')
         filter_function_output = filter_function(contours)
 
         if isinstance(filter_function_output, tuple):
             if len(filter_function_output) == 2:
-                filtered_contours, ratio = filter_function_output[0], filter_function_output[1]
+                filtered_contours, ratio = filter_function_output
             else:
                 raise InvalidCustomFunctionError('Filter function must return between 1 and 2 lists.'
                                                  'Please refer to the Documentation: '
@@ -206,7 +211,7 @@ class Vision:
             targets, ratio = self.apply_target_filter(filter_func, targets, verbose=verbose)
             ratios.append(ratio)
         if verbose:
-            print("After all filters: {}".format(len(targets)))
+            print(f"After all filters: {len(targets)}")
         return targets, ratios
 
     def apply_image_filters(self, image: np.ndarray) -> np.ndarray:
@@ -257,7 +262,7 @@ class Vision:
                 camera.set(4, image_height)
 
         if not camera.isOpened():
-            raise CameraError("Camera did not open correctly! Camera source: {}".format(self.camera_port))
+            raise CameraError(f"Camera did not open correctly! Camera source: {self.camera_port}")
         self.camera = camera
         return camera
 
