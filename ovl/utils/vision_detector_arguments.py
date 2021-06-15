@@ -19,9 +19,9 @@ def arguments_to_detector(mutually_exclusive_arguments):
         if any(argument_group):
             if existing_group_name:
                 raise ValueError(
-                    "When passing parameters that create a Detector only 1 group can be passed,"
-                    " got both '{}' and '{}'".format(_GROUP_TO_DETECTOR[group_name].arguments,
-                                                     _GROUP_TO_DETECTOR[argument_group].arguments))
+                    f"When passing parameters that create a Detector only 1 group can be passed,"
+                    f" got both '{_GROUP_TO_DETECTOR[group_name].arguments}'"
+                    f" and '{_GROUP_TO_DETECTOR[argument_group].arguments}'")
             else:
                 existing_group = argument_group
                 existing_group_name = group_name

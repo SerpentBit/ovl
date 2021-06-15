@@ -126,7 +126,7 @@ class Color(Threshold):
         return self.threshold(hsv_image)
 
     def __repr__(self):
-        return 'Color({}, {})'.format(repr(self.low_bound), repr(self.high_bound))
+        return f'Color({repr(self.low_bound)}, {repr(self.high_bound)})'
 
     def copy(self):
         """

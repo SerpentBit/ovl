@@ -12,5 +12,5 @@ def team_number_to_ip(team_number: typing.Union[str, int]):
     first_numbers, second_numbers = team_number[:-2], team_number[-2:]
     if first_numbers == "":
         first_numbers = 0
-    team_number = "{}.{}".format(first_numbers, second_numbers)
-    return "10.{team_number}.2".format(team_number=team_number)
+    team_number = f"{first_numbers}.{second_numbers}"
+    return f"10.{team_number}.2"

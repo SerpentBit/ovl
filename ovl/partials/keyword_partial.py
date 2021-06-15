@@ -62,10 +62,9 @@ def keyword_partial(target_function):
     """
     def argument_loader(*args, **kwargs):
         if args != ():
-            warning_message = ("When passing parameters it is recommended to pass everything as keywords "
-                               "in order to make it clear what parameters are passed."
-                               "(Do: {0}(parameter1=value2, parameter2=value2) not {0}(value, value2))"
-                               .format(target_function.__name__))
+            warning_message = (f"When passing parameters it is recommended to pass everything as keywords in order"
+                               f" to make it clear what parameters are passed. (Do: {target_function.__name__}"
+                               f"(parameter1=value2, parameter2=value2) not {target_function.__name__}(value, value2))")
             warnings.warn(warning_message, SyntaxWarning)
         partial_function = ReversePartial(target_function, *args, **kwargs)
         return functools.update_wrapper(partial_function, target_function)

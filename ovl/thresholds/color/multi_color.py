@@ -88,4 +88,4 @@ class MultiColor(Threshold):
         return ', '.join([str(color) for color in self.colors])
 
     def __repr__(self):
-        return 'MultiColor(0)'.format([repr(i) for i in self.colors])
+        return f'MultiColor({[repr(i) for i in self.colors]})'
