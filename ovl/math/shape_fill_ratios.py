@@ -34,7 +34,7 @@ def triangle_fill_ratio(contour, triangle=None) -> float:
     """
     bounding_triangle_area, triangle = cv2.minEnclosingTriangle(contour, triangle)
     contour_area = cv2.contourArea(contour)
-    return contour_area / float(bounding_triangle_area)
+    return float(contour_area) / bounding_triangle_area
 
 
 def rotating_rectangle_fill_ratio(contour: np.ndarray) -> typing.Tuple[float, float, float]:
