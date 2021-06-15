@@ -52,7 +52,7 @@ class Camera:
         :param exposure_value: the exposure value to be set
         :return: if it was successful in setting the value
         """
-        return self.stream.set(15, exposure_value)
+        return self.stream.set(cv2.CAP_PROP_EXPOSURE, exposure_value)
 
     def start(self) -> "Camera":
         """
@@ -140,10 +140,11 @@ class Camera:
         :return: the value of the property
         """
         if isinstance(property_id, int):
-            raise ValueError("Given Property id {} was not valid, please refer to the documentation: "
-                             "https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html".format(property_id))
+            raise ValueError(
+                f"Given Property id {property_id} was not valid, please refer to the documentation: "
+                f"https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html")
         if not MIN_OPENCV_CAMERA_PROPERTY <= type(property_id) <= MAX_OPENCV_CAMERA_PROPERTY:
-            raise ValueError("Invalid property id ({}), please refer to the documentation".format(property_id))
+            raise ValueError(f"Invalid property id ({property_id}), please refer to the documentation")
         return self.stream.get(property_id)
 
     def is_opened(self) -> bool:

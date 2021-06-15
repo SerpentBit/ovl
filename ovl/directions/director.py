@@ -32,8 +32,8 @@ class Director:
         """
         self.directions = directing_function
         if not isinstance(target_amount, int):
-            raise ValueError("Target amount must be an integer, got '{}' of type '{}'.".format(target_amount,
-                                                                                               type(target_amount)))
+            raise ValueError(f"Target amount must be an integer,"
+                             f" got '{target_amount}' of type '{type(target_amount)}'.")
         self.target_amount = target_amount if target_amount != 0 else math.inf
         self.direction_monitors = direction_modifiers
         self.failed_detection = failed_detection

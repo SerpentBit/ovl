@@ -40,10 +40,10 @@ def sharpen_image(image: np.ndarray, size: tuple = DEFAULT_KERNEL_SIZE) -> np.nd
 @image_filter
 def adaptive_brightness(image: np.ndarray, brightness: RangedNumber(0, 100) = 50, hsv: bool = False) -> np.ndarray:
     """
-    Changes the brightness of every pixel so that the average of the image is the target average
+    Changes the brightness of every pixel so that the polygon_filter_average of the image is the target polygon_filter_average
 
     :param image: The image to be changed (Numpy array)
-    :param brightness: the target average for the image
+    :param brightness: the target polygon_filter_average for the image
     :param hsv: bool noting if the image is in hsv
     :return: a copy of the image changed
     """

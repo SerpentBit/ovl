@@ -9,6 +9,12 @@ from .geometry import distance_between_points, law_of_cosine
 from .shape_fill_ratios import circle_fill_ratio
 from ..image_filters.image_filters import crop_image
 
+__all__ = [
+    "target_size", "open_arc_length", "open_contour_approximation",
+    "contour_center", "contour_average_center", "contour_approximation",
+    "contour_lengths_and_angles", "calculate_normalized_screen_space",
+    "circle_rating", "crop_contour_region", "contour_average_color"]
+
 
 def target_size(contours: typing.List[np.ndarray]) -> float:
     """
@@ -50,7 +56,8 @@ def contour_center(contour: np.ndarray) -> Tuple[float, float]:
         center_x, center_y = moments['m10'] / area, moments['m01'] / area
     except ZeroDivisionError:
         raise ValueError('Contour given is too small!,'
-                         'try using area_filter to remove small contours (try min_area=20)')
+                         'try using area_filter to remove small contours,'
+                         ' try adding an area_filter or increasing an existing one')
     return center_x, center_y
 
 
@@ -59,11 +66,11 @@ def _contour_center_sum(point_sum, contour):
     Helper function for contour_average_center
     """
 
-    def _average_point_reduce(first_point, second_point):
+    def cumulate_points(first_point, second_point):
         return first_point[0] + second_point[0], first_point[1] + second_point[1]
 
     current_contour_center = contour_center(contour)
-    return _average_point_reduce(point_sum, current_contour_center)
+    return cumulate_points(point_sum, current_contour_center)
 
 
 def contour_average_center(contours) -> Tuple[float, float]:
@@ -71,7 +78,7 @@ def contour_average_center(contours) -> Tuple[float, float]:
     Calculates the average center of a list of contours
 
     :param contours: the list of contours
-    :return: the average center  (x,y)
+    :return: the polygon_filter_average center  (x,y)
     """
     contour_amount = float(len(contours))
     point_sum = reduce(_contour_center_sum, contours, (0, 0))
@@ -168,7 +175,7 @@ def crop_contour_region(contour: np.ndarray, image: np.ndarray):
 
 def contour_average_color(contours: typing.List[np.ndarray], image: np.ndarray):
     """
-    Calculates the average color (in hsv) of all the pixels of a list of contours in the image.
+    Calculates the polygon_filter_average color (in hsv) of all the pixels of a list of contours in the image.
 
     :param contours: a list of contour(s) detected in the image
     :param image: the image where the contours where detected, numpy array

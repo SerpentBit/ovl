@@ -17,11 +17,10 @@ def open_image(image_path, flags=None):
     arguments = {"flags": flags}
 
     if not Path(image_path).is_file():
-        raise OSError("Given image at path {} does not exist or is not a file!".format(image_path))
+        raise OSError(f"Given image at path {image_path} does not exist or is not a file!")
 
     image = cv2.imread(image_path, **remove_none_values(arguments))
     if image is None:
-        raise ValueError("Couldn't read the image file, Check that {}\n"
-                         "exists, that it's a valid format and that you\n"
-                         "have the proper permissions to read it.".format(image))
+        raise ValueError(f"Failed to read the image file, Check that {image} exists, that it's a valid format and that "
+                         f"you have the proper permissions to read it.")
     return image
