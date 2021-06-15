@@ -1,7 +1,7 @@
 import numpy as np
 
-from .contours import contour_center, distance_between_points
-from .geometry import slope, x_intersection, y_intersection
+from .contours import contour_center
+from .geometry import slope, x_intersection, y_intersection, distance_between_points
 
 
 def image_center(image_dimensions):
