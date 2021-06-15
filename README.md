@@ -6,7 +6,8 @@ Python Module for Computer Vision Object Tracking and Detection mainly for the F
 Ovl support complex yet modular computer vision pipelines that are easy to create and modify.
 
 Easy to create and setup for beginners and flexible for pros
- 
+
+Notice: ovl now only supports python 3.7+! 
 
 *You can follow up on changes in for the current version in the [changelog folder](https://github.com/1937Elysium/Ovl-Python/tree/master/changelogs)*
 
@@ -36,7 +37,7 @@ The following python modules are optional for certain features:
  
  - PySerial (pyserial) for `SerialConnection`
 
-OVL is officially supported for python 3.5+ only!
+OVL is officially supported for python **3.7+** only!
 
 Installation:
 
