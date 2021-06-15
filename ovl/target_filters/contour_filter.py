@@ -1,4 +1,4 @@
-from ..partials import keyword_partial
+from ..partials.keyword_partial import keyword_partial
 
 
 CONTOUR_FILTERS = set()
@@ -61,4 +61,4 @@ def contour_filter(contour_filter_function):
         vision = Vision(..., target_filters=target_filters, ...)
     """
     CONTOUR_FILTERS.add(contour_filter_function)
-    return keyword_partial.keyword_partial(contour_filter_function)
+    return keyword_partial(contour_filter_function)
