@@ -1,7 +1,4 @@
-from typing import Any
-
-
-class NetworkLocation:
+class NetworkLocation(dict):
     """
     An object used to specify parameters for a Connection.send  and Connection.receive functions
     This is used to create a specific address / port for a connection and allows automated specification
@@ -18,10 +15,4 @@ class NetworkLocation:
 
     """
     def __init__(self, **kwargs):
-        self.kwargs = kwargs
-
-    def keys(self):
-        return self.kwargs.keys()
-
-    def __getitem__(self, key) -> Any:
-        return self.kwargs[key]
+        super().__init__(**kwargs)
