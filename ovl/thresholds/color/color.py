@@ -85,9 +85,6 @@ class Color(Threshold):
       Purple: [135, 100, 100], [165, 255, 255]
     """
 
-    def validate(self, *args, **kwargs):
-        return assert_hsv(self.low_bound) and assert_hsv(self.high_bound)
-
     def __init__(self, low: BaseForColor, high: BaseForColor):
         """
          Constructor for the Color used to turn images to binary images based on
@@ -110,6 +107,9 @@ class Color(Threshold):
             high = [high, 255, 255]
         self.__low_bound = np.array(low)
         self.__high_bound = np.array(high)
+
+    def validate(self, *args, **kwargs):
+        return assert_hsv(self.low_bound) and assert_hsv(self.high_bound)
 
     def threshold(self, image: np.ndarray) -> np.ndarray:
         return cv2.inRange(image, self.low, self.high)
