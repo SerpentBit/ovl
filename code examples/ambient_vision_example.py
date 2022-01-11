@@ -9,8 +9,8 @@ image_filters = [ovl.gaussian_blur((5, 5))]
 hexagon_contour_filters = [ovl.percent_area_filter(minimal_percent=0.05),
                            ovl.polygon_filter(side_amount=6,
                                               min_area_filter=0.7,
-                                              min_len_ratio=0.5,
-                                              min_angle_ratio=0.6),
+                                              side_length_deviation=0.5,
+                                              angle_deviation=0.6),
                            ovl.area_sort()]
 
 ball_contour_filters = [ovl.area_filter(min_area=200),

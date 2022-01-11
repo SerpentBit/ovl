@@ -2,7 +2,7 @@ import cv2
 
 from ..contour_filter import contour_filter
 from ...math.shape_fill_ratios import rectangle_fill_ratio_straight
-from ...helpers.types import RangedNumber
+from ...utils.types import RangedNumber
 
 
 @contour_filter

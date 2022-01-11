@@ -2,14 +2,14 @@ import typing
 import numpy as np
 
 from ovl.math.image import image_size
-from ovl.helpers.types import RangedNumber
+from ovl.utils.types import RangedNumber
 from ovl.math import contours
 from ..direction_modifiers.direction_modifier import DirectionModifier
 
 
 class StopIfCloseModifier(DirectionModifier):
     """
-    A Direction monitor that stops when the target found is large enough (close enough).
+    A Direction modify_directions that stops when the target found is large enough (close enough).
     Like other DirectionMonitor objects, it monitors the directions returned.
     """
 
@@ -17,9 +17,8 @@ class StopIfCloseModifier(DirectionModifier):
         """
         :param minimum_size: relative size in percent of the size of the image that considers the object "close" enough
                             it depends on your object size, but 40% of the image size is usually enough
-                            so for an image the size of 320 x 240 it will be 320 * 240 * 0.4
         :param value_sent: the value returned if the object is close enough
-        :param priority: a boolean that notes if this monitor should take priority (and stop consecutive monitors from
+        :param priority: a boolean that notes if this modify_directions should take priority (and stop consecutive monitors from
                          being called)
         WARNING: Setting priority to true can cause 'unexpected' behaviour as a result of stopping
         """
@@ -29,10 +28,15 @@ class StopIfCloseModifier(DirectionModifier):
 
     @property
     def priority(self):
+        """
+        This is a value that determines whether to skip consecutive DirectionModifiers
+
+        :return:
+        """
         return self._priority
 
-    def monitor(self, directions: typing.Any, targets: typing.List[np.ndarray],
-                image: np.ndarray) -> typing.Any:
+    def modify_directions(self, directions: typing.Any, targets: typing.List[np.ndarray],
+                          image: np.ndarray) -> typing.Any:
         """
 
         :param directions: the directions received from directing function / from the previous direction monitors

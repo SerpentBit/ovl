@@ -7,7 +7,7 @@ class SerialConnection(Connection):
     """
     Serial connection is a Connection used to send and receive on a Serial bus like various USB cables.
 
-    SerialConnection is implemented under the hood using Pyserial and it is a package requirement for
+    SerialConnection is implemented using Pyserial; it is a package requirement for
     using SerialConnection, make sure it is installed by executing in console:
 
     pip install pyserial

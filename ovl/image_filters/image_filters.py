@@ -4,9 +4,10 @@ import cv2
 import numpy as np
 
 from .image_filter import image_filter
-from ..helpers.remove_none_values import remove_none_values
+from ..utils.remove_none_values import remove_none_values
 from .kernels import validate_odd_size
-from ..helpers.types import RangedNumber
+from ..utils.types import RangedNumber
+from ..utils.constants import DEFAULT_KERNEL_SIZE
 
 
 def convert_to_hsv(image: np.ndarray) -> np.ndarray:
@@ -20,7 +21,7 @@ def convert_to_hsv(image: np.ndarray) -> np.ndarray:
 
 
 @image_filter
-def sharpen_image(image: np.ndarray, size: tuple = (3, 3)) -> np.ndarray:
+def sharpen_image(image: np.ndarray, size: tuple = DEFAULT_KERNEL_SIZE) -> np.ndarray:
     """
     Sharpens an image by preforming convolution it with a sharpening matrix
 
@@ -39,10 +40,10 @@ def sharpen_image(image: np.ndarray, size: tuple = (3, 3)) -> np.ndarray:
 @image_filter
 def adaptive_brightness(image: np.ndarray, brightness: RangedNumber(0, 100) = 50, hsv: bool = False) -> np.ndarray:
     """
-    Changes the brightness of every pixel so that the average of the image is the target average
+    Changes the brightness of every pixel so that the polygon_filter_average of the image is the target polygon_filter_average
 
     :param image: The image to be changed (Numpy array)
-    :param brightness: the target average for the image
+    :param brightness: the target polygon_filter_average for the image
     :param hsv: bool noting if the image is in hsv
     :return: a copy of the image changed
     """
@@ -107,7 +108,7 @@ def rotate_image(image: np.ndarray, angle: int = 180) -> np.ndarray:
     """
     Rotates an image by a given amount of degrees.
     Note that the rotated image's dimensions will most likely change if
-    the angle is not 90, -90, 180, 0 or a multiplication of them)
+    the angle is not 90, -90, 180, 0 or any multiple of 90)
 
     :param image: the image to be rotated
     :param angle: the angle to rotate the image in degrees (positive is to the left, negative to the right)
@@ -150,11 +151,11 @@ def _rotate_by_angle(image, angle):
 def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None, search_window_size=None,
                              destination=None):
     """
-    Non local mean denoising is an image noise removal function.
-    Non local mean denoising removes noise by finding matching patterns in other parts of the image
+    Non-local mean denoising is an image noise removal function.
+    Non-local mean denoising removes noise by finding matching patterns in other parts of the image
     It has different arguments for greyscale images and color images
 
-    :param image: the image to be denoised
+    :param image: the image to be sharpened
     :param hColor:
     :param h: parameter deciding filter strength. Higher h value removes noise better,
      but removes details of image also. (10 is default)
@@ -164,11 +165,11 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
     :param destination: an image of the same size to place the result
     :return: the denoised image, a numpy array
 
-    For more information about the implementation please refer the the opencv source code
+    For more information about the implementation please refer to the opencv source code
     and this tutorial:
     https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html
 
-    For more information on the algorithim behind the implementation look at this
+    For more information on the algorithm behind the implementation look at this
     paper:
     http://www.ipol.im/pub/art/2011/bcm_nlm/
     """
@@ -183,7 +184,7 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
 
 
 @image_filter
-def gaussian_blur(image, kernel_size=(3, 3), sigma_x=5, sigma_y=None, border_type=None):
+def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=None, border_type=None):
     """
     An image filter version of cv2.gaussianBlur.
 
@@ -199,9 +200,9 @@ def gaussian_blur(image, kernel_size=(3, 3), sigma_x=5, sigma_y=None, border_typ
     :param kernel_size: the size of the window that moves over the image
     this determines what are the pixel's neighbors. The kernel must be of odd dimensions
     so that it has a center pixel - which is where the output is placed
-    :param sigma_x: standard distribution of the gaussian function on the x axis,
+    :param sigma_x: standard distribution of the gaussian function on the x-axis,
     the larger this is the more further neighbors affect the new value of the window's center
-    :param sigma_y: standard distribution of the gaussian function on the y axis,
+    :param sigma_y: standard distribution of the gaussian function on the y-axis,
     the larger this is the more further neighbors affect the new value of the window's center
     if this is set to 0 or None then it will take the value of sigma_x
     :param border_type: Specifies image boundaries while kernel is applied on image borders.

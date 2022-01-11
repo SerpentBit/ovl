@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Union, List, Any, Generator, Tuple, Dict
 
-from ..helpers.types import VisionLike
+from ..utils.types import VisionLike
 from .ambient_vision import AmbientVision
 from ..connections.connection import *
 from ..connections.network_location import NetworkLocation
@@ -45,8 +45,8 @@ class MultiVision:
         self.visions = visions
         self.connection = update_connection
         self.update_location = update_location
-        self.switch_functions = {list: self._list_switch_vision,
-                                 dict: self._dict_switch_vision}
+        self.validate_switch_value = {list: self._list_switch_vision,
+                                      dict: self._dict_switch_vision}
 
     def __enter__(self):
         return self
@@ -84,14 +84,14 @@ class MultiVision:
 
     def _dict_switch_vision(self, index: Any):
         """
-        Switches the current vision to the one given if the visions container is a list
+        Switches the current vision to the one given if the visions' container is a list
 
         """
         return index in self.visions
 
     def _list_switch_vision(self, index: Any):
         """
-        Switches the current vision to the one given if the visions container is a dictionary
+        Switches the current vision to the one given if the visions' container is a dictionary
 
         """
         return 0 <= index < len(self.visions)
@@ -104,7 +104,7 @@ class MultiVision:
          is a list or any immutable object if it is a dictionary
         :return: the index set (the index given if it is valid and
         """
-        if self.switch_functions[type(self.visions)](index):
+        if self.validate_switch_value[type(self.visions)](index):
             self.set_vision(index)
             return index
         return self.index

@@ -15,7 +15,7 @@ class HTTPRequestTypes(Enum):
 
 class HTTPConnection(Connection):
     """
-    A Connection that utilizes http
+    A Connection that utilizes HTTP
 
     HTTP is useful for communicating with HTTP Servers over the web, although slower than other more
     low level connection types
@@ -31,8 +31,8 @@ class HTTPConnection(Connection):
 
     def send_request(self, data: Any, url: str, method: HTTPRequestTypes, **kwargs):
         """
-        send_request is the function used to send a request using http protocol.
-        This can be used to send request to servers running remotely in the internet or to a HTTP server in the LAN.
+        send_request is the function used to send a request using HTTP protocol.
+        This can be used to send request to servers running remotely in the internet or to an HTTP server in the LAN.
 
 
         Note: This is the inner function used by the Connection object to send and receive.
@@ -56,13 +56,13 @@ class HTTPConnection(Connection):
 
     def send(self, data: Any, url: str = None, method=HTTPRequestTypes.POST, **kwargs):
         """
-        Sends an http requests, should be used to only send data and not receive any data
+        Sends an HTTP requests, should be used to only send data and not receive any data
         as it represent the logical action of sending information
 
-        :param data: the data to be send, passed
-        :param url:
-        :param method:
-        :param kwargs:
+        :param data: the data to be sent, passed
+        :param url: the url to send it to
+        :param method: the request method (GET, POST, DELETE etc.)
+        :param kwargs: any other parameter to be passed the request ()
         :return:
         """
         return self.send_request(data, url, method, **kwargs)
@@ -76,7 +76,7 @@ class HTTPConnection(Connection):
 
         :param url: the url to send to, overrides self.url
         :param data: any data to pass with the requests
-        :param method: determines what http method should the request use (GET, POST, PUT etc.)
+        :param method: determines what HTTP method should the request use (GET, POST, PUT etc.)
         :param interval:
         :param kwargs: any other parameters passed to Request.request
         :return:

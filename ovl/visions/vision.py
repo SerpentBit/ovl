@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from typing import List, Union, Tuple, Any
 
-from ..helpers.vision_detector_arguments import arguments_to_detector
+from ..utils.vision_detector_arguments import arguments_to_detector
 from ..thresholds.threshold import Threshold
 from ..detectors.detector import Detector
 from ..exceptions.exceptions import InvalidCustomFunctionError, CameraError
@@ -16,6 +16,10 @@ from ..directions.director import Director
 from ..camera.camera_settings import CameraSettings
 from ..connections.network_location import NetworkLocation
 from ..directions.directing_functions import center_directions
+from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
+
+OMIT_DIMENSION_VALUES = (-1, 0)
+DEFAULT_FAILED_DETECTION_VALUE = 9999
 
 
 class Vision:
@@ -47,9 +51,9 @@ class Vision:
 
     def __init__(self, detector: Detector = None, threshold: Threshold = None,
                  morphological_functions: List[types.FunctionType] = None,
-                 target_filters: List[types.FunctionType] = None,
-                 director: Director = None, width=320, height=240, connection: Connection = None,
-                 camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
+                 target_filters: List[types.FunctionType] = None, director: Director = None,
+                 width=DEFAULT_IMAGE_WIDTH, height=DEFAULT_IMAGE_HEIGHT,
+                 connection: Connection = None, camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
                  camera_settings: CameraSettings = None, image_filters: List[types.FunctionType] = None,
                  ovl_camera: bool = False, haar_classifier: str = None):
         """
@@ -78,26 +82,30 @@ class Vision:
         self.width = width
         self.height = height
         self.target_filters = target_filters or []
-        self.director = director or Director(center_directions, failed_detection=9999, target_amount=1)
+        self.director = director or Director(center_directions,
+                                             failed_detection=DEFAULT_FAILED_DETECTION_VALUE,
+                                             target_amount=1)
         self.connection = connection
         self.image_filters = image_filters or []
         self.camera = None
         self.camera_port = None
         self.camera_settings = camera_settings
 
-        if isinstance(camera, (cv2.VideoCapture, Camera)):
+        if isinstance(camera, (cv2.VideoCapture, Camera)) or camera is None:
             self.camera = camera
-        elif camera is None:
-            pass
         else:
             self.camera_setup(camera, width, height, ovl_camera=ovl_camera)
+
+    @staticmethod
+    def vision_from_object(vision_loaded):
+        return
 
     def __repr__(self):
         return str(self)
 
     def __str__(self):
         filters = [filter_function.__name__ for filter_function in self.target_filters]
-        return "Vision: \n Detector: {} \n Filters: {}".format(self.detector, filters)
+        return f"Vision: \n Detector: {self.detector} \n Filters: {filters}"
 
     @property
     def target_amount(self):
@@ -171,12 +179,12 @@ class Vision:
 
         """
         if verbose:
-            print('Before "{}": {}'.format(filter_function.__name__, len(contours)))
+            print(f'Before "{filter_function.__name__}": {len(contours)}')
         filter_function_output = filter_function(contours)
 
         if isinstance(filter_function_output, tuple):
             if len(filter_function_output) == 2:
-                filtered_contours, ratio = filter_function_output[0], filter_function_output[1]
+                filtered_contours, ratio = filter_function_output
             else:
                 raise InvalidCustomFunctionError('Filter function must return between 1 and 2 lists.'
                                                  'Please refer to the Documentation: '
@@ -190,12 +198,12 @@ class Vision:
     def apply_target_filters(self, targets: List[np.ndarray], verbose=False
                              ) -> Tuple[List[np.ndarray], List[float]]:
         """
-        Applies all of the filters on a list of contours, one after the other.
+        Applies all target filters on a list of targets, one after the other.
         Applies the first filter and passes the output to the second filter,
 
         :param targets: List of targets (numpy arrays or bounding boxes) to
         :param verbose: prints out information about filtering process if true (useful for debugging)
-        :return: a list of all of the ratios given by the filter function in order.
+        :return: a list of all ratios given by the filter functions in order.
 
         """
         ratios = []
@@ -203,7 +211,7 @@ class Vision:
             targets, ratio = self.apply_target_filter(filter_func, targets, verbose=verbose)
             ratios.append(ratio)
         if verbose:
-            print("After all filters: {}".format(len(targets)))
+            print(f"After all filters: {len(targets)}")
         return targets, ratios
 
     def apply_image_filters(self, image: np.ndarray) -> np.ndarray:
@@ -248,19 +256,19 @@ class Vision:
             camera = Camera(source=source, image_width=image_width, image_height=image_height)
         else:
             camera = cv2.VideoCapture(source)
-            if image_width != -1:
+            if image_width not in OMIT_DIMENSION_VALUES:
                 camera.set(3, image_width)
-            if image_height != -1:
+            if image_height not in OMIT_DIMENSION_VALUES:
                 camera.set(4, image_height)
 
         if not camera.isOpened():
-            raise CameraError("Camera did not open correctly! Camera source: {}".format(self.camera_port))
+            raise CameraError(f"Camera did not open correctly! Camera source: {self.camera_port}")
         self.camera = camera
         return camera
 
     def detect(self, image, verbose=False, *args, **kwargs):
         """
-        This is the function that performs processing detection and filtering on a given image, essentially passing
+        This is the function that performs processing, detection and filtering on a given image, essentially passing
         the image through the detection related part of the pipeline
 
         detect applies image filters, detects objects in the filtered images (using the passed/created detector object)
@@ -273,6 +281,13 @@ class Vision:
         :return: contours and the filtered image and the ratios if return_ratios is true
 
         """
-        image = self.apply_image_filters(image)
-        targets = self.detector.detect(image, verbose, *args, **kwargs)
-        return self.apply_target_filters(targets, verbose)
+        filtered_image = self.apply_image_filters(image)
+        targets = self.detector.detect(filtered_image, verbose, *args, **kwargs)
+        filtered_targets = self.apply_target_filters(targets, verbose)
+        if isinstance(filtered_targets, tuple):
+            targets, ratios = filtered_targets
+            returned_value = (targets, filtered_image, ratios)
+        else:
+            returned_value = (targets, filtered_image)
+
+        return returned_value

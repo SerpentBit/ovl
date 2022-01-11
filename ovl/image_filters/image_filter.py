@@ -1,5 +1,7 @@
 from ..partials.keyword_partial import keyword_partial
 
+IMAGE_FILTERS = set()
+
 
 def image_filter(image_filter_function):
     """
@@ -10,8 +12,8 @@ def image_filter(image_filter_function):
     applies changes on it and then returns it altered.
     functions decorated by image_filter can be passed to Vision(image_filters_)
 
-    Changes that can be applied vary from various blurs like Gaussian blur or Bilateral filter to image rotations
-    translations, contrast and brightness alterations and color spaces changes (HSV, RGB Greyscale conversions)
+    Changes that are applied can vary from  blurs, image rotations, translations, contrast and brightness alterations
+    and color spaces conversions (HSV, RGB Greyscale conversions)
 
     Filters that change binary images (images that have been threshold by
     a threshold object such as ovl.Color ovl.MultiColor or ovl.Canny) like morphological
@@ -42,4 +44,8 @@ def image_filter(image_filter_function):
 
         pipeline = Vision(image_filters=[rotate_by_angle(angle=180)]
     """
-    return keyword_partial(image_filter_function)
+    filter_partial = keyword_partial(image_filter_function)
+    IMAGE_FILTERS.add(filter_partial)
+    return filter_partial
+
+

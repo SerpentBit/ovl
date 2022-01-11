@@ -12,7 +12,7 @@ dark_purple = ovl.Color([130, 100, 70], [154, 255, 255])
 image_filters = [ovl.gaussian_blur(), ovl.rotate_image(angle=90), ovl.adaptive_brightness(brightness=45)]
 
 target_filters = [ovl.percent_area_filter(minimal_percent=0.03),
-                  ovl.polygon_filter(side_amount=6, min_len_ratio=0.4, min_area_ratio=0.6),
+                  ovl.polygon_filter(side_amount=6, side_length_deviation=0.4, min_fill_ratio=0.6),
                   ovl.area_sort()]
 
 direction_monitors = [ovl.StopIfCloseModifier(minimum_size=0.6, value_sent=5000)]

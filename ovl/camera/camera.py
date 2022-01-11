@@ -3,12 +3,16 @@ from threading import Thread
 import numpy as np
 import cv2
 
+from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, DEFAULT_CAMERA_SOURCE, \
+    MAX_OPENCV_CAMERA_PROPERTY, MIN_OPENCV_CAMERA_PROPERTY
+
 
 class Camera:
     __slots__ = ("stream", "grabbed", "frame", "stopped", "camera_thread", "start_immediately")
 
-    def __init__(self, source: Union[str, int, cv2.VideoCapture] = 0,
-                 image_width: int = 320, image_height: int = 240, start_immediately=True):
+    def __init__(self, source: Union[str, int, cv2.VideoCapture] = DEFAULT_CAMERA_SOURCE,
+                 image_width: int = DEFAULT_IMAGE_WIDTH, image_height: int = DEFAULT_IMAGE_HEIGHT,
+                 start_immediately=True):
         """
         Camera connects to and opens a connected camera and on constantly reads image from the camera.
         ovl.Camera is more real-time oriented and operates at a faster rate than opencv's VideoCapture, but is not
@@ -48,7 +52,7 @@ class Camera:
         :param exposure_value: the exposure value to be set
         :return: if it was successful in setting the value
         """
-        return self.stream.set(15, exposure_value)
+        return self.stream.set(cv2.CAP_PROP_EXPOSURE, exposure_value)
 
     def start(self) -> "Camera":
         """
@@ -72,7 +76,7 @@ class Camera:
 
     def read(self) -> [bool, np.ndarray]:
         """
-        Returns the return value (if getting the frame was successful and the frame itself
+        Returns the return value (if getting the frame was successful and the frame itself)
 
         This function is mainly for compatibility with cv2.VideoCapture, Camera.get_image() is
         recommended for common use.
@@ -118,7 +122,7 @@ class Camera:
         Read more at:
         https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html#aeb1644641842e6b104f244f049648f94
 
-        import cv2 and use cv2.CAP_PROP_<PROPERTY NAME> or simply use the property id number (number depends
+        import cv2 and use cv2.CAP_PROP_<PROPERTY NAME> or simply use the property id number. The number depends
         on the property's location f.e CAP_PROP_FRAME_WIDTH is 3
 
         :param property_id: the property id (number)
@@ -136,10 +140,11 @@ class Camera:
         :return: the value of the property
         """
         if isinstance(property_id, int):
-            raise ValueError("Given Property id {} was not valid, please refer to the documentation: "
-                             "https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html".format(property_id))
-        if not 0 <= type(property_id) < 19:
-            raise ValueError("Invalid property id ({}), please refer to the documentation".format(property_id))
+            raise ValueError(
+                f"Given Property id {property_id} was not valid, please refer to the documentation: "
+                f"https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html")
+        if not MIN_OPENCV_CAMERA_PROPERTY <= type(property_id) <= MAX_OPENCV_CAMERA_PROPERTY:
+            raise ValueError(f"Invalid property id ({property_id}), please refer to the documentation")
         return self.stream.get(property_id)
 
     def is_opened(self) -> bool:
@@ -166,3 +171,12 @@ class Camera:
         :return: returns the backend name of a camera
         """
         return self.stream.getBackendName()
+
+    def getBackendName(self) -> str:
+        """
+        Gets the backend name of the camera using cv2.VideoCapture.getBackendName()
+
+        This Function exists to allow compatibility with opencv's VideoCapture object
+        :return: returns the backend name of a camera
+        """
+        return self.get_backend_name()

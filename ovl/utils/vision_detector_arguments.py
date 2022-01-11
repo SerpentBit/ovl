@@ -26,9 +26,7 @@ def arguments_to_detector(mutually_exclusive_arguments):
                 existing_group = argument_group
                 existing_group_name = group_name
 
-    if existing_group_name is None:
-        detector = None
-    elif existing_group_name != "detector":
+    if existing_group_name != "detector":
         detector = _argument_group_to_detector_constructor(existing_group_name, *existing_group)
     else:
         detector = existing_group

@@ -20,7 +20,7 @@ class Connection:
         Used to receive information from an external source,
         receive represents incoming information, usually over-network but not exclusively
         Receive can be used to send a request in order to receive
-        for example HttpConnection send an http request and returns the response data
+        for example HttpConnection send an HTTP request and returns the response data
 
         :param args: any additional arguments for the specific connection object
         :param kwargs: any additional keyword arguments for the specific connection object
@@ -34,7 +34,7 @@ class Connection:
         receive represents incoming information, usually over-network but not exclusively
 
         Receive can be used to send a request in order to receive
-        for example HttpConnection send an http request and returns the response data
+        for example HttpConnection send an HTTP request and returns the response data
 
         Receive_from_location uses a NetworkLocation to specify
 

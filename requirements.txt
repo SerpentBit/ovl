@@ -3,3 +3,4 @@ pynetworktables
 pyserial
 numpy
 sklearn
+requests
