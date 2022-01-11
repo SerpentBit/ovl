@@ -16,8 +16,12 @@ setup(
                 " object detection pipelines tailored for robotics applications",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/1937Elysium/Ovl-Python',
-    install_requires=['numpy', 'pynetworktables', 'opencv-python'],
+    url="https://github.com/1937Elysium/Ovl-Python",
+    install_requires=['numpy', 'opencv-python'],
+    extra_requires={
+        "full": ["pynetworktables", "pyserial", "requests"]
+        "frc": ["pynetworktables", "pyserial"]
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Education",
