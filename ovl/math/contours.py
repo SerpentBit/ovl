@@ -151,7 +151,7 @@ def circle_rating(contour, area_factor=0.9, radius_factor=0.8):
 
     :param contour: the contour that its rating is calculated
     :param area_factor: the factor (p-value) that separates an area ratio that is a circle and one that isn't
-    :param radius_factor: the factor (p-value) that separates an radius ratio that is a circle and one that isn't
+    :param radius_factor: the factor (p-value) that separates a radius ratio that is a circle and one that isn't
     :return: the circle rating for the given contour
     """
     fill_ratio, radius = circle_fill_ratio(contour)

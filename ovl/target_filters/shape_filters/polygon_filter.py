@@ -36,7 +36,7 @@ def polygon_filter(contour_list, side_amount=POLYGON_FILTER_DEFAULT_SIDE_AMOUNT,
     :param polygon_angle_ratio:
     :param contour_list: the list of contours to be filtered
     :param side_amount: the amount of sides the wanted polygon has. The Default is to detect a Hexagon
-    :param angle_deviation: the minimum ratio between the each angle and the polygon_filter_average angle and the polygon_filter_average angle and the
+    :param angle_deviation: the minimum ratio between each angle and the polygon_filter_average angle and the polygon_filter_average angle and the
     target angle of a shape of side_amount
     :param polygon_fill_ratio: The minimum ratio between the contour's area and the target area
     :param side_length_deviation: The minimum ratio between the length of each side and the polygon_filter_average length and

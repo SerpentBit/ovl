@@ -12,6 +12,5 @@ from .partials import *
 from .target_filters import *
 from .thresholds import *
 from .utils import *
-from .vision_delta import *
 from .visions import *
 from .version import __version__

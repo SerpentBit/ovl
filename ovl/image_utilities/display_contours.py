@@ -28,7 +28,7 @@ def display_contours(image, contours, amount=0, display_loop=False, window_name=
 
     :param image: image from which the contours were taken from, numpy array or image path
     :param contours: the list of contours to display_image
-    :param color: the color of the of the contours outline
+    :param color: the color of the contours outline
     :param display_loop: if display is used in a loop should be true, else false
     :param window_name: the window name, this is useful when display multiple different images at the same time
     :param amount: amount of contours to display

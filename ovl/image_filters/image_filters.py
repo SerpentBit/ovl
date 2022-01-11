@@ -108,7 +108,7 @@ def rotate_image(image: np.ndarray, angle: int = 180) -> np.ndarray:
     """
     Rotates an image by a given amount of degrees.
     Note that the rotated image's dimensions will most likely change if
-    the angle is not 90, -90, 180, 0 or a multiplication of them)
+    the angle is not 90, -90, 180, 0 or any multiple of 90)
 
     :param image: the image to be rotated
     :param angle: the angle to rotate the image in degrees (positive is to the left, negative to the right)
@@ -151,11 +151,11 @@ def _rotate_by_angle(image, angle):
 def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None, search_window_size=None,
                              destination=None):
     """
-    Non local mean denoising is an image noise removal function.
-    Non local mean denoising removes noise by finding matching patterns in other parts of the image
+    Non-local mean denoising is an image noise removal function.
+    Non-local mean denoising removes noise by finding matching patterns in other parts of the image
     It has different arguments for greyscale images and color images
 
-    :param image: the image to be denoised
+    :param image: the image to be sharpened
     :param hColor:
     :param h: parameter deciding filter strength. Higher h value removes noise better,
      but removes details of image also. (10 is default)
@@ -165,11 +165,11 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
     :param destination: an image of the same size to place the result
     :return: the denoised image, a numpy array
 
-    For more information about the implementation please refer the the opencv source code
+    For more information about the implementation please refer to the opencv source code
     and this tutorial:
     https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html
 
-    For more information on the algorithim behind the implementation look at this
+    For more information on the algorithm behind the implementation look at this
     paper:
     http://www.ipol.im/pub/art/2011/bcm_nlm/
     """
@@ -200,9 +200,9 @@ def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=Non
     :param kernel_size: the size of the window that moves over the image
     this determines what are the pixel's neighbors. The kernel must be of odd dimensions
     so that it has a center pixel - which is where the output is placed
-    :param sigma_x: standard distribution of the gaussian function on the x axis,
+    :param sigma_x: standard distribution of the gaussian function on the x-axis,
     the larger this is the more further neighbors affect the new value of the window's center
-    :param sigma_y: standard distribution of the gaussian function on the y axis,
+    :param sigma_y: standard distribution of the gaussian function on the y-axis,
     the larger this is the more further neighbors affect the new value of the window's center
     if this is set to 0 or None then it will take the value of sigma_x
     :param border_type: Specifies image boundaries while kernel is applied on image borders.

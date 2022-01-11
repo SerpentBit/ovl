@@ -11,8 +11,7 @@ class SerializeType(enum):
 
 def validate_loaded_vision(loaded_vision):
     """
-    Verifies the a loaded vision (Dictionary) contains the the necessary
-            Attributes to create a Vision object
+    Verifies that a loaded vision (Dictionary) contains  the necessary Attributes to create a Vision object
 
     :param loaded_vision: A dictionary containing raw data of the Vision object
     :return:

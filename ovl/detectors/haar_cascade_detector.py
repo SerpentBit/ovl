@@ -6,8 +6,8 @@ from .detector import Detector
 
 class HaarCascadeDetector(Detector):
     """
-    A detector used to detect objects using haar cascade algorithim
-    The Detector initializes using an xml file containing the descriptor
+    A detector used to detect objects using haar cascade algorithm
+    The Detector initializes using a xml file containing the descriptor
 
     The Detector uses the underlying cv2.CascadeClassifier
 

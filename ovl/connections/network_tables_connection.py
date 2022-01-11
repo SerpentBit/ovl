@@ -15,7 +15,7 @@ class NetworkTablesConnection(Connection):
 
     NetworkTables are a group of Dictionaries (Hash tables) that are shared by all computers in the network.
     In the case of the FRC it is created by the RoboRIO and shared by other
-    computers on the network like: the driver station, any connected co-processor (like a raspberry pi) etc.
+    computers on the network like: the driver station, any connected coprocessor (like a raspberry pi) etc.
 
     NetworkTablesConnection creates defaults to writing to the Vision table.
     You can then read from /vision/vision_result the result sent.
@@ -59,7 +59,7 @@ class NetworkTablesConnection(Connection):
         If table is none it returns the default table (set in the constructor)
 
         :param table: the name of the table examples: "usage", "SmartDashboard", "vision"
-        if it doesnt exist it is created
+        if it doesn't exist it is created
         :return: the table
         """
         from networktables import NetworkTables
@@ -84,8 +84,7 @@ class NetworkTablesConnection(Connection):
 
         :param data: the data to send (post to the NetworkTables)
         :param table_key: the specific table to read from
-        :param table: the table to receive from. Examples are SmartDashboard
-                      or Usage. Use "Vision" if you are not sure)
+        :param table: the table to receive from. Examples are SmartDashboard or Usage. Use "Vision" if you aren't sure
         """
         table_key = table_key if table_key else self.table_key
         table = self.get_table(table)

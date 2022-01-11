@@ -23,7 +23,7 @@ def is_odd_size(size) -> bool:
     Validates that a kernel shape is of odd  ints and of size 2
 
     :param size: the shape (size) to be checked
-    :return: doesnt raise an error if it's ok.
+    :return: doesn't raise an error if it's ok.
     """
     if type(size) not in (list, tuple):
         return False
@@ -92,7 +92,7 @@ def ellipse_kernel(size):
 
 def horizontal_line_kernel(size):
     r"""
-    Returns an horizontal line (a horizontal line of ones) kernel for morphological functions
+    Returns a horizontal line (a horizontal line of ones) kernel for morphological functions
     Example of a (5,5) horizontal line:
 
     | \| 0 0 0 0 0 \|

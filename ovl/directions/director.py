@@ -17,7 +17,7 @@ class Director:
     - if the amount of contours is less than target amount then set directions to failed_detection
     - else it passes only target_amount of contours to the direction function
     - The final result (direction function or failed_detection) is passed to the direction monitors
-    - each monitor is applied to the result and its result is passed to the next one
+    - each modify_directions is applied to the result and its result is passed to the next one
     - then the final result is returned
     """
 
@@ -47,7 +47,7 @@ class Director:
             - if the amount of contours is less than target amount then set directions to failed_detection
             - else it passes only target_amount of contours to the direction function
             - The final result (direction function or failed_detection) is passed to the direction monitors
-            - each monitor is applied to the result and its result is passed to the next one
+            - each modify_directions is applied to the result and its result is passed to the next one
             - then the final result is returned
 
         :param contours: the list of contours (numpy ndarrays) from which to extrapolate target direction
@@ -83,7 +83,7 @@ class Director:
         """
         if self.direction_monitors:
             for direction_monitor in self.direction_monitors:
-                directions = direction_monitor.monitor(directions, contours, image)
+                directions = direction_monitor.modify_directions(directions, contours, image)
                 if direction_monitor.priority:
                     return directions
         return directions

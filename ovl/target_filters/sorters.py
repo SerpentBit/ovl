@@ -78,7 +78,7 @@ def inc_area_sort(contour_list):
 @contour_filter
 def circle_sort(contour_list, area_limit=0.9, radius_limit=0.8):
     """
-    Sorts the list of contours according to how much they are circle from most similar to least
+    Sorts the list of contours according to how similar they are to a circle from most similar to least
     using the circle rating function.
 
     :param contour_list: list of Contours to filter

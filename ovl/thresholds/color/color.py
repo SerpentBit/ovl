@@ -27,7 +27,7 @@ def assert_hsv(hsv_point):
 
     :param hsv_point: a 3 length list with 3 ints describing a point the hsv color space
     that describe a color limit in a range for a findContour function.
-    :return: True if valid False if not.
+    :return: True if valid False otherwise
     :rtype: bool
     """
 
@@ -62,18 +62,18 @@ class Color(Threshold):
 
 
 
-    The color object can the be passed to a Vision object to threshold binary images
+    The color object can be passed to a Vision object to threshold binary images
     Threshold object can be used by themselves using the color.convert() method.
 
     NOTE: Threshold objects automatically convert images to HSV (From the default BGR)
 
-    There are multiple built in "battery included" pre-made color object
+    There are multiple built-in "battery included" pre-made color object
     for instant use in testing and tuning
     List of colors:
       Red (MultiColorObject) : Red (low) + Red (high)
       Red (Low): [0, 100, 100], [8, 255, 255]
       Red (High): [172, 100, 100], [179, 255, 255]
-      Note: in order to find red, use both ranges (low and high) and use the some of both results.
+      Note: in order to find red, use both ranges (low and high) and use the sum of both results.
       Blue: [105, 100, 100], [135, 255, 255]
       Green: [45, 100, 100], [75, 255, 255]
       Yellow: [20, 100, 100], [55, 255, 255]

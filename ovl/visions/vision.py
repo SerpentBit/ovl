@@ -198,12 +198,12 @@ class Vision:
     def apply_target_filters(self, targets: List[np.ndarray], verbose=False
                              ) -> Tuple[List[np.ndarray], List[float]]:
         """
-        Applies all of the filters on a list of contours, one after the other.
+        Applies all target filters on a list of targets, one after the other.
         Applies the first filter and passes the output to the second filter,
 
         :param targets: List of targets (numpy arrays or bounding boxes) to
         :param verbose: prints out information about filtering process if true (useful for debugging)
-        :return: a list of all of the ratios given by the filter function in order.
+        :return: a list of all ratios given by the filter functions in order.
 
         """
         ratios = []

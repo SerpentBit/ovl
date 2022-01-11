@@ -76,7 +76,7 @@ class Camera:
 
     def read(self) -> [bool, np.ndarray]:
         """
-        Returns the return value (if getting the frame was successful and the frame itself
+        Returns the return value (if getting the frame was successful and the frame itself)
 
         This function is mainly for compatibility with cv2.VideoCapture, Camera.get_image() is
         recommended for common use.
@@ -122,7 +122,7 @@ class Camera:
         Read more at:
         https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html#aeb1644641842e6b104f244f049648f94
 
-        import cv2 and use cv2.CAP_PROP_<PROPERTY NAME> or simply use the property id number (number depends
+        import cv2 and use cv2.CAP_PROP_<PROPERTY NAME> or simply use the property id number. The number depends
         on the property's location f.e CAP_PROP_FRAME_WIDTH is 3
 
         :param property_id: the property id (number)

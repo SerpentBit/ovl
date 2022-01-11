@@ -78,7 +78,7 @@ class AmbientVision:
 
     def apply_image_filters(self, image: np.ndarray) -> np.ndarray:
         """
-        Applies all of the image filter of the current vision on the given image
+        Applies all the image filters of the current vision on the given image
 
         See Vision.apply_image_filters for more information
         """

@@ -47,7 +47,7 @@ def keyword_partial(target_function):
         final_value = activator(list_of_contours)
 
 
-    Vision objects use functions that are decorated with keyword_partial (contour_filter, image_filter,
+    Vision objects use functions that are decorated with keyword_partial (contour_filter, image_filter)
     you can just pass the activator to the Vision object like so:
 
     .. code-block:: python
@@ -57,19 +57,19 @@ def keyword_partial(target_function):
        vision = Vision(...,  contours_filters=target_filters, ...)
 
     :param target_function: the function to be preloaded
-    :return: a function (argument loader) that preloads (passes only some of the arguments)
-             the wrapped function (target_function)
+    :return: a function (argument loader) that preloads the wrapped function (target_function)
     """
+
     def argument_loader(*args, **kwargs):
         if args != ():
             warning_message = ("When passing parameters it is recommended to pass everything as keywords "
                                "in order to make it clear what parameters are passed."
-                               "(Do: {0}(parameter1=value2, parameter2=value2) not {0}(value, value2))"
-                               .format(target_function.__name__))
+                               "(Do: {function_name}(parameter1=value2, parameter2=value2)"
+                               " not {function_name}(value, value2))"
+                               .format(function_name=target_function.__name__))
             warnings.warn(warning_message, SyntaxWarning)
         partial_function = ReversePartial(target_function, *args, **kwargs)
         return functools.update_wrapper(partial_function, target_function)
 
     wrapped_argument_loader = functools.update_wrapper(argument_loader, target_function)
     return wrapped_argument_loader
-

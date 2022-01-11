@@ -8,7 +8,7 @@ from ..threshold import Threshold
 
 class MultiColor(Threshold):
     """
-    Multi Color is like the Color object but it allows for the use of multiple ranges
+    Multi Color is similar to the Color object, but allows multiple color ranges
     a main use is for representing the red color range.
 
     Example Code:
@@ -21,13 +21,13 @@ class MultiColor(Threshold):
 
 
 
-    There are multiple built in "battery included" pre-made color object
+    There are multiple built-in "battery included" pre-made color object
     for instant use in testing and tuning
     List of colors:
       Red (MultiColorObject) : Red (low) + Red (high)
       Red (Low): [0, 100, 100], [8, 255, 255]
       Red (High): [172, 100, 100], [179, 255, 255]
-      Note: in order to find red, use both ranges (low and high) and use the some of both results.
+      Note: in order to find red, use both ranges (low and high) and use the sum of both results.
       Blue: [105, 100, 100], [135, 255, 255]
       Green: [45, 100, 100], [75, 255, 255]
       Yellow: [20, 100, 100], [55, 255, 255]
