@@ -5,6 +5,7 @@ from .display_image import *
 from ..image_utilities.open_image import open_image
 
 
+# TODO: Change parameter to change default contour width
 def display_contours(image, contours, amount=0, display_loop=False, window_name="image", color=(0, 255, 0),
                      save_path=None):
     """

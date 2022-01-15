@@ -1,6 +1,7 @@
 from .color import Color
 from .multi_color import MultiColor
 
+# TODO: ADD default retro-reflective tape color with green leds
 """
 There are multiple built in "battery included" pre-made color object
     for instant use in testing and tuning
