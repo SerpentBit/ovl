@@ -22,7 +22,7 @@ OMIT_DIMENSION_VALUES = (-1, 0)
 DEFAULT_FAILED_DETECTION_VALUE = 9999
 
 
-# TODO: FIND BUG WITH get_directions
+# TODO: find bug with get_directions
 class Vision:
     """
     Vision object represents a computer vision pipeline.
