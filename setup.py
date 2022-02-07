@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "2021.1.3"
+__version__ = "2021.1.4"
 
 with open("README.md", "r") as read_me:
     long_description = read_me.read()
@@ -17,9 +17,9 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/1937Elysium/Ovl-Python",
-    install_requires=['numpy', 'opencv-python'],
+    install_requires=['numpy'],
     extra_requires={
-        "full": ["pynetworktables", "pyserial", "requests"]
+        "full": ["pynetworktables", "pyserial", "requests"],
         "frc": ["pynetworktables", "pyserial"]
     },
     classifiers=[
