@@ -1,9 +1,19 @@
 from setuptools import setup, find_packages
 
-__version__ = "2021.1.3"
+from ovl import __version__
 
 with open("README.md", "r") as read_me:
     long_description = read_me.read()
+
+PRECOMPILED_OPENCV = ["opencv-python"]
+EXTRA_CONNECTIONS = ["pyserial", "requests"]
+FRC_EXTRA_PACKAGES = ["pynetworktables"]
+
+extra_requirements = {
+    "cv": PRECOMPILED_OPENCV,
+    "connections": EXTRA_CONNECTIONS,
+    "frc": FRC_EXTRA_PACKAGES,
+}
 
 setup(
     name="ovl",
@@ -17,11 +27,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/1937Elysium/Ovl-Python",
-    install_requires=['numpy', 'opencv-python'],
-    extra_requires={
-        "full": ["pynetworktables", "pyserial", "requests"]
-        "frc": ["pynetworktables", "pyserial"]
-    },
+    install_requires=["numpy"],
+    extra_requires=extra_requirements,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Education",
@@ -32,6 +39,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Scientific/Engineering :: Image Recognition",
         "Operating System :: POSIX :: Linux",
         "Operating System :: Microsoft :: Windows"
