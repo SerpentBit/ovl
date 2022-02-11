@@ -4,7 +4,7 @@ import cv2
 
 from ..shape_filer_constants import POLYGON_FILTER_PRECISION, POLYGON_FILTER_DEFAULT_SIDE_AMOUNT
 from ...math.contours import contour_lengths_and_angles
-from ..contour_filter import contour_filter
+from ..contour_filter import target_filter
 from ...math import geometry
 from ...utils.types import RangedNumber
 
@@ -17,7 +17,7 @@ def polygon_filter_average(items, precision: int = POLYGON_FILTER_PRECISION):
     return round(sum(items) / float(len(items)), precision)
 
 
-@contour_filter
+@target_filter
 def polygon_filter(contour_list, side_amount=POLYGON_FILTER_DEFAULT_SIDE_AMOUNT,
                    angle_deviation: RangedNumber(0, 1) = 0,
                    side_length_deviation: RangedNumber(0, 1) = 0,
@@ -36,11 +36,12 @@ def polygon_filter(contour_list, side_amount=POLYGON_FILTER_DEFAULT_SIDE_AMOUNT,
     :param polygon_angle_ratio:
     :param contour_list: the list of contours to be filtered
     :param side_amount: the amount of sides the wanted polygon has. The Default is to detect a Hexagon
-    :param angle_deviation: the minimum ratio between each angle and the polygon_filter_average angle and the polygon_filter_average angle and the
+    :param angle_deviation: the minimum ratio between each angle and the polygon_filter_average angle and
+    the polygon_filter_average angle and the
     target angle of a shape of side_amount
     :param polygon_fill_ratio: The minimum ratio between the contour's area and the target area
-    :param side_length_deviation: The minimum ratio between the length of each side and the polygon_filter_average length and
-    between the polygon_filter_average length.
+    :param side_length_deviation: The minimum ratio between the length of each side and the polygon_filter_average
+    length and between the polygon_filter_average length.
     :param approximation_coefficient: the coefficient for the function cv2.approxPolyDP.
     :return: the list of contours (numpy ndarrays) that passed the filter and are regular polygon
     """

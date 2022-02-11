@@ -1,11 +1,11 @@
 import cv2
 
-from ..contour_filter import contour_filter
+from ..contour_filter import target_filter
 from ...math.shape_fill_ratios import rotating_rectangle_fill_ratio
 from ...utils.types import RangedNumber
 
 
-@contour_filter
+@target_filter
 def rotated_square_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.8, min_ratio: RangedNumber(0, 1) = 0.95,
                           max_ratio: RangedNumber(0, 1) = 1.05):
     """

@@ -47,14 +47,14 @@ def keyword_partial(target_function):
         final_value = activator(list_of_contours)
 
 
-    Vision objects use functions that are decorated with keyword_partial (contour_filter, image_filter)
+    Vision objects use functions that are decorated with keyword_partial (target_filter, image_filter)
     you can just pass the activator to the Vision object like so:
 
     .. code-block:: python
 
        target_filters = [some_filter(parameter1=5, parameter2=3), ovl.circle_filter(min_area_ratio=0.75)]
 
-       vision = Vision(...,  contours_filters=target_filters, ...)
+       vision = Vision(...,  target_filters=target_filters, ...)
 
     :param target_function: the function to be preloaded
     :return: a function (argument loader) that preloads the wrapped function (target_function)

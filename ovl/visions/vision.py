@@ -1,22 +1,24 @@
 from functools import reduce
 import math
 import types
-import cv2
-import numpy as np
+from functools import reduce
 from typing import List, Union, Tuple, Any
 
-from ..utils.vision_detector_arguments import arguments_to_detector
-from ..thresholds.threshold import Threshold
-from ..detectors.detector import Detector
-from ..exceptions.exceptions import InvalidCustomFunctionError, CameraError
+import cv2
+import numpy as np
+
 from ..camera.camera import Camera
 from ..partials.filter_applier import filter_applier
 from ..connections.connection import Connection
-from ..directions.director import Director
-from ..camera.camera_settings import CameraSettings
 from ..connections.network_location import NetworkLocation
+from ..detectors.detector import Detector
 from ..directions.directing_functions import center_directions
+from ..directions.director import Director
+from ..exceptions.exceptions import InvalidCustomFilterError, CameraError
+from ..partials.filter_applier import apply
+from ..thresholds.threshold import Threshold
 from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
+from ..utils.vision_detector_arguments import arguments_to_detector
 
 OMIT_DIMENSION_VALUES = (-1, 0)
 DEFAULT_FAILED_DETECTION_VALUE = 9999
@@ -161,19 +163,19 @@ class Vision:
         else:
             return output
 
-    def apply_target_filter(self, filter_function, contours, verbose=False):
+    def apply_target_filter(self, filter_function, targets, verbose=False):
         """
-        Applies a filter function on the contour list, this is used to remove contours
+        Applies a filter function on the contour list, this is used to remove targets
         that do not match desired features
 
         NOTE: Vision.detect is mainly used for full object detection and filtering,
         refer to it for common use of Vision
 
-        :param filter_function: Filter functions are function with a contour list variable that apply some
-         sort of filter on the contours, thus removing ones that don't fit the limit given by the filter.
+        :param filter_function: Filter functions are functions that take out targets that
          for example: straight_rectangle_filter removes contours that are not rectangles that are parallel
          to the frame of the picture
-        :param contours: the contours on which the filter should be applied (list of numpy.ndarrays)
+        :param targets: the targets on which the filter should be applied (list of numpy.ndarrays or bounding boxes,
+        depends on the values returned by your detector)
         :param verbose: if true_shape does not print anything
         :return: returns the output of the filter function.
 
@@ -223,19 +225,18 @@ class Vision:
         :param image: the image that the image filters should be applied on (numpy array)
         :return: the image with the filters applied
         """
-        return reduce(filter_applier, self.image_filters, image)
+        return reduce(apply, self.image_filters, image)
 
-    def get_directions(self, contours: List[np.ndarray], image: np.ndarray, sorter=None):
+    def get_directions(self, targets: List[np.ndarray], image: np.ndarray, sorter=None) -> Any:
         """
-        Calculates the directions, based on contours found in the given image
+        Calculates the directions, based on targets found in the given image
 
-        :param contours: final contours after filtering
-        :param image: the image from which to find the contours
+        :param targets: final targets after filtering
+        :param image: the image
         :param sorter: optional parameter, applies a sorter on the given contours
-        :return: a string of the director (output of the director function),
-                 length depends on the director function
+        :return: returns the direction
         """
-        return self.director.direct(contours, image, sorter=sorter)
+        return self.director.direct(targets, image, sorter=sorter)
 
     def camera_setup(self, source=0, image_width=None, image_height=None, ovl_camera=False):
         """
@@ -272,7 +273,7 @@ class Vision:
         the image through the detection related part of the pipeline
 
         detect applies image filters, detects objects in the filtered images (using the passed/created detector object)
-        and finally applies all of the target_filters on the image.
+        and finally applies all the target_filters on the image.
 
         args and kwargs are passed to the detect function (passed to the detect method of the detector)
 

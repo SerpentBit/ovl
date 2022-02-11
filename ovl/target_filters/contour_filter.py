@@ -1,10 +1,10 @@
 from ..partials.keyword_partial import keyword_partial
 
 
-CONTOUR_FILTERS = set()
+TARGET_FILTERS = set()
 
 
-def contour_filter(contour_filter_function):
+def target_filter(contour_filter_function):
     """
     A decorator function used to make a contour filter function.
     Contours filters are functions that take a list of contours
@@ -23,7 +23,7 @@ def contour_filter(contour_filter_function):
 
     .. code-block:: python
 
-        @contour_filter
+        @target_filter
         def area_filter(contours, min_area, max_area):
             output_list = []
             ratio_list = []
@@ -50,7 +50,7 @@ def contour_filter(contour_filter_function):
          result = activator(list_of_contours)
 
 
-    Vision objects use functions that are decorated with contour_filter
+    Vision objects use functions that are decorated with target_filter
     you can just pass the activator to the Vision object
     like so:
 
@@ -60,5 +60,5 @@ def contour_filter(contour_filter_function):
 
         vision = Vision(..., target_filters=target_filters, ...)
     """
-    CONTOUR_FILTERS.add(contour_filter_function)
+    TARGET_FILTERS.add(contour_filter_function)
     return keyword_partial(contour_filter_function)

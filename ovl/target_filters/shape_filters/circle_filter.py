@@ -1,9 +1,9 @@
-from ..contour_filter import contour_filter
+from ... import single_target_filter
 from ...math.shape_fill_ratios import circle_fill_ratio
 from ...utils.types import RangedNumber
 
 
-@contour_filter
+@single_target_filter
 def circle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.7):
     """
     Filters out contour which are not approximately circle.

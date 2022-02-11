@@ -1,15 +1,13 @@
 import cv2
-import warnings
 
-from ..math.contours import open_arc_length, circle_rating
-
-from ..math import image
-from .contour_filter import contour_filter
+from .contour_filter import target_filter
 from .sorter_helper_functions import contour_center_and_point_distance
+from ..math import image
+from ..math.contours import open_arc_length, circle_rating
 from ..utils.constants import DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT
 
 
-@contour_filter
+@target_filter
 def area_sort(contour_list, descending_sort=True):
     """
     Sorts the list of contours by contour sort, default is from large to small
@@ -21,22 +19,21 @@ def area_sort(contour_list, descending_sort=True):
     return sorted(contour_list, key=cv2.contourArea, reverse=descending_sort)
 
 
-@contour_filter
+@target_filter
 def distance_sort(contour_list, point):
     """
     Sorts the contours according to their distance from the
-    NOTE: it is important to area filter before image_center_sort
+    NOTE: it is important to area filter before distance_sort
 
     :param contour_list: The list of contours to be sorted
     :type contour_list: List or one contour (numpy array)
     :param point: the point from which the distance of all contours are sorted by
     :return: the sorted contour list
     """
-    return sorted(contour_list,
-                  key=contour_center_and_point_distance(point))
+    return sorted(contour_list, key=contour_center_and_point_distance(point))
 
 
-@contour_filter
+@target_filter
 def image_center_sort(contour_list, image_dimensions=(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT)):
     """
     Sorts the contours from the closest to the center to the farthest.
@@ -47,35 +44,10 @@ def image_center_sort(contour_list, image_dimensions=(DEFAULT_IMAGE_WIDTH, DEFAU
     :return:
     """
     image_center = image.image_center(image_dimensions)
-    return sorted(contour_list,
-                  key=contour_center_and_point_distance(image_center))
+    return sorted(contour_list, key=contour_center_and_point_distance(image_center))
 
 
-@contour_filter
-def dec_area_sort(contour_list):
-    """
-    Sorts the list of contours from the largest to the smallest based on area of the contour
-
-    :param contour_list: List of Contours to be sorted
-    :return: the contour list sorted.
-    """
-    warnings.warn("dec_area_sort is deprecated, use area_sort() instead", DeprecationWarning)
-    return sorted(contour_list, key=lambda x: cv2.contourArea(x), reverse=True)
-
-
-@contour_filter
-def inc_area_sort(contour_list):
-    """
-    Sorts the list of contours from the smallest to the largest based on area of the contour
-
-    :param contour_list: List of Contours to filter
-    :return: the contour list sorted.
-    """
-    warnings.warn("inc_area_sort is deprecated, use area_sort(descending_sort=False) instead", DeprecationWarning)
-    return sorted(contour_list, key=lambda x: cv2.contourArea(x))
-
-
-@contour_filter
+@target_filter
 def circle_sort(contour_list, area_limit=0.9, radius_limit=0.8):
     """
     Sorts the list of contours according to how similar they are to a circle from most similar to least
@@ -90,23 +62,13 @@ def circle_sort(contour_list, area_limit=0.9, radius_limit=0.8):
     return sorted(contour_list, key=lambda x: circle_rating(x, area_limit, radius_limit))
 
 
-@contour_filter
-def dec_length_sort(contour_list):
+@target_filter
+def length_sort(contour_list, descending_sort=True):
     """
-    Sorts the list of contours from the largest to the smallest based on area of the contour
+    Sorts the list of contours from the longest to the shortest based on length of the contour (for open contours)
 
     :param contour_list: List of Contours to filter
+    :param descending_sort: true if the sort is from longest to shortest contour, False reverses it
     :return: the contour list sorted.
     """
-    return sorted(contour_list, key=open_arc_length).reverse()
-
-
-@contour_filter
-def inc_length_sort(contour_list):
-    """
-    Sorts the list of contours from the smallest to the largest based on area of the contour
-
-    :param contour_list: List of Contours to filter
-    :return: the contour list sorted.
-    """
-    return sorted(contour_list, key=open_arc_length)
+    return sorted(contour_list, key=open_arc_length,reverse=descending_sort)

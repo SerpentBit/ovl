@@ -1,5 +1,5 @@
 from .shape_filters import *
-from .conditional_contour_filter import conditional_contour_filter
-from .contour_filter import contour_filter, CONTOUR_FILTERS
+from .predicate_target_filter import single_target_filter
+from .contour_filter import target_filter, TARGET_FILTERS
 from .sorters import *
 from .contour_filters import *

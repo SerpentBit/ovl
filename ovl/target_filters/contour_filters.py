@@ -1,17 +1,19 @@
-from typing import Tuple
 import math
+from typing import Tuple
+
 import cv2
 
+from . import single_target_filter
+from .contour_filter import target_filter
+from ..math import image
 from ..math.contours import contour_center
 from ..math.geometry import distance_between_points
 from ..math.image import distance_from_frame
-from .contour_filter import contour_filter
-from ..utils.types import RangedNumber
 from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
-from ..math import image
+from ..utils.types import RangedNumber
 
 
-@contour_filter
+@target_filter
 def image_center_filter(contour_list, image_dimensions: Tuple[int, int] = (DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT),
                         min_ratio: RangedNumber(0, 1) = 0.7, max_ratio: RangedNumber(0, 1) = math.inf):
     """
@@ -37,7 +39,7 @@ def image_center_filter(contour_list, image_dimensions: Tuple[int, int] = (DEFAU
     return output, ratio
 
 
-@contour_filter
+@target_filter
 def distance_filter(contour_list, point: Tuple[int, int], min_dist: float = 0, max_dist: float = 50):
     """
     Filters out contours that their center is not close enough
@@ -60,7 +62,7 @@ def distance_filter(contour_list, point: Tuple[int, int], min_dist: float = 0, m
     return output, ratio
 
 
-@contour_filter
+@target_filter
 def absolute_distance_filter(contour_list, max_dist=50, min_dist=0,
                              image_dimensions=(DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT)):
     """
@@ -85,48 +87,36 @@ def absolute_distance_filter(contour_list, max_dist=50, min_dist=0,
     return output, ratio
 
 
-@contour_filter
-def length_filter(contour_list, min_length=50, max_length=76800):
+@single_target_filter
+def length_filter(contour, min_length=50, max_length=math.inf):
     """
     Receives a list of contours and removes ones that are not long enough
     Note: for "open" contours only!
 
-    :param contour_list: list of contours (numpy array) to be filtered
+    :param contour: contour (numpy array) to be filtered
     :param min_length: minimum length of a contour (in pixels)
     :param max_length: maximum length of a contour (in pixels)
     :return: list of filtered contours and list of the lengths
     """
-    output = []
-    ratio = []
-    for contour in contour_list:
-        perimeter = cv2.arcLength(contour, False)
-        if min_length >= perimeter >= max_length:
-            output.append(contour)
-            ratio.append(perimeter)
-    return output, ratio
+    perimeter = cv2.arcLength(contour, False)
+    return min_length >= perimeter >= max_length
 
 
-@contour_filter
-def area_filter(contour_list, min_area: float = 200, max_area: float = math.inf):
+@single_target_filter
+def area_filter(contour, min_area: float = 200, max_area: float = math.inf):
     """
     Filters contours that are not within the threshold of area (in pixels)
 
     :param max_area: maximum area of a contour (Inclusive) default is no limit (infinity)
     :param min_area: minimum area of a contour (Inclusive) set to 0 for no lower limit.
-    :param contour_list: List of Contours to filter
+    :param contour: contour to be filtered
     :return: the contour list filtered.
     """
-    output_list = []
-    ratio_list = []
-    for contour in contour_list:
-        contour_area = cv2.contourArea(contour)
-        if min_area <= contour_area <= max_area:
-            output_list.append(contour)
-            ratio_list.append(contour_area)
-    return output_list, ratio_list
+    area = cv2.contourArea(contour)
+    return max_area >= area >= min_area
 
 
-@contour_filter
+@target_filter
 def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.02,
                         maximum_percent: RangedNumber(0, 1) = 1,
                         image_dimensions: Tuple[int, int] = (DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT)):
@@ -153,7 +143,7 @@ def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.02
     return output, ratios
 
 
-@contour_filter
+@target_filter
 def size_ratio_filter(contours, min_ratio: float = 2, max_ratio: float = math.inf, reverse_ratio=False):
     """
     Sorts out contours by the ratio between their width and height

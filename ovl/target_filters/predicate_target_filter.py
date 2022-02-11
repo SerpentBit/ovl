@@ -9,16 +9,16 @@ def _loaded_condition(loaded_contour_filter, contour_list: List[np.ndarray]):
     return list(filter(loaded_contour_filter, contour_list))
 
 
-def conditional_contour_filter(single_contour_filter):
+def single_target_filter(single_contour_filter):
     """
-    A contour_filter that turns a function that filters a single contour (and returns true if it has passed)
+    A target_filter that turns a function that filters a single contour (and returns true if it has passed)
     to an iterative one that goes over a list
 
     example:
 
     .. code-block:: python
 
-        @conditional_contour_filter
+        @single_target_filter
         def area_filter(contour, minimum_area=50)
             return cv2.contourArea(contour) > minimum_area
 
