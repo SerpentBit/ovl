@@ -16,7 +16,7 @@ import ovl
 # for other ways to connect to your RoboRIO run the following python code: help(NetworkTablesConnection)
 TEAM_NUMBER = "1937"
 
-threshold = ovl.RED_HSV
+threshold = ovl.HSV.red
 
 contour_filters = [ovl.area_filter(min_area=150),
                    ovl.straight_rectangle_filter(min_area_ratio=0.7),

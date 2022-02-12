@@ -15,4 +15,4 @@ pipeline = ovl.Vision(image_filters=image_filters,
 while True:
     image = pipeline.get_image()
     blurred_image = pipeline.apply_image_filters(image)
-    ovl.display_image(blurred_image, display_loop=1)
+    ovl.display_image(blurred_image, display_loop=True)

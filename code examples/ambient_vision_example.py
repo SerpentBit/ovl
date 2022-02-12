@@ -25,7 +25,7 @@ ball_director = ovl.Director(ovl.target_amount_directions,
                              failed_detection="Could not detect!",
                              target_amount=2)
 
-red_ball_amount_counter = ovl.Vision(threshold=ovl.RED_HSV,
+red_ball_amount_counter = ovl.Vision(threshold=ovl.HSV.red,
                                      target_filters=ball_contour_filters,
                                      camera=camera,
                                      image_filters=image_filters)
