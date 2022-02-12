@@ -117,5 +117,3 @@ def law_of_cosine(first_point, second_point, third_point) -> float:
     third_length = distance_between_points(second_point, third_point)
     angle = (first_length ** 2 + second_length ** 2 - third_length ** 2) / (first_length * second_length * 2)
     return math.degrees(angle)
-
-

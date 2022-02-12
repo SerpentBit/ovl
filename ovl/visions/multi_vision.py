@@ -84,15 +84,14 @@ class MultiVision:
 
     def _dict_switch_vision(self, index: Any):
         """
-        Switches the current vision to the one given if the visions' container is a list
+        Switches the current vision to the one given if the visions' container is a dictionary
 
         """
         return index in self.visions
 
     def _list_switch_vision(self, index: Any):
         """
-        Switches the current vision to the one given if the visions' container is a dictionary
-
+        Switches the current vision to the one given if the visions' container is a list
         """
         return 0 <= index < len(self.visions)
 
@@ -104,7 +103,7 @@ class MultiVision:
          is a list or any immutable object if it is a dictionary
         :return: the index set (the index given if it is valid and
         """
-        if self.validate_switch_value[type(self.visions)](index):
+        if self.validate_switch_value[type(self.visions)](index=index):
             self.set_vision(index)
             return index
         return self.index
@@ -146,7 +145,7 @@ class MultiVision:
 
                 multi_vision.send(directions)
 
-                ovl.display_contours(image, contours, delay=1)
+                ovl.display_contours(image, targets, delay=1)
 
         Note: automatically updates AmbientVision's vision swapping (AmbientVision.update_vision())!
 

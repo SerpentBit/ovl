@@ -40,9 +40,9 @@ class BinaryThreshold(Threshold):
         """
 
 
-        :param threshold: minimum value that is defined to pass the threshold
+        :param threshold: minimum value that is defined to pass the `Threshold`
         :param upper_bound: maximum
-        :param threshold_type: what to do with pixels are determined to pass the threshold,
+        :param threshold_type: what to do with pixels are determined to pass the `Threshold`,
         
         :param otsu: when true uses otsu binarization (Bi-modal thresholding),
         when using otsu binarization threshold and upper_bound are *ignored* and are not used

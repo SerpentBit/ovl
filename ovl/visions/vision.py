@@ -1,4 +1,3 @@
-from functools import reduce
 import math
 import types
 from functools import reduce
@@ -8,7 +7,7 @@ import cv2
 import numpy as np
 
 from ..camera.camera import Camera
-from ..partials.filter_applier import filter_applier
+from ..camera.camera_configuration import CameraConfiguration
 from ..connections.connection import Connection
 from ..connections.network_location import NetworkLocation
 from ..detectors.detector import Detector
@@ -38,7 +37,6 @@ class Vision:
     Additional capabilities and tuning options are:
         Image filters (Blurs, rotations, cropping),
         Morphological functions,
-        Ovl color HSVCalibration,
 
         1. camera handling
         2. connection clean-up and sending
@@ -56,14 +54,13 @@ class Vision:
                  target_filters: List[types.FunctionType] = None, director: Director = None,
                  width=DEFAULT_IMAGE_WIDTH, height=DEFAULT_IMAGE_HEIGHT,
                  connection: Connection = None, camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
-                 camera_settings: CameraSettings = None, image_filters: List[types.FunctionType] = None,
+                 camera_settings: CameraConfiguration = None, image_filters: List[types.FunctionType] = None,
                  ovl_camera: bool = False, haar_classifier: str = None):
         """
         :param detector: a Detector object responsible for detecting targets
-        :param threshold: threshold object, creates the binary mask from a given image, this cannot be passed together
-        with detector
-        :param target_filters: the list of contour_filter functions that
-                                remove contours that aren't the target(s)
+        :param threshold: threshold is a shortcut for detecting
+        :param target_filters: the list of target_filter functions that remove targets that aren't what you want,
+        can also perform grouping, sorting or any other action you want to
         :param director: a functions that receives a list or a single contour and returns director
         :param width: the width (in pixels) of images taken with the camera
         :param height: the height (in pixels)
@@ -98,22 +95,19 @@ class Vision:
         else:
             self.camera_setup(camera, width, height, ovl_camera=ovl_camera)
 
-    @staticmethod
-    def vision_from_object(vision_loaded):
-        return
-
     def __repr__(self):
         return str(self)
 
     def __str__(self):
         filters = [filter_function.__name__ for filter_function in self.target_filters]
-        return f"Vision: \n Detector: {self.detector} \n Filters: {filters}"
+        image_filters = [image_filter.__name__ for image_filter in self.image_filters]
+        return f"Vision: \n Detector: {self.detector} \n Filters: {filters} \n Image Filters: {image_filters}"
 
     @property
     def target_amount(self):
         """
         The wanted amount of targets
-        Determined by self.director
+        Determined by `self.director`
         (0 None or math.inf if there is no limit, 1 if 1 target is wanted etc.)
 
         """
@@ -123,7 +117,7 @@ class Vision:
 
     def send(self, data: Any, *args, **kwargs) -> Any:
         """
-        Sends data to the destination using self.connection
+        Sends data to the destination using `self.connection`
 
         :param data: The data to send to the Connection
         :param args: any other arguments for the send function in your connection
@@ -147,9 +141,10 @@ class Vision:
 
     def get_image(self) -> np.ndarray:
         """
-        Gets an image from self.camera and applies image filters
+        Gets an image from `self.camera` and applies image filters
 
-        :return: the image, false if failed to get it
+        :return: the image
+        :raises: ImageError if the image fau
 
         """
         if self.camera is None:
@@ -158,8 +153,10 @@ class Vision:
             raise CameraError("Camera given is not open (Has it been closed or disconnected?)")
         output = self.camera.read()
         if len(output) == 2:
-            ret, image = output
-            return image if ret else False
+            success, image = output
+            if not success:
+                raise ImageError("Failed to take image")
+            return image
         else:
             return output
 
@@ -168,7 +165,7 @@ class Vision:
         Applies a filter function on the contour list, this is used to remove targets
         that do not match desired features
 
-        NOTE: Vision.detect is mainly used for full object detection and filtering,
+        NOTE: `Vision.detect` is mainly used for full object detection and filtering,
         refer to it for common use of Vision
 
         :param filter_function: Filter functions are functions that take out targets that
@@ -181,16 +178,16 @@ class Vision:
 
         """
         if verbose:
-            print(f'Before "{filter_function.__name__}": {len(contours)}')
-        filter_function_output = filter_function(contours)
+            print(f'Before "{filter_function.__name__}": {len(targets)}')
+        filter_function_output = filter_function(targets)
 
         if isinstance(filter_function_output, tuple):
             if len(filter_function_output) == 2:
                 filtered_contours, ratio = filter_function_output
             else:
-                raise InvalidCustomFunctionError('Filter function must return between 1 and 2 lists.'
-                                                 'Please refer to the Documentation: '
-                                                 'https://github.com/1937Elysium/Ovl-Python')
+                raise InvalidCustomFilterError('Filter function must return between 1 and 2 lists.'
+                                               'Please refer to the Documentation: '
+                                               'https://github.com/1937Elysium/Ovl-Python')
         elif isinstance(filter_function_output, list):
             filtered_contours, ratio = filter_function_output, []
         else:
@@ -247,7 +244,7 @@ class Vision:
         :param source: the location from which to open the camera
          string for network connections int for local USB connections.
         :param ovl_camera: if the camera object should be ovl.Camera
-        :return: the camera object, also sets self.camera to the object.
+        :return: the camera object, also sets `self.camera`.
         """
 
         image_height = image_height or self.height
@@ -255,12 +252,17 @@ class Vision:
         self.camera_port = source
         if ovl_camera:
             camera = Camera(source=source, image_width=image_width, image_height=image_height)
+            self.width = image_width
+            self.height = image_height
+
         else:
             camera = cv2.VideoCapture(source)
             if image_width not in OMIT_DIMENSION_VALUES:
-                camera.set(3, image_width)
+                camera.set(cv2.CAP_PROP_FRAME_WIDTH, image_width)
+                self.width = image_width
             if image_height not in OMIT_DIMENSION_VALUES:
-                camera.set(4, image_height)
+                self.height = image_height
+                camera.set(cv2.CAP_PROP_FRAME_HEIGHT, image_height)
 
         if not camera.isOpened():
             raise CameraError(f"Camera did not open correctly! Camera source: {self.camera_port}")

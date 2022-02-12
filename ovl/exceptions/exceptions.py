@@ -1,4 +1,4 @@
-class InvalidCustomFunctionError(Exception):
+class InvalidCustomFilterError(Exception):
     pass
 
 
@@ -11,4 +11,8 @@ class VersionError(Exception):
 
 
 class CameraError(Exception):
+    pass
+
+
+class ImageError(Exception):
     pass
