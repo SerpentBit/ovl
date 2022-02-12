@@ -5,7 +5,7 @@ from typing import Any, Union
 import cv2
 import numpy as np
 
-from .camera_settings import CameraConfiguration
+from .camera_configuration import CameraConfiguration
 from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, DEFAULT_CAMERA_SOURCE, \
     MAX_OPENCV_CAMERA_PROPERTY, MIN_OPENCV_CAMERA_PROPERTY
 
