@@ -29,7 +29,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/SerpentBit/ovl",
     install_requires=["numpy"],
-    extra_requires=extra_requirements,
+    extra_require=extra_requirements,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Education",
