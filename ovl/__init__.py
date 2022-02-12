@@ -12,6 +12,18 @@ from .morphological_functions import *
 from .partials import *
 from .target_filters import *
 from .thresholds import *
-from .utils import *
-from .visions import *
-from .version import __version__
+from .thresholds.binary_threshold import BinaryThreshold
+from .thresholds.binary_threshold import BinaryThresholdType
+from .thresholds.canny_edge import CannyEdge
+from .thresholds.color.built_in_colors import HSV
+from .thresholds.color.color import Color
+from .thresholds.color.multi_color import MultiColor
+
+from .utils.constants import *
+from .utils.team_number_to_ip import team_number_to_ip
+
+from .visions.ambient_vision import AmbientVision
+from .visions.multi_vision import MultiVision
+from .visions.vision import Vision
+
+
