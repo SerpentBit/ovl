@@ -24,7 +24,7 @@ contour_filters = [ovl.area_filter(min_area=150),
 
 director = ovl.Director(directing_function=ovl.xy_normalized_directions,
                         failed_detection="Could not detect!",
-                        target_amount=1)
+                        target_selector=1)
 
 
 camera = ovl.Camera(0, image_width=640, image_height=480)

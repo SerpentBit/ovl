@@ -18,7 +18,7 @@ target_filters = [ovl.percent_area_filter(minimal_percent=0.03),
 direction_monitors = [ovl.StopIfCloseModifier(minimum_size=0.6, value_sent=5000)]
 
 director = ovl.Director(direction_modifiers=direction_monitors,
-                        target_amount=6,
+                        target_selector=6,
                         failed_detection="Could not detect!",
                         directing_function=ovl.center_directions)
 

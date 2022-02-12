@@ -4,7 +4,7 @@ target_filters = [ovl.percent_area_filter(min_area=0.005),
                   ovl.circle_filter(min_area_ratio=0.7),
                   ovl.area_sort()]
 
-threshold = YELLOW_HSV = ovl.Color([20, 100, 100], [55, 255, 255])
+threshold = ovl.Color([20, 100, 100], [55, 255, 255])
 
 yellow_circle = ovl.Vision(threshold=threshold,
                            target_filters=target_filters,
