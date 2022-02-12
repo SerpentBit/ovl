@@ -1,16 +1,11 @@
-import numpy as np
+import dataclasses
+from typing import Dict, Any
+
+from .camera_calibration import CameraCalibration
+from .camera_properties import CameraProperties
 
 
-class CameraSettings:
-    def __init__(self, camera_offset, camera_calibration):
-        self.camera_offset = camera_offset
-        self.camera_calibration = camera_calibration
-        self.image_dimensions = None
-
-    def undistort_image(self, image: np.ndarray) -> np.ndarray:
-        """
-         Removes distortion created by imperfections in the camera.
-        :param image: The image (numpy ndarray) that should be undistorted.
-        :return: an undistorted copy of the image
-        """
-        return self.camera_calibration.undistort_image(image)
+@dataclasses.dataclass
+class CameraConfiguration:
+    camera_properties: Dict[CameraProperties, Any]
+    camera_calibration: CameraCalibration = None

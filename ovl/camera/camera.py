@@ -1,8 +1,11 @@
-from typing import Any, Union
+import time
 from threading import Thread
-import numpy as np
-import cv2
+from typing import Any, Union
 
+import cv2
+import numpy as np
+
+from .camera_settings import CameraConfiguration
 from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, DEFAULT_CAMERA_SOURCE, \
     MAX_OPENCV_CAMERA_PROPERTY, MIN_OPENCV_CAMERA_PROPERTY
 
@@ -28,7 +31,7 @@ class Camera:
         :param image_width: The width of images to be captured in pixels
         :param image_height: The height of images to be captured in pixels
         :param start_immediately: The Camera has an inner thread that reads images, this determines if
-        it should start immediately or be started by Camera.start manually.
+        it should start immediately or be started by `Camera.start` manually.
         """
 
         self.stream = cv2.VideoCapture(source)
@@ -44,15 +47,19 @@ class Camera:
         if start_immediately:
             self.start()
 
-    def set_exposure(self, exposure_value: float) -> bool:
+    def set_exposure(self, exposure_value: float, *, delay: float = 0) -> bool:
         """
         Sets the exposure for the camera.
         Value range depend on the camera some use the value as the exponential negative values or actual number of ms
 
         :param exposure_value: the exposure value to be set
+        :param delay: the time to wait after setting exposure for it to take effect
         :return: if it was successful in setting the value
         """
-        return self.stream.set(cv2.CAP_PROP_EXPOSURE, exposure_value)
+        setting_value = self.stream.set(cv2.CAP_PROP_EXPOSURE, exposure_value)
+        if delay:
+            time.sleep(delay)
+        return setting_value
 
     def start(self) -> "Camera":
         """
@@ -82,7 +89,7 @@ class Camera:
         recommended for common use.
 
         :return: if the image was taken successfully, the image
-        :rtype: bool, numpy.array
+        :rtype: bool, `numpy.array`
         """
         return self.grabbed, self.frame
 
@@ -180,3 +187,16 @@ class Camera:
         :return: returns the backend name of a camera
         """
         return self.get_backend_name()
+
+    def configure_camera(self, configuration: CameraConfiguration, delay=0):
+        """
+        Uses a camera configuration object to configure the camera, can use the delay parameter to wait after each set.
+
+        :param configuration: a `CameraConfiguration` allows to configure a camera
+        :param delay:  some properties can have a time delay in order to take effect,
+         a delay in seconds can be added to wait after each configuration.
+        """
+        for property_key, property_value in configuration.camera_properties.items():
+            self.set(property_key, property_value)
+            if delay:
+                time.sleep(delay)
