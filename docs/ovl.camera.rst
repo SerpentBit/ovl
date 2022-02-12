@@ -8,6 +8,9 @@ Submodules
    :maxdepth: 4
 
    ovl.camera.camera
+   ovl.camera.camera_calibration
+   ovl.camera.camera_configuration
+   ovl.camera.camera_properties
 
 Module contents
 ---------------

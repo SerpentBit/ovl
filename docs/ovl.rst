@@ -13,14 +13,14 @@ Subpackages
    ovl.direction_modifiers
    ovl.directions
    ovl.exceptions
-   ovl.helpers
    ovl.image_filters
    ovl.image_utilities
-   ovl.math
    ovl.morphological_functions
+   ovl.ovl_math
    ovl.partials
    ovl.target_filters
    ovl.thresholds
+   ovl.utils
    ovl.visions
 
 Module contents

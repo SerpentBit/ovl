@@ -6,9 +6,9 @@ IMAGE_FILTERS = set()
 def image_filter(image_filter_function):
     """
     A decorator used to pass parameters in two stages,
-    run in a python console "help(ovl.contour_filter)" or ovl.contour_filter.__doc__
-    or look at ovl.contour_filter documentation for more information
-    image_filter acts like contour_filter except it receives an image (np.ndarray)
+    run in a python console `help(ovl.target_filter)`
+    or look at ovl.target_filter documentation for more information
+    image_filter acts like target_filter except it receives an image (np.ndarray)
     applies changes on it and then returns it altered.
     functions decorated by image_filter can be passed to Vision(image_filters_)
 
@@ -36,7 +36,7 @@ def image_filter(image_filter_function):
             rotation_matrix[1, 2] += (rotated_image_dimensions[1] / 2) - center_xy[1]
             return cv2.warpAffine(image, rotation_matrix, rotated_image_dimensions)
 
-    The filter can then be passed to a Vision object to be applied to images
+    The filter can then be passed to a Vision object to be applied to the images
     in the pipeline.
 
 
@@ -47,5 +47,3 @@ def image_filter(image_filter_function):
     filter_partial = keyword_partial(image_filter_function)
     IMAGE_FILTERS.add(filter_partial)
     return filter_partial
-
-

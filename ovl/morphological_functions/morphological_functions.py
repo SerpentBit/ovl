@@ -2,11 +2,10 @@ import cv2
 
 from ..image_filters import kernels
 from ..image_filters.image_filter import image_filter
-from ..utils.remove_none_values import remove_none_values
 
 
 @image_filter
-def erosion(mask, kernel=None, iterations=1, destination=None,
+def erosion(mask, kernel=(5, 5), iterations=1, destination=None,
             anchor=None, border_type=None, border_value=None):
     """
      a copy of cv2.erode with default kernel of 5 by 5
@@ -29,16 +28,8 @@ def erosion(mask, kernel=None, iterations=1, destination=None,
     """
     if isinstance(kernel, tuple):
         kernel = kernels.rectangle_kernel(kernel)
-    arguments = {
-        "iterations": iterations,
-        "dst": destination,
-        "anchor": anchor,
-        "borderType": border_type,
-        "borderValue": border_value
-    }
-    return cv2.erode(mask,
-                     kernel,
-                     **remove_none_values(arguments))
+    return cv2.erode(mask, kernel, iterations=iterations, dst=destination, anchor=anchor, borderType=border_type,
+                     borderValue=border_value)
 
 
 @image_filter
@@ -66,13 +57,5 @@ def dilation(mask, kernel=(5, 5), iterations=1, destination=None,
     """
     if isinstance(kernel, tuple):
         kernel = kernels.rectangle_kernel(kernel)
-    arguments = {
-        "iterations": iterations,
-        "dst": destination,
-        "anchor": anchor,
-        "borderType": border_type,
-        "borderValue": border_value
-    }
-    return cv2.dilate(mask,
-                      kernel,
-                      **remove_none_values(arguments))
+    return cv2.dilate(mask, kernel, iterations=iterations, dst=destination, anchor=anchor, borderType=border_type,
+                      borderValue=border_value)

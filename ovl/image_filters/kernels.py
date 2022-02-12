@@ -1,29 +1,13 @@
-import numpy as np
 import cv2
+import numpy as np
 
 
-def validate_odd_size(size):
+def valid_odd_size(size):
     """
     Validates that a kernel shape is of odd ints and of with 2 dimensions
 
     :param size: the shape (size) to be checked
     :return: False if size is invalid
-    """
-    if type(size) not in (list, tuple):
-        return False
-    if len(size) != 2:
-        return False
-    if size[0] % 2 != 1 or size[1] % 2 != 1:
-        return False
-    return True
-
-
-def is_odd_size(size) -> bool:
-    """
-    Validates that a kernel shape is of odd  ints and of size 2
-
-    :param size: the shape (size) to be checked
-    :return: doesn't raise an error if it's ok.
     """
     if type(size) not in (list, tuple):
         return False
@@ -47,9 +31,11 @@ def cross_kernel(size):
 
     :param size:  a tuple of size 2 of 2 odd integers denoting the size of the kernel
     f.g. (5, 5)
-    :return: the numpy.array of the cross shape
+    :return: the `numpy.array` of the cross shape
     """
-    validate_odd_size(size)
+    if not valid_odd_size(size):
+        raise ValueError(f"Invalid kernel size given, make sure the size (width, height) are both positive and odd,"
+                         f" size given {size}")
     return cv2.getStructuringElement(cv2.MORPH_CROSS, ksize=size)
 
 
@@ -66,7 +52,7 @@ def rectangle_kernel(size):
 
     :param size: a tuple of size 2 of 2 odd integers denoting the size of the kernel
     f.g. (5, 5)
-    :return: the numpy.array of the cross shape
+    :return: the `numpy.array` of the cross shape
     """
     return cv2.getStructuringElement(cv2.MORPH_RECT, ksize=size)
 
@@ -86,7 +72,9 @@ def ellipse_kernel(size):
     f.g. (5, 5)
     :return: the kernel
     """
-    validate_odd_size(size)
+    if not valid_odd_size(size):
+        raise ValueError(f"Invalid kernel size given, make sure the size (width, height) are both positive and odd,"
+                         f" size given {size}")
     return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, ksize=size)
 
 
@@ -105,9 +93,11 @@ def horizontal_line_kernel(size):
     f.g. (5, 5)
     :return: the kernel
     """
-    validate_odd_size(size)
+    if not valid_odd_size(size):
+        raise ValueError(f"Invalid kernel size given, make sure the size (width, height) are both positive and odd,"
+                         f" size given {size}")
     kernel = np.zeros(size, dtype=np.uint8)
-    kernel[int((size[0] - 1) / 2), ] = 1
+    kernel[int((size[0] - 1) / 2),] = 1
     return kernel
 
 
@@ -126,7 +116,23 @@ def vertical_line_kernel(size):
     f.g. (5, 5)
     :return: the kernel
     """
-    validate_odd_size(size)
+    if not valid_odd_size(size):
+        raise ValueError(f"Invalid kernel size given, make sure the size (width, height) are both positive and odd,"
+                         f" size given {size}")
     kernel = np.zeros(size, dtype=np.uint8)
     kernel[:, int((size[1] - 1) / 2)] = 1
+    return kernel
+
+
+def sharpening_kernel(size):
+    """
+    Creates a sharpening kernel for image shar
+
+    """
+    if not valid_odd_size(size):
+        raise ValueError(f"Invalid kernel size given, make sure the size (width, height) are both positive and odd,"
+                         f" size given {size}")
+    kernel = np.ones(size)
+    kernel *= -1
+    kernel[int((size[0] - 1) / 2), int((size[1] - 1) / 2)] = kernel.size
     return kernel

@@ -1,10 +1,11 @@
 import typing
+
 import numpy as np
 
-from ovl.math.image import image_size
+from ovl.ovl_math import contours
+from ovl.ovl_math.image import image_size
 from ovl.utils.types import RangedNumber
-from ovl.math import contours
-from ..direction_modifiers.direction_modifier import DirectionModifier
+from ovl.direction_modifiers.direction_modifier import DirectionModifier
 
 
 class StopIfCloseModifier(DirectionModifier):

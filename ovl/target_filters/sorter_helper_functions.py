@@ -1,7 +1,7 @@
 from functools import partial
 
-from ..math import contours
-from ..math import geometry
+from ..ovl_math import contours
+from ..ovl_math import geometry
 
 
 def contour_and_point_distance(point):

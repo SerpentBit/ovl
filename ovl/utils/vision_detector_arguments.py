@@ -4,7 +4,7 @@ from ..detectors.haar_cascade_detector import HaarCascadeDetector
 from ..detectors.threshold_detector import ThresholdDetector
 
 GroupToDetector = namedtuple("GroupToDetector", "constructor arguments")
-_GROUP_TO_DETECTOR = {"threshold": GroupToDetector(ThresholdDetector, "threshold amd/or morphological functions"),
+_GROUP_TO_DETECTOR = {"threshold": GroupToDetector(ThresholdDetector, "threshold and/or morphological functions"),
                       "haar_cascade": GroupToDetector(HaarCascadeDetector, "haar_classifier")}
 
 

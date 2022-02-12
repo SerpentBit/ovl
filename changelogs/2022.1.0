@@ -1,0 +1,41 @@
+## 2022.1.0 Changelog
+
+### Added:
+
+- `sharpening_kernel`
+- Target Selectors for the `Director` now allows for more complex target selection, using a selector function, the
+  default select `target_amount` of targets from the final targets (after filtration) still exists, now has an option of
+  passing a tuple of a low and high bound (allows for selection of up to `target_amount` targets, and at least low but
+  now more than high)
+- Built-in colors are now bundled under the `HSV` class, still has the functionality of `HSV.red.convert` for easy
+  usage.
+- New camera configuration option, allows for systematic and automatic configuration of cameras using the new `CameraConfiguration`
+- new camera configuration example
+
+### Changed:
+
+- opencv is no longer automatically installed with `pip install ovl`
+  Added extra install options:
+    - `cv` installs `opencv-python` for quick
+    - `connections` installs requests and pyserial for the additional `Connection` capabilities
+    - `frc` installs `pynetworktables`
+- Code examples
+- Built in colors are now an enum called `HSV`
+- `percent_area_filter` now uses 1 -> 1% instead of 0.1 -> 1%
+- `ThresholdDetector` can be instantiated without values
+
+### Bugfixes:
+- init now properly imports only the important features and correctly imports `color`
+
+
+### Refactor:
+
+- `sharpening_filter` now uses `sharpening_kernel`
+- completed change to `targets`
+- multiple `target_filters` now use `predicate_target_filter` for simplicity
+
+### Docs:
+- a wide variety of doc updates to match changes
+- grammar corrections
+- many object references now displayed as "code"
+- simplified documentation of many classes
