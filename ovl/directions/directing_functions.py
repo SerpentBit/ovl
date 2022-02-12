@@ -1,13 +1,14 @@
 from numpy import ndarray
 
-from ..math import contours as contours_
+from ..ovl_math import contours as contours_
 
 
 def xy_normalized_directions(contours, image: ndarray):
     """
-    Returns the x and y direction to move in. The object(s) detected xy coordinates are compared to the center of the image,
-    The value returned is returned in normalized screen space -1 to 1. -1 meaning the most left compared to the center,
-    and 1 the most right compared to the center and 0 meaning perfectly centered
+    Returns the x and y direction to move in. The object(s) detected xy coordinates are compared to the center of the
+    image, The value returned is returned in normalized screen space -1 to 1.
+    -1 meaning the most left compared to the center, and 1 the most right compared to the center
+    and 0 meaning perfectly centered
 
     xy_normalized_directions returns x and y center directions,
 

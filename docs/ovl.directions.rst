@@ -9,6 +9,7 @@ Submodules
 
    ovl.directions.directing_functions
    ovl.directions.director
+   ovl.directions.target_selector
 
 Module contents
 ---------------

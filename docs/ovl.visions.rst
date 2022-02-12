@@ -8,7 +8,6 @@ Submodules
    :maxdepth: 4
 
    ovl.visions.ambient_vision
-   ovl.visions.load_vision_json
    ovl.visions.multi_vision
    ovl.visions.vision
 

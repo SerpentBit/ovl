@@ -1,11 +1,11 @@
 import cv2
 
-from ..contour_filter import contour_filter
-from ...math.shape_fill_ratios import circle_fill_ratio
+from ..target_filter import target_filter
+from ...ovl_math.shape_fill_ratios import circle_fill_ratio
 from ...utils.types import RangedNumber
 
 
-@contour_filter
+@target_filter
 def constraining_circle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.80,
                                min_len_ratio: RangedNumber(0, 1) = 0.9):
     """

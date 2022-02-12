@@ -1,9 +1,9 @@
-from ..contour_filter import contour_filter
-from ...math.shape_fill_ratios import circle_fill_ratio
-from ...utils.types import RangedNumber
+from ovl.ovl_math.shape_fill_ratios import circle_fill_ratio
+from ovl.target_filters.predicate_target_filter import predicate_target_filter
+from ovl.utils.types import RangedNumber
 
 
-@contour_filter
+@predicate_target_filter
 def circle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.7):
     """
     Filters out contour which are not approximately circle.

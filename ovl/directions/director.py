@@ -1,8 +1,10 @@
 from typing import *
-import math
 
+import numpy as np
+
+import math
+from .target_selector import validate_target_selector
 from ..direction_modifiers.direction_modifier import DirectionModifier
-from ..camera.camera_settings import *
 
 
 class Director:
@@ -14,71 +16,99 @@ class Director:
     This is the final step before sending/using the data.
 
     Director.direct works in the following way:
-    - if the amount of contours is less than target amount then set directions to failed_detection
-    - else it passes only target_amount of contours to the direction function
+    - if the amount of targets is less than target amount then set directions to failed_detection
+    - else it passes only target_selector of targets to the direction function
     - The final result (direction function or failed_detection) is passed to the direction monitors
     - each modify_directions is applied to the result and its result is passed to the next one
     - then the final result is returned
     """
 
-    def __init__(self, directing_function: Callable, failed_detection: Any = None, target_amount: int = 1,
+    def __init__(self, directing_function: Callable, failed_detection: Any = None, target_selector: int = 0,
                  direction_modifiers: List[DirectionModifier] = None):
         """
         :param directing_function: the function that performs the initial direction calculation
         :param failed_detection: The value returned on a failed detection
-        :param target_amount: the target amount to find, if the value is 0
-                              the target amount (minimum amount) removed and is infinite
+        :param target_selector: selects targets after the targets have been filtered by the target filters,
+        can be a number, range or selecting function
+        (selecting functions receive the targets and should return False for if it failed to select)
         :param direction_modifiers: list of DirectionMonitor objects that alter the directions to be sent
         """
         self.directions = directing_function
-        if not isinstance(target_amount, int):
-            raise ValueError(f"Target amount must be an integer,"
-                             f" got '{target_amount}' of type '{type(target_amount)}'.")
-        self.target_amount = target_amount if target_amount != 0 else math.inf
+        self.target_selector = validate_target_selector(target_selector)
         self.direction_monitors = direction_modifiers
         self.failed_detection = failed_detection
 
-    def direct(self, contours: List[np.ndarray], image: np.ndarray, sorter=None) -> Any:
-        """
-        Returns the directions using the vision.director for the given contours using the image and camera settings (if
-        given).
+    def _limit_selector(self, targets: List):
+        if len(targets) < self.target_selector:
+            return False
+        return targets[:self.target_selector]
 
-        Director.direct works in the following way:
-            - if the amount of contours is less than target amount then set directions to failed_detection
-            - else it passes only target_amount of contours to the direction function
+    def _range_selector(self, targets: List):
+        low_bound, high_bound = self.target_selector
+        target_amount = len(targets)
+        if target_amount < low_bound:
+            return False
+        return targets[:high_bound]
+
+    def _function_selector(self, targets: List):
+        return self.target_selector(targets)
+
+    def _select(self, targets):
+        if isinstance(self.target_selector, int):
+            return self._limit_selector(targets)
+        elif isinstance(self.target_selector, tuple):
+            return self._range_selector(targets)
+        elif isinstance(self.target_selector, Callable):
+            return self._function_selector(targets)
+        else:
+            raise TypeError("Invalid target selector, must be an limit (int), range (tuple of 2 ints), "
+                            "or a function (returns the targets or false if 'failed')")
+
+    def select_targets(self, targets):
+        selection = self._select(targets)
+        return selection if selection else self.failed_detection
+
+    def direct(self, targets, image: np.ndarray, sorter=None) -> Any:
+        """
+        Returns the directions using the `vision.director` for the given targets using the image.
+
+        `Director.direct` works in the following way:
+            - if the amount of targets is less than target amount then set directions to failed_detection
+            - else it passes only target_selector of targets to the direction function
             - The final result (direction function or failed_detection) is passed to the direction monitors
             - each modify_directions is applied to the result and its result is passed to the next one
             - then the final result is returned
 
-        :param contours: the list of contours (numpy ndarrays) from which to extrapolate target direction
-        :param image: the image from which the contours were taken
-        :param sorter: A sorter function to be applied on the contours, or None to not apply one
+        :param targets: the list of object that were detected in your image
+        :param image: the image from which the targets were taken
+        :param sorter: A sorter function to be applied on the targets, or None to not apply one
         :return: Depends on the directing function and the direction monitors,
-                 usually a number or a string
+                 usually a number or tuple
         """
-        if not len(contours) >= self.target_amount:
+        if sorter is not None:
+            targets = sorter(targets)
+        if not len(targets) >= self.target_selector:
             directions = self.failed_detection
         else:
-            if sorter is not None:
-                contours = sorter(contours)
-            if math.isfinite(self.target_amount):
-                contours = contours[:self.target_amount]
-            directions = self.directions(contours, image)
 
-        return self.apply_direction_monitors(directions, contours, image)
+            if math.isfinite(self.target_selector):
+                targets = targets[:self.target_selector]
+            directions = self.directions(targets, image)
+
+        return self.apply_direction_monitors(directions, targets, image)
 
     def apply_direction_monitors(self, directions: Any, contours: List[np.ndarray],
                                  image: np.ndarray) -> Any:
         """
         Applies the list of direction monitors one after the other
 
-        Direction monitors are functions that receive directions contours image and camera settings
+        Direction monitors are functions that receive directions targets image and camera settings
         and change it some way, like applying a PID feedback loop, returning a "stop" value based on some condition
         (like getting close enough to the target)
 
         :param directions: the raw directions returned from the directions function
-        :param contours: the list of contours that passed all filters
-        :param image: the image from which the contours were found
+        :param contours: the list of targets that passed all filters
+        :param image: the image from which the targets were found
         :return: the final direction result
         """
         if self.direction_monitors:

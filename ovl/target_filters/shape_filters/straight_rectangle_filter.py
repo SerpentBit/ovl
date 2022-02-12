@@ -1,11 +1,11 @@
 import cv2
 
-from ..contour_filter import contour_filter
-from ...math.shape_fill_ratios import rectangle_fill_ratio_straight
+from ..target_filter import target_filter
+from ...ovl_math.shape_fill_ratios import rectangle_fill_ratio_straight
 from ...utils.types import RangedNumber
 
 
-@contour_filter
+@target_filter
 def straight_rectangle_filter(contour_list, min_area_ratio: RangedNumber(0, 1) = 0.8):
     """
     Receives a list of contours and returns only those that are approximately a rectangle that

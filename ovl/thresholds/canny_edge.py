@@ -1,8 +1,8 @@
-import cv2
 import json
+
+import cv2
 import numpy as np
 
-from ..utils.remove_none_values import remove_none_values
 from .threshold import Threshold
 
 
@@ -13,6 +13,7 @@ class CannyEdge(Threshold):
     See:
     https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_canny/py_canny.html
     """
+
     def __init__(self, low: int, high: int, aperture_size: int = None, l2_gradient: bool = None):
         self.low = low
         self.high = high
@@ -23,18 +24,11 @@ class CannyEdge(Threshold):
         """
         Validate that the Canny edge parameters are valid
         """
-        return 255 > self.high > self.low > 0
-
-    def canny_parameters(self):
-        """
-        Returns the parameters of the Canny threshold that are not None
-        """
-        parameters = {"apertureSize": self.aperture_size,
-                      "L2gradient": self.l2_gradient}
-        return remove_none_values(parameters)
+        return 255 > self.high >= self.low > 0
 
     def convert(self, image: np.ndarray) -> np.ndarray:
-        return cv2.Canny(image, self.low, self.high, **self.canny_parameters())
+        return cv2.Canny(image, self.low, self.high, apertureSize=self.aperture_size,
+                         L2gradient=self.l2_gradient)
 
     def serialize(self):
         """

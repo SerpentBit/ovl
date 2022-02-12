@@ -4,10 +4,9 @@ import cv2
 import numpy as np
 
 from .image_filter import image_filter
-from ..utils.remove_none_values import remove_none_values
-from .kernels import validate_odd_size
-from ..utils.types import RangedNumber
+from .kernels import sharpening_kernel
 from ..utils.constants import DEFAULT_KERNEL_SIZE
+from ..utils.types import RangedNumber
 
 
 def convert_to_hsv(image: np.ndarray) -> np.ndarray:
@@ -30,17 +29,14 @@ def sharpen_image(image: np.ndarray, size: tuple = DEFAULT_KERNEL_SIZE) -> np.nd
     :return: the new sharpened image
     """
 
-    validate_odd_size(size)
-    kernel = np.ones(size)
-    kernel *= -1
-    kernel[int((size[0] - 1) / 2), int((size[1] - 1) / 2)] = kernel.size
+    kernel = sharpening_kernel(size)
     return cv2.filter2D(image, -1, kernel)
 
 
 @image_filter
 def adaptive_brightness(image: np.ndarray, brightness: RangedNumber(0, 100) = 50, hsv: bool = False) -> np.ndarray:
     """
-    Changes the brightness of every pixel so that the polygon_filter_average of the image is the target polygon_filter_average
+    Changes the brightness of every pixel so that the average brightness of the image is the target brightness
 
     :param image: The image to be changed (Numpy array)
     :param brightness: the target polygon_filter_average for the image
@@ -97,12 +93,6 @@ def _rotate_shortcut(image, shortcut_angle):
     return cv2.warpAffine(image, rotation_matrix, (height, width))
 
 
-SHORTCUT_ANGLES = {
-    90: _rotate_shortcut,
-    180: _rotate_shortcut,
-}
-
-
 @image_filter
 def rotate_image(image: np.ndarray, angle: int = 180) -> np.ndarray:
     """
@@ -114,11 +104,11 @@ def rotate_image(image: np.ndarray, angle: int = 180) -> np.ndarray:
     :param angle: the angle to rotate the image in degrees (positive is to the left, negative to the right)
     :return: the rotated image
     """
-    angle = abs(angle % 360)
-    if angle in SHORTCUT_ANGLES:
-        return SHORTCUT_ANGLES[abs(angle)](image, angle)
-    elif angle == 0:
+    angle %= 360
+    if angle == 0:
         return image
+    if angle % 90 == 0:
+        return _rotate_shortcut(image, angle)
     else:
         return _rotate_by_angle(image, angle)
 
@@ -163,7 +153,7 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
     :param template_window_size: size of the template window, should be an odd number
     :param search_window_size: size of the search window
     :param destination: an image of the same size to place the result
-    :return: the denoised image, a numpy array
+    :return: the de-noised image, a numpy array
 
     For more information about the implementation please refer to the opencv source code
     and this tutorial:
@@ -173,18 +163,13 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
     paper:
     http://www.ipol.im/pub/art/2011/bcm_nlm/
     """
-    parameters = {"h": h,
-                  "hColor": hColor,
-                  "templateWindowSize": template_window_size,
-                  "seasonWindowSize": search_window_size,
-                  "dst": destination
-                  }
-    return cv2.fastNlMeansDenoisingColored(image,
-                                           **remove_none_values(parameters))
+    return cv2.fastNlMeansDenoisingColored(image, dst=destination, h=h, hColor=hColor,
+                                           templateWindowSize=template_window_size,
+                                           searchWindowSize=search_window_size)
 
 
 @image_filter
-def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=None, border_type=None):
+def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=None, border_type=None, destination=None):
     """
     An image filter version of cv2.gaussianBlur.
 
@@ -206,16 +191,14 @@ def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=Non
     the larger this is the more further neighbors affect the new value of the window's center
     if this is set to 0 or None then it will take the value of sigma_x
     :param border_type: Specifies image boundaries while kernel is applied on image borders.
+    :param destination: an image to put the result in
 
     More information on these can be found in the opencv's gaussianBlur function
     https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html#gaussian-filtering
     :return: the blurred image
     """
-    parameters = {"ksize": kernel_size,
-                  "sigmaX": sigma_x,
-                  "sigmaY": sigma_y,
-                  "borderType": border_type}
-    return cv2.GaussianBlur(image, **remove_none_values(parameters))
+    return cv2.GaussianBlur(image, ksize=kernel_size, sigmaX=sigma_x, dst=destination, sigmaY=sigma_y,
+                            borderType=border_type)
 
 
 @image_filter
@@ -254,8 +237,5 @@ def undistort(image, camera_matrix, distortion_coefficients, destination=None, n
     :param new_camera_matrix: the new optimal camera matrix .
     :return: the undistorted image
     """
-    parameters = {
-        "destination": destination,
-        "new_camera_matrix": new_camera_matrix
-    }
-    return cv2.undistort(image, camera_matrix, distortion_coefficients, **remove_none_values(parameters))
+    return cv2.undistort(image, camera_matrix, distortion_coefficients, dst=destination,
+                         newCameraMatrix=new_camera_matrix)
