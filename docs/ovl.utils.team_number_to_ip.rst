@@ -1,7 +1,7 @@
-ovl.visions.load\_vision\_json module
+ovl.utils.team\_number\_to\_ip module
 =====================================
 
-.. automodule:: ovl.visions.load_vision_json
+.. automodule:: ovl.utils.team_number_to_ip
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,7 +1,7 @@
-ovl.helpers.team\_number\_to\_ip module
+ovl.camera.camera\_configuration module
 =======================================
 
-.. automodule:: ovl.helpers.team_number_to_ip
+.. automodule:: ovl.camera.camera_configuration
    :members:
    :undoc-members:
    :show-inheritance:
