@@ -123,7 +123,7 @@ class MultiVision:
     def start(self, yield_ratios=False) -> Generator[Tuple[List[np.ndarray], np.ndarray, Any], None, None]:
         """
         A function that starts an infinite generator that takes an image
-        detects with the current vision and returns the list of contours the image and directions
+        detects with the current vision and returns the list of targets the image and directions
         and should be used as follows:
 
         .. code-block:: python
@@ -138,11 +138,11 @@ class MultiVision:
 
             multi_vision = ovl.MultiVision([vision1, vision2, vision3], connection, update_location)
 
-            for directions, contours, image  in multi_vision.start():
+            for directions, targets, image  in multi_vision.start():
 
                 # do something with the generated data
 
-                # like sending the data or displaying the contours
+                # like sending the data or displaying the targets
 
                 multi_vision.send(directions)
 
@@ -151,13 +151,13 @@ class MultiVision:
         Note: automatically updates AmbientVision's vision swapping (AmbientVision.update_vision())!
 
         :param yield_ratios: if True also yields the list of ratios returned from
-        :yields: contours image directions and ratios if yield_ratios if True
+        :yields: targets image directions and ratios if yield_ratios if True
         """
         while True:
             self.update_current()
             image = self.current.get_image()
-            contours, filtered_image = self.current.detect(image, return_ratios=yield_ratios)
-            directions = self.current.director.direct(contours, filter, self.current.camera_settings)
+            targets, filtered_image = self.current.detect(image, return_ratios=yield_ratios)
+            directions = self.current.director.direct(targets, filtered_image, self.current.camera_settings)
             if self.is_ambient():
                 self.current.update_vision()
-            yield directions, contours, filtered_image
+            yield directions, targets, filtered_image
