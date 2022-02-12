@@ -1,7 +1,7 @@
 import cv2
 
-from ..contour_filter import target_filter
-from ...math.shape_fill_ratios import circle_fill_ratio
+from ..target_filter import target_filter
+from ...ovl_math.shape_fill_ratios import circle_fill_ratio
 from ...utils.types import RangedNumber
 
 

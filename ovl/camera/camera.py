@@ -47,18 +47,18 @@ class Camera:
         if start_immediately:
             self.start()
 
-    def set_exposure(self, exposure_value: float, *, delay: float = 0) -> bool:
+    def set_exposure(self, exposure_value: float, *, configuration_delay: Union[int, float] = 0) -> bool:
         """
         Sets the exposure for the camera.
         Value range depend on the camera some use the value as the exponential negative values or actual number of ms
 
         :param exposure_value: the exposure value to be set
-        :param delay: the time to wait after setting exposure for it to take effect
+        :param configuration_delay: the time to wait after setting exposure for it to take effect
         :return: if it was successful in setting the value
         """
         setting_value = self.stream.set(cv2.CAP_PROP_EXPOSURE, exposure_value)
-        if delay:
-            time.sleep(delay)
+        if configuration_delay:
+            time.sleep(configuration_delay)
         return setting_value
 
     def start(self) -> "Camera":
@@ -190,11 +190,11 @@ class Camera:
 
     def configure_camera(self, configuration: CameraConfiguration, delay=0):
         """
-        Uses a camera configuration object to configure the camera, can use the delay parameter to wait after each set.
+        Uses a camera configuration object to configure the camera, can use the configuration_delay parameter to wait after each set.
 
         :param configuration: a `CameraConfiguration` allows to configure a camera
-        :param delay:  some properties can have a time delay in order to take effect,
-         a delay in seconds can be added to wait after each configuration.
+        :param delay:  some properties can have a time configuration_delay in order to take effect,
+         a configuration_delay in seconds can be added to wait after each configuration.
         """
         for property_key, property_value in configuration.camera_properties.items():
             self.set(property_key, property_value)

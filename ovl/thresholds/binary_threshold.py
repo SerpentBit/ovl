@@ -1,8 +1,7 @@
+import enum
 from typing import Union
 
 import cv2
-import enum
-
 import numpy as np
 
 from .threshold import Threshold

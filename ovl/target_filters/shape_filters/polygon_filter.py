@@ -3,9 +3,9 @@ from functools import partial
 import cv2
 
 from ..shape_filer_constants import POLYGON_FILTER_PRECISION, POLYGON_FILTER_DEFAULT_SIDE_AMOUNT
-from ...math.contours import contour_lengths_and_angles
-from ..contour_filter import target_filter
-from ...math import geometry
+from ..target_filter import target_filter
+from ...ovl_math import geometry
+from ...ovl_math.contours import contour_lengths_and_angles
 from ...utils.types import RangedNumber
 
 

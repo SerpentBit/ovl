@@ -4,18 +4,18 @@ from ..partials.keyword_partial import keyword_partial
 TARGET_FILTERS = set()
 
 
-def target_filter(contour_filter_function):
+def target_filter(target_filter_function):
     """
     A decorator function used to make a contour filter function.
-    Contours filters are functions that take a list of contours
+    Target filters are functions that take a list of targets
     and returns only
 
 
     Wrapping a function it gives the following capabilities:
-        - pass parameters before the list of contours
+        - pass parameters before the list of targets
         - preserves the properties of the function: name, documentation etc.
 
-    The contours filter then changes it behaviour to act as follows:
+    The `target_filter` then changes it behaviour to act as follows:
 
 
     For a given function:
@@ -60,5 +60,5 @@ def target_filter(contour_filter_function):
 
         vision = Vision(..., target_filters=target_filters, ...)
     """
-    TARGET_FILTERS.add(contour_filter_function)
-    return keyword_partial(contour_filter_function)
+    TARGET_FILTERS.add(target_filter_function)
+    return keyword_partial(target_filter_function)

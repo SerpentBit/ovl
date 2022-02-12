@@ -5,9 +5,9 @@ from typing import Tuple
 import cv2
 import numpy as np
 
-from .geometry import distance_between_points, law_of_cosine
-from .shape_fill_ratios import circle_fill_ratio
-from ..image_filters.image_filters import crop_image
+from ovl.ovl_math.geometry import distance_between_points, law_of_cosine
+from ovl.ovl_math.shape_fill_ratios import circle_fill_ratio
+from ovl.image_filters.image_filters import crop_image
 
 __all__ = [
     "target_size", "open_arc_length", "open_contour_approximation",

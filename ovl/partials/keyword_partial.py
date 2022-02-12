@@ -20,7 +20,7 @@ def keyword_partial(target_function):
     .. code-block:: python
 
         @keyword_partial
-        def area_filter(contours, min_area, max_area):
+        def area_filter(targets, min_area, max_area):
             output_list = []
             ratio_list = []
             if type(contour_list) is not list:
@@ -47,7 +47,8 @@ def keyword_partial(target_function):
         final_value = activator(list_of_contours)
 
 
-    Vision objects use functions that are decorated with keyword_partial (target_filter, image_filter)
+    Vision objects use functions that are decorated with keyword_partial (target_filter, image_filter,
+    predicate_target_filter)
     you can just pass the activator to the Vision object like so:
 
     .. code-block:: python
@@ -59,7 +60,7 @@ def keyword_partial(target_function):
     :param target_function: the function to be preloaded
     :return: a function (argument loader) that preloads the wrapped function (target_function)
     """
-
+    @functools.wraps(target_function)
     def argument_loader(*args, **kwargs):
         if args != ():
             warning_message = ("When passing parameters it is recommended to pass everything as keywords "
@@ -71,5 +72,4 @@ def keyword_partial(target_function):
         partial_function = ReversePartial(target_function, *args, **kwargs)
         return functools.update_wrapper(partial_function, target_function)
 
-    wrapped_argument_loader = functools.update_wrapper(argument_loader, target_function)
-    return wrapped_argument_loader
+    return argument_loader

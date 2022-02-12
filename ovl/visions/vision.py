@@ -1,4 +1,3 @@
-import math
 import types
 from functools import reduce
 from typing import List, Union, Tuple, Any
@@ -6,6 +5,7 @@ from typing import List, Union, Tuple, Any
 import cv2
 import numpy as np
 
+import math
 from ..camera.camera import Camera
 from ..camera.camera_configuration import CameraConfiguration
 from ..connections.connection import Connection
@@ -13,7 +13,7 @@ from ..connections.network_location import NetworkLocation
 from ..detectors.detector import Detector
 from ..directions.directing_functions import center_directions
 from ..directions.director import Director
-from ..exceptions.exceptions import InvalidCustomFilterError, CameraError
+from ..exceptions.exceptions import InvalidCustomFilterError, CameraError, ImageError
 from ..partials.filter_applier import apply
 from ..thresholds.threshold import Threshold
 from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
@@ -28,7 +28,7 @@ class Vision:
     Vision object represents a computer vision pipeline.
     The pipeline consists of 4 main stages:
          1. processing - 'apply_all_image_filters' which uses a list of image_filter functions
-         2. detection - 'detect' which comes from Detector objects and detects objects (contours, bounding rectangles..)
+         2. detection - 'detect' which comes from Detector objects and detects objects (targets, bounding rectangles..)
          3. filtering  - 'apply_target_filters' which is uses filter_functions like contour_filters
          4. conversion & usage - 'direct' which comes from director objects
 
@@ -72,18 +72,19 @@ class Vision:
         :param ovl_camera: a boolean that makes the camera opened to be ovl.Camera instead of cv2.VideoCapture
         :param haar_classifier:
         """
-        mutually_exclusive_arguments = {"threshold": (threshold, morphological_functions),
-                                        "detector": (detector,),
-                                        "haar_cascade": (haar_classifier,)}
+        if not (detector is None and threshold is None and haar_classifier is None):
+            mutually_exclusive_arguments = {"threshold": (threshold, morphological_functions),
+                                            "detector": (detector,),
+                                            "haar_cascade": (haar_classifier,)}
 
-        detector = arguments_to_detector(mutually_exclusive_arguments)
-        self.detector = detector
+            detector = arguments_to_detector(mutually_exclusive_arguments)
+            self.detector = detector
         self.width = width
         self.height = height
         self.target_filters = target_filters or []
         self.director = director or Director(center_directions,
                                              failed_detection=DEFAULT_FAILED_DETECTION_VALUE,
-                                             target_amount=1)
+                                             target_selector=1)
         self.connection = connection
         self.image_filters = image_filters or []
         self.camera = None
@@ -104,7 +105,7 @@ class Vision:
         return f"Vision: \n Detector: {self.detector} \n Filters: {filters} \n Image Filters: {image_filters}"
 
     @property
-    def target_amount(self):
+    def target_selector(self):
         """
         The wanted amount of targets
         Determined by `self.director`
@@ -113,7 +114,7 @@ class Vision:
         """
         if self.director is None:
             return math.inf
-        return self.director.target_amount
+        return self.director.target_selector
 
     def send(self, data: Any, *args, **kwargs) -> Any:
         """
@@ -148,7 +149,7 @@ class Vision:
 
         """
         if self.camera is None:
-            raise ValueError("No camera given, (Camera is None)")
+            raise CameraError("No camera given, (Camera is None)")
         if not self.camera.isOpened():
             raise CameraError("Camera given is not open (Has it been closed or disconnected?)")
         output = self.camera.read()
@@ -162,7 +163,7 @@ class Vision:
 
     def apply_target_filter(self, filter_function, targets, verbose=False):
         """
-        Applies a filter function on the contour list, this is used to remove targets
+        Applies a filter function on the target list, this is used to remove targets
         that do not match desired features
 
         NOTE: `Vision.detect` is mainly used for full object detection and filtering,
@@ -183,16 +184,16 @@ class Vision:
 
         if isinstance(filter_function_output, tuple):
             if len(filter_function_output) == 2:
-                filtered_contours, ratio = filter_function_output
+                filtered_targets, ratio = filter_function_output
             else:
                 raise InvalidCustomFilterError('Filter function must return between 1 and 2 lists.'
                                                'Please refer to the Documentation: '
                                                'https://github.com/1937Elysium/Ovl-Python')
         elif isinstance(filter_function_output, list):
-            filtered_contours, ratio = filter_function_output, []
+            filtered_targets, ratio = filter_function_output, []
         else:
-            raise TypeError('The contour list must be a list or tuple of 2 lists (contours and ratios)')
-        return filtered_contours, ratio
+            raise TypeError('The target list must be a list or tuple of 2 lists (targets and ratios)')
+        return filtered_targets, ratio
 
     def apply_target_filters(self, targets: List[np.ndarray], verbose=False
                              ) -> Tuple[List[np.ndarray], List[float]]:
@@ -230,7 +231,7 @@ class Vision:
 
         :param targets: final targets after filtering
         :param image: the image
-        :param sorter: optional parameter, applies a sorter on the given contours
+        :param sorter: optional parameter, applies a sorter on the given targets
         :return: returns the direction
         """
         return self.director.direct(targets, image, sorter=sorter)
@@ -281,7 +282,7 @@ class Vision:
 
         :param verbose: passes verbose to apply_target_filters, which prints out information about the target filtering.
         :param image: image in which the vision should detect an object
-        :return: contours and the filtered image and the ratios if return_ratios is true
+        :return: targets and the filtered image and the ratios if return_ratios is true
 
         """
         filtered_image = self.apply_image_filters(image)

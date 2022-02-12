@@ -1,5 +1,6 @@
-import cv2
 from pathlib import Path
+
+import cv2
 
 
 def open_image(image_path, flags=None):

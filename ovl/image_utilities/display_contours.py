@@ -1,6 +1,6 @@
 import copy
-import math
 
+import math
 from .display_image import *
 from ..image_utilities.open_image import open_image
 
@@ -8,9 +8,9 @@ from ..image_utilities.open_image import open_image
 def display_contours(image, contours, amount=0, display_loop=False, window_name="image", color=(0, 255, 0),
                      save_path=None):
     """
-    Displays the image with the current_vision list of contours
+    Displays the image with the current_vision list of targets
 
-    This can be used to display detected contours (object outlines) on an image (numpy array)
+    This can be used to display detected targets (object outlines) on an image (numpy array)
 
     .. code-block:: python
 
@@ -19,21 +19,21 @@ def display_contours(image, contours, amount=0, display_loop=False, window_name=
 
         image = cv2.imread("path/to/image.png")
 
-        (define a vision pipeline to detect contours)
+        (define a vision pipeline to detect targets)
 
-        contours, _ = vision.detect(image)
+        targets, _ = vision.detect(image)
 
-        ovl.display_contours(image, contours)
+        ovl.display_contours(image, targets)
 
 
-    :param image: image from which the contours were taken from, numpy array or image path
-    :param contours: the list of contours to display_image
-    :param color: the color of the contours outline
+    :param image: image from which the targets were taken from, numpy array or image path
+    :param contours: the list of targets to display_image
+    :param color: the color of the targets outline
     :param display_loop: if display is used in a loop should be true, else false
     :param window_name: the window name, this is useful when display multiple different images at the same time
-    :param amount: amount of contours to display
+    :param amount: amount of targets to display
     :param save_path: if the image should be saved, pass the wanted result path
-    :return: the image with the drawn contours.
+    :return: the image with the drawn targets.
     """
     if type(image) is str:
         image = open_image(image)

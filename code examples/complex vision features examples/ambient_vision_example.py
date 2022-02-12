@@ -41,6 +41,6 @@ vision_controller = ovl.AmbientVision(main_vision=two_blue_hexagons,
 
 while True:
     image = vision_controller.get_image()
-    contours, filtered_image = vision_controller.detect(image)
+    contours, filtered_image, _ = vision_controller.detect(image)
     directions = vision_controller.get_directions(contours, filtered_image)
     print("Directions:", directions)

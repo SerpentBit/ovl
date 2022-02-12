@@ -47,5 +47,3 @@ def image_filter(image_filter_function):
     filter_partial = keyword_partial(image_filter_function)
     IMAGE_FILTERS.add(filter_partial)
     return filter_partial
-
-

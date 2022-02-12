@@ -1,10 +1,11 @@
-import numpy as np
 from typing import Union, List, Any, Generator, Tuple, Dict
 
-from ..utils.types import VisionLike
+import numpy as np
+
 from .ambient_vision import AmbientVision
 from ..connections.connection import *
 from ..connections.network_location import NetworkLocation
+from ..utils.types import VisionLike
 
 
 class MultiVision:
@@ -26,15 +27,15 @@ class MultiVision:
 
         multi_vision = ovl.MultiVision([vision1, vision2, vision3], connection, update_location)
 
-        for directions, contours, image  in multi_vision.start():
+        for directions, targets, image  in multi_vision.start():
 
             # do something with the generated data
 
-            # like sending the data or displaying the contours
+            # like sending the data or displaying the targets
 
             multi_vision.send(directions)
 
-            ovl.display_contours(image, contours, delay=1)
+            ovl.display_contours(image, targets, delay=1)
 
     """
 

@@ -1,14 +1,15 @@
-import math
 from typing import Tuple
 
 import cv2
 
-from . import single_target_filter
-from .contour_filter import target_filter
-from ..math import image
-from ..math.contours import contour_center
-from ..math.geometry import distance_between_points
-from ..math.image import distance_from_frame
+import math
+
+from .predicate_target_filter import predicate_target_filter
+from .target_filter import target_filter
+from ..ovl_math import image
+from ..ovl_math.contours import contour_center
+from ..ovl_math.geometry import distance_between_points
+from ..ovl_math.image import distance_from_frame
 from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
 from ..utils.types import RangedNumber
 
@@ -87,7 +88,7 @@ def absolute_distance_filter(contour_list, max_dist=50, min_dist=0,
     return output, ratio
 
 
-@single_target_filter
+@predicate_target_filter
 def length_filter(contour, min_length=50, max_length=math.inf):
     """
     Receives a list of contours and removes ones that are not long enough
@@ -102,7 +103,7 @@ def length_filter(contour, min_length=50, max_length=math.inf):
     return min_length >= perimeter >= max_length
 
 
-@single_target_filter
+@predicate_target_filter
 def area_filter(contour, min_area: float = 200, max_area: float = math.inf):
     """
     Filters contours that are not within the threshold of area (in pixels)

@@ -1,6 +1,7 @@
-import numpy as np
-from typing import List, Tuple
 import types
+from typing import List
+
+import numpy as np
 
 from . import vision
 from ..connections import connection
@@ -29,7 +30,7 @@ class AmbientVision:
         while True:
             image = vision_controller.get_image()
 
-            contours, image = vision_controller.detect(image)
+            targets, image = vision_controller.detect(image)
 
             vision_controller.update_vision()
 
@@ -68,11 +69,15 @@ class AmbientVision:
     def directions(self):
         return self.current_vision.director
 
+    @property
+    def director(self):
+        return self.current_vision.director
+
     def get_image(self) -> np.ndarray:
         """
         Take a picture using the current vision
 
-        See Vision.get_image for more information
+        See `Vision.get_image` for more information
         """
         return self.current_vision.get_image()
 
@@ -80,19 +85,19 @@ class AmbientVision:
         """
         Applies all the image filters of the current vision on the given image
 
-        See Vision.apply_image_filters for more information
+        See `Vision.apply_image_filters` for more information
         """
         return self.current_vision.apply_image_filters(image)
 
-    def detect(self, image: np.ndarray, verbose=False, *args, **kwargs) -> Tuple[List[np.ndarray], np.ndarray]:
+    def detect(self, image: np.ndarray, verbose=False, *args, **kwargs):
         """
-        Gets contours and applies all filters and returns the result,
+        Gets targets and applies all filters and returns the result,
         thus detecting the object according to the specifications in the vision,
         Uses the current vision
 
         :param image: image in which the vision should detect an object
         :param verbose: if true prints additional information about contour filtering
-        :return: contours, ratio list (from the filter functions) and the filtered image
+        :return: targets, ratio list (from the filter functions) and the filtered image
         """
         return self.current_vision.detect(image, verbose=verbose, *args, **kwargs)
 
@@ -107,16 +112,16 @@ class AmbientVision:
         """
         return self.current_vision.send(data, *args, **kwargs)
 
-    def get_directions(self, contours, image, sorter=None):
+    def get_directions(self, targets, image, sorter=None):
         """
         Returns the directions for the given image and contours using the current vision
 
-        :param contours: the final contours detected.
+        :param targets: the final contours detected.
         :param image: the image where the contours were detected in.
         :param sorter: a sorter function that can be added to be applied before getting directions
         :return: the directions
         """
-        return self.current_vision.get_directions(contours, image, sorter)
+        return self.current_vision.get_directions(targets, image, sorter)
 
     def update_vision(self):
         """
