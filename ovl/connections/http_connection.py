@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Union
+from typing import Any
 
 from .connection import Connection
 
@@ -20,6 +20,7 @@ class HTTPConnection(Connection):
     HTTP is useful for communicating with HTTP Servers over the web, although slower than other more
     low level connection types
     """
+
     def __init__(self, session, default_url=None, headers=None, auth=None):
         import requests
         self.session = session or requests.Session()
@@ -29,7 +30,13 @@ class HTTPConnection(Connection):
             self.session.auth(auth)
         self.url = default_url
 
-    def send_request(self, data: Any, url: str, method: HTTPRequestTypes, **kwargs):
+    def __enter__(self):
+        return self.session.__enter__()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return self.session.__exit__(exc_type, exc_val, exc_tb)
+
+    def send_request(self, data: Any, url: str, method: HTTPRequestTypes, raise_for_status=True, **kwargs):
         """
         send_request is the function used to send a request using HTTP protocol.
         This can be used to send request to servers running remotely in the internet or to an HTTP server in the LAN.
@@ -42,7 +49,8 @@ class HTTPConnection(Connection):
         :param data: The data to be passed as the request's payload
         :param url: the url to send the request to
         :param method: the HTTP method to be used
-        :param kwargs: any other parameters to requests.request
+        :param kwargs: any other parameters to `requests.request`
+        :param raise_for_status: raise an exception if the request failed, uses `request.raise_for_status()`
         :return: the response received for the request
         """
         import requests
@@ -51,7 +59,9 @@ class HTTPConnection(Connection):
             params = {**kwargs["params"], "data": data}
         url = url or self.url
         response = requests.request(method.value, url, params=params, **kwargs)
-        response.raise_for_status()
+
+        if raise_for_status:
+            response.raise_for_status()
         return response
 
     def send(self, data: Any, url: str = None, method=HTTPRequestTypes.POST, **kwargs):
@@ -67,8 +77,7 @@ class HTTPConnection(Connection):
         """
         return self.send_request(data, url, method, **kwargs)
 
-    def receive(self, data: Any = None, url: str = None, method: HTTPRequestTypes = HTTPRequestTypes.GET,
-                interval: Union[float, bool] = False, **kwargs):
+    def receive(self, data: Any = None, url: str = None, method: HTTPRequestTypes = HTTPRequestTypes.GET, **kwargs):
         """
         Receive for HTTPConnection is a bit different compared to other Connection in that it sends a request
         and returns a response which is the main usage, in addition the interval parameter allows for high
@@ -77,14 +86,7 @@ class HTTPConnection(Connection):
         :param url: the url to send to, overrides self.url
         :param data: any data to pass with the requests
         :param method: determines what HTTP method should the request use (GET, POST, PUT etc.)
-        :param interval:
-        :param kwargs: any other parameters passed to Request.request
+        :param kwargs: any other parameters passed to `requests.request`
         :return:
         """
-        if interval:
-            return self.interval_receive(data, url, method, **kwargs)
-        else:
-            self.send_request(data, url, method, **kwargs)
-
-    def interval_receive(self, data: Any, url: str = None, method=HTTPRequestTypes.GET, **kwargs):
-        pass
+        return self.send_request(data, url, method, **kwargs)

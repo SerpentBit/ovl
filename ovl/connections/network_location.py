@@ -1,6 +1,6 @@
 class NetworkLocation(dict):
     """
-    An object used to specify parameters for a Connection.send  and Connection.receive functions
+    An object used to specify parameters for a `Connection.send`  and `Connection.receive` functions
     This is used to create a specific address / port for a connection and allows automated specification
     for a place to send / receive.
 
