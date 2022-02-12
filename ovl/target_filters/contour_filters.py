@@ -118,11 +118,11 @@ def area_filter(contour, min_area: float = 200, max_area: float = math.inf):
 
 
 @target_filter
-def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.02,
-                        maximum_percent: RangedNumber(0, 1) = 1,
+def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 2,
+                        maximum_percent: RangedNumber(0, 1) = 100,
                         image_dimensions: Tuple[int, int] = (DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT)):
     """
-    Filters out contours that are not in the specified ratio to the area of the image (1% -> 0.1)
+    Filters out contours that are not in the specified ratio to the area of the image (1% -> 1)
 
     :param contour_list: list of contours to be filtered (numpy.ndarray)
     :param minimal_percent: the minimal ratio between the contour area and the image area
@@ -132,12 +132,16 @@ def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 0.02
     output, ratios = [], []
     output_append = output.append
     ratio_append = ratios.append
+    if maximum_percent > 100:
+        raise ValueError(f"Maximum percent cannot be bigger than 100! maximum percent: {maximum_percent}")
+    if minimal_percent < 0:
+        raise ValueError(f"Minimum percent cannot be smaller than 0! minimal percent: {minimal_percent}")
     image_size = image_dimensions[0] * image_dimensions[1]
     if image_size == 0:
         raise ValueError("Invalid image dimensions, Received (width, height): {}, {}".format(*image_dimensions))
     for contour in contour_list:
         contour_area = cv2.contourArea(contour)
-        percent_area = contour_area / image_size
+        percent_area = contour_area / image_size * 100
         if minimal_percent <= percent_area <= maximum_percent:
             ratio_append(percent_area)
             output_append(contour)

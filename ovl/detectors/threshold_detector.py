@@ -5,8 +5,8 @@ import cv2
 import numpy as np
 
 from .detector import Detector
-from ..thresholds.threshold import Threshold
 from ..partials.filter_applier import apply
+from ..thresholds.threshold import Threshold
 
 
 class ThresholdDetector(Detector):
@@ -36,7 +36,7 @@ class ThresholdDetector(Detector):
     https://docs.opencv.org/3.4/d9/d61/tutorial_py_morphological_ops.html
     """
 
-    def __init__(self, threshold: Threshold, morphological_functions):
+    def __init__(self, threshold: Threshold = None, morphological_functions=()):
         """
         :param threshold: a Threshold object used to create binary images
         :param morphological_functions: a list of morphological functions
