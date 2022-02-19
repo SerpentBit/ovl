@@ -10,7 +10,7 @@ def validate_target_selector(target_selector: TargetSelector):
         raise TypeError("Target selector must be an int, a tuple of 2 ints or a function that receives the targets,"
                         f"target_selector: {target_selector}")
     if isinstance(target_selector, int):
-        return target_selector if target_selector <= 0 else math.inf
+        return math.inf if target_selector <= 0 else target_selector
     if isinstance(target_selector, tuple):
         try:
             low, high = target_selector

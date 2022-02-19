@@ -10,6 +10,13 @@ from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, DEFAULT
     MAX_OPENCV_CAMERA_PROPERTY, MIN_OPENCV_CAMERA_PROPERTY
 
 
+def configure_camera(camera, configuration, delay=0):
+    for camera_property, value in configuration.camera_properties.items():
+        camera.set(camera_property, value)
+        if delay:
+            time.sleep(delay)
+
+
 class Camera:
     __slots__ = ("stream", "grabbed", "frame", "stopped", "camera_thread", "start_immediately")
 
@@ -196,7 +203,4 @@ class Camera:
         :param delay:  some properties can have a time configuration_delay in order to take effect,
          a configuration_delay in seconds can be added to wait after each configuration.
         """
-        for property_key, property_value in configuration.camera_properties.items():
-            self.set(property_key, property_value)
-            if delay:
-                time.sleep(delay)
+        configure_camera(self.stream, configuration=configuration, delay=delay)

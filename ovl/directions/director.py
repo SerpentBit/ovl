@@ -1,10 +1,14 @@
+import math
+from logging import getLogger
 from typing import *
 
 import numpy as np
 
-import math
+from ..exceptions.exceptions import NotEnoughTargets
 from .target_selector import validate_target_selector
 from ..direction_modifiers.direction_modifier import DirectionModifier
+
+DEFAULT_DIRECTOR_LOGGER = "Director"
 
 
 class Director:
@@ -24,7 +28,7 @@ class Director:
     """
 
     def __init__(self, directing_function: Callable, failed_detection: Any = None, target_selector: int = 0,
-                 direction_modifiers: List[DirectionModifier] = None):
+                 direction_modifiers: List[DirectionModifier] = None, logger: str = None):
         """
         :param directing_function: the function that performs the initial direction calculation
         :param failed_detection: The value returned on a failed detection
@@ -37,24 +41,30 @@ class Director:
         self.target_selector = validate_target_selector(target_selector)
         self.direction_monitors = direction_modifiers
         self.failed_detection = failed_detection
+        self.logger = getLogger(logger or DEFAULT_DIRECTOR_LOGGER)
+
+    def _inf_select(self, targets: List, selector):
+        if math.isinf(selector):
+            selector = None
+        return targets[:selector]
 
     def _limit_selector(self, targets: List):
         if len(targets) < self.target_selector:
-            return False
-        return targets[:self.target_selector]
+            raise NotEnoughTargets()
+        return self._inf_select(targets, self.target_selector)
 
     def _range_selector(self, targets: List):
         low_bound, high_bound = self.target_selector
         target_amount = len(targets)
         if target_amount < low_bound:
-            return False
+            raise NotEnoughTargets()
         return targets[:high_bound]
 
     def _function_selector(self, targets: List):
         return self.target_selector(targets)
 
     def _select(self, targets):
-        if isinstance(self.target_selector, int):
+        if isinstance(self.target_selector, int) or math.isinf(self.target_selector):
             return self._limit_selector(targets)
         elif isinstance(self.target_selector, tuple):
             return self._range_selector(targets)
@@ -62,13 +72,12 @@ class Director:
             return self._function_selector(targets)
         else:
             raise TypeError("Invalid target selector, must be an limit (int), range (tuple of 2 ints), "
-                            "or a function (returns the targets or false if 'failed')")
+                            "or a function (returns the targets or raises FailedDetection/NotEnoughTargets)")
 
     def select_targets(self, targets):
-        selection = self._select(targets)
-        return selection if selection else self.failed_detection
+        return self._select(targets)
 
-    def direct(self, targets, image: np.ndarray, sorter=None) -> Any:
+    def direct(self, targets, image: np.ndarray) -> Any:
         """
         Returns the directions using the `vision.director` for the given targets using the image.
 
@@ -81,24 +90,18 @@ class Director:
 
         :param targets: the list of object that were detected in your image
         :param image: the image from which the targets were taken
-        :param sorter: A sorter function to be applied on the targets, or None to not apply one
         :return: Depends on the directing function and the direction monitors,
                  usually a number or tuple
         """
-        if sorter is not None:
-            targets = sorter(targets)
-        if not len(targets) >= self.target_selector:
-            directions = self.failed_detection
-        else:
-
-            if math.isfinite(self.target_selector):
-                targets = targets[:self.target_selector]
+        try:
+            targets = self.select_targets(targets)
             directions = self.directions(targets, image)
+            return self.apply_direction_monitors(directions, targets, image)
+        except NotEnoughTargets:
+            self.logger.debug("Not enough targets to direct")
+            return self.failed_detection
 
-        return self.apply_direction_monitors(directions, targets, image)
-
-    def apply_direction_monitors(self, directions: Any, contours: List[np.ndarray],
-                                 image: np.ndarray) -> Any:
+    def apply_direction_monitors(self, directions: Any, targets: List[np.ndarray], image: np.ndarray) -> Any:
         """
         Applies the list of direction monitors one after the other
 
@@ -107,13 +110,13 @@ class Director:
         (like getting close enough to the target)
 
         :param directions: the raw directions returned from the directions function
-        :param contours: the list of targets that passed all filters
+        :param targets: the list of targets that passed all filters
         :param image: the image from which the targets were found
         :return: the final direction result
         """
         if self.direction_monitors:
             for direction_monitor in self.direction_monitors:
-                directions = direction_monitor.modify_directions(directions, contours, image)
+                directions = direction_monitor.modify_directions(directions, targets, image)
                 if direction_monitor.priority:
                     return directions
         return directions

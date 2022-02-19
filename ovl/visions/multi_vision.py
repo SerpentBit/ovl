@@ -157,7 +157,7 @@ class MultiVision:
             self.update_current()
             image = self.current.get_image()
             targets, filtered_image = self.current.detect(image, return_ratios=yield_ratios)
-            directions = self.current.director.direct(targets, filtered_image, self.current.camera_settings)
+            directions = self.current.director.direct(targets, filtered_image, self.current.camera_configuration)
             if self.is_ambient():
                 self.current.update_vision()
             yield directions, targets, filtered_image

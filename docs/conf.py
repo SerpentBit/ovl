@@ -18,14 +18,14 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'ovl'
-copyright = '2018 - 2021, Elysium 1937'
-author = 'Elysium1937'
+copyright = '2018 - 2022, SerpentBit'
+author = 'SerpentBit'
 
 # The short X.Y version
-version = '2021.1'
+version = "2022.1"
 
 # The full version, including alpha/beta/rc tags
-release = '2021.1.4'
+release = '2022.1.2'
 
 # -- General configuration ---------------------------------------------------
 

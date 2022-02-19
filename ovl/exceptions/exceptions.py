@@ -16,3 +16,11 @@ class CameraError(Exception):
 
 class ImageError(Exception):
     pass
+
+
+class FailedDetection(Exception):
+    pass
+
+
+class NotEnoughTargets(Exception):
+    pass
