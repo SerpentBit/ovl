@@ -255,8 +255,8 @@ class Vision:
 
         if not camera.isOpened():
             raise CameraError(f"Camera did not open correctly! Camera source: {self.camera_port}")
-
-        configure_camera(camera, camera_configuration)
+        if camera_configuration is not None:
+            configure_camera(camera, camera_configuration)
         self.camera = camera
         return camera
 
@@ -265,7 +265,8 @@ class Vision:
         This is the function that performs processing, detection and filtering on a given image, essentially passing
         the image through the detection related part of the pipeline
 
-        `detect` applies image filters, detects objects in the filtered images (using the passed/created detector object)
+        `detect` applies image filters, detects objects in the filtered images
+        (using the passed/created detector object)
         and finally applies all the target_filters on the image.
 
         args and kwargs are passed to the detect function (passed to the detect method of the detector)
