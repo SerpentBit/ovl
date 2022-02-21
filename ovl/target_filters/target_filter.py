@@ -26,13 +26,12 @@ def target_filter(target_filter_function):
         @target_filter
         def area_filter(contours, min_area, max_area):
             output_list = []
-            ratio_list = []
 
             for current_contour in contour_list:
                 if min_area <= cv2.contourArea(current_contour) <= max_area:
                     output_list.append(current_contour)
-                    ratio_list.append(current_contour)
-            return output_list, ratio_list
+            return output_list
+
 
 
     Instead of calling the function like other functions:

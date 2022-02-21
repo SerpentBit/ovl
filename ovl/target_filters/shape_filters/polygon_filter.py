@@ -48,9 +48,7 @@ def polygon_filter(contour_list, side_amount=POLYGON_FILTER_DEFAULT_SIDE_AMOUNT,
     if side_amount < 3:
         raise ValueError("A polygon must have at least 3 sides")
     output = []
-    ratios = []
     output_append = output.append
-    ratio_append = ratios.append
     for current_contour in contour_list:
         vertices, lengths, angles = contour_lengths_and_angles(current_contour, approximation_coefficient)
         if len(vertices) == side_amount:
@@ -74,6 +72,5 @@ def polygon_filter(contour_list, side_amount=POLYGON_FILTER_DEFAULT_SIDE_AMOUNT,
                         fill_ratio = cv2.contourArea(current_contour) / geometry.polygon_area(average_length,
                                                                                               side_amount)
                         if polygon_fill_ratio <= fill_ratio <= 1 / polygon_fill_ratio:
-                            ratio_append(ratios)
                             output_append(current_contour)
-    return output, ratios
+    return output

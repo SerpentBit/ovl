@@ -1,8 +1,7 @@
+import math
 from typing import Tuple
 
 import cv2
-
-import math
 
 from .predicate_target_filter import predicate_target_filter
 from .target_filter import target_filter
@@ -27,7 +26,6 @@ def image_center_filter(contour_list, image_dimensions: Tuple[int, int] = (DEFAU
     :return: list of contours within the maximum distance from the image center
     """
     output = []
-    ratio = []
     image_center = image.image_center(image_dimensions)
     for contour in contour_list:
         current_contour_center = contour_center(contour)
@@ -36,31 +34,25 @@ def image_center_filter(contour_list, image_dimensions: Tuple[int, int] = (DEFAU
         distance_ratio = distance_from_image_center / distance_from_image_frame
         if min_ratio <= distance_ratio <= max_ratio:
             output.append(contour)
-            ratio.append(distance_ratio)
-    return output, ratio
+    return output
 
 
-@target_filter
-def distance_filter(contour_list, point: Tuple[int, int], min_dist: float = 0, max_dist: float = 50):
+@predicate_target_filter
+def distance_filter(contour, point: Tuple[int, int], min_dist: float = 0, max_dist: float = 50):
     """
     Filters out contours that their center is not close enough
     to the given (x, y) point in the image
 
-    :param contour_list: a list of contours to be filtered
+    :param contour: the contour to be filtered (numpy.ndarray)
     :param point: the point from which the contours should be filtered a tuple (or list) of 2 numbers.
     :param max_dist: the maximum distance from the point in pixels
     :param min_dist: the minimum distance from the point in pixels
     :return: the filtered contour list
     """
-    output = []
-    ratio = []
-    for contour in contour_list:
-        current_contour_center = contour_center(contour)
-        distance_from_center = distance_between_points(current_contour_center, point)
-        if max_dist >= distance_from_center >= min_dist:
-            output.append(contour)
-            ratio.append(distance_from_center)
-    return output, ratio
+
+    current_contour_center = contour_center(contour)
+    distance_from_center = distance_between_points(current_contour_center, point)
+    return max_dist >= distance_from_center >= min_dist
 
 
 @target_filter
@@ -77,15 +69,13 @@ def absolute_distance_filter(contour_list, max_dist=50, min_dist=0,
     :return:
     """
     output = []
-    ratio = []
     image_center = (image_dimensions[0] / 2 - .5, image_dimensions[1] / 2 - .5)
     for contour in contour_list:
         current_contour_center = contour_center(contour)
         distance_from_center = distance_between_points(current_contour_center, image_center)
         if max_dist >= distance_from_center >= min_dist:
             output.append(contour)
-            ratio.append(distance_from_center)
-    return output, ratio
+    return output
 
 
 @predicate_target_filter
@@ -129,23 +119,21 @@ def percent_area_filter(contour_list, minimal_percent: RangedNumber(0, 1) = 2,
     :param maximum_percent: the maximum ratio between the contour area and the image area
     :param image_dimensions: The (width, height) of the image in pixels,
     """
-    output, ratios = [], []
+    output = []
     output_append = output.append
-    ratio_append = ratios.append
     if maximum_percent > 100:
         raise ValueError(f"Maximum percent cannot be bigger than 100! maximum percent: {maximum_percent}")
     if minimal_percent < 0:
         raise ValueError(f"Minimum percent cannot be smaller than 0! minimal percent: {minimal_percent}")
     image_size = image_dimensions[0] * image_dimensions[1]
-    if image_size == 0:
+    if image_size <= 0:
         raise ValueError("Invalid image dimensions, Received (width, height): {}, {}".format(*image_dimensions))
     for contour in contour_list:
         contour_area = cv2.contourArea(contour)
         percent_area = contour_area / image_size * 100
         if minimal_percent <= percent_area <= maximum_percent:
-            ratio_append(percent_area)
             output_append(contour)
-    return output, ratios
+    return output
 
 
 @target_filter
@@ -159,17 +147,14 @@ def size_ratio_filter(contours, min_ratio: float = 2, max_ratio: float = math.in
     :param reverse_ratio: reversed the ratio to be height to width
     :return: the filtered list
     """
-    output, ratios = [], []
+    output = []
     output_append = output.append
-    ratios_append = ratios.append
     for contour in contours:
         _, _, width, height = cv2.boundingRect(contour)
         if 0 in (width, height):
             raise ValueError(
-                "The width or height of one of the contours was 0,\n"
-                " try using an area filter before this filter")
+                "The width or height of one of the contours was 0,\n try using an area filter before this filter")
         size_ratio = height / width if reverse_ratio else width / height
         if min_ratio <= size_ratio <= max_ratio:
             output_append(contour)
-            ratios_append(size_ratio)
-    return output, ratios
+    return output
