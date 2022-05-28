@@ -7,12 +7,10 @@ with open("README.md", "r") as read_me:
     long_description = read_me.read()
 
 PRECOMPILED_OPENCV = ["opencv-python"]
-EXTRA_CONNECTIONS = ["pyserial", "requests"]
 FRC_EXTRA_PACKAGES = ["pynetworktables"]
 
 extra_requirements = {
     "cv": PRECOMPILED_OPENCV,
-    "connections": EXTRA_CONNECTIONS,
     "frc": FRC_EXTRA_PACKAGES,
 }
 
