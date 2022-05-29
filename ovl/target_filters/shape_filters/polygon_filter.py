@@ -2,7 +2,7 @@ from functools import partial
 
 import cv2
 
-from ..shape_filer_constants import POLYGON_FILTER_PRECISION, POLYGON_FILTER_DEFAULT_SIDE_AMOUNT
+from ..shape_filter_constants import POLYGON_FILTER_PRECISION, POLYGON_FILTER_DEFAULT_SIDE_AMOUNT
 from ..target_filter import target_filter
 from ...ovl_math import geometry
 from ...ovl_math.contours import contour_lengths_and_angles
