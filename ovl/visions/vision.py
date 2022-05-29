@@ -1,30 +1,27 @@
-import enum
 import math
 import types
 from functools import reduce
 from logging import getLogger
-from typing import List, Union, Tuple, Any, Callable
+from typing import List, Union, Any, Callable, Tuple, Iterable
 
 import cv2
 import numpy as np
 
-from ..utils.get_function_name import get_function_name
+from ovl import OMIT_DIMENSION_VALUES, DEFAULT_FAILED_DETECTION_VALUE, VISION_LOGGER
+from utils.types import Target
 from ..camera.camera import Camera, configure_camera
 from ..camera.camera_configuration import CameraConfiguration
-from ..connections.connection import Connection
-from ..connections.network_location import NetworkLocation
 from ..detectors.detector import Detector
 from ..directions.directing_functions import center_directions
 from ..directions.director import Director
 from ..exceptions.exceptions import CameraError, ImageError
 from ..partials.filter_applier import apply
 from ..thresholds.threshold import Threshold
-from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH
+from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, BASE_LOGGER
+from ..utils.get_function_name import get_function_name
 from ..utils.vision_detector_arguments import arguments_to_detector
 
-OMIT_DIMENSION_VALUES = (-1, 0)
-DEFAULT_FAILED_DETECTION_VALUE = "Failed to detect targets"
-VISION_LOGGER = "vision"
+logger = getLogger(f"{BASE_LOGGER}.{VISION_LOGGER}")
 
 
 class Vision:
@@ -58,7 +55,7 @@ class Vision:
                  target_filters: List[types.FunctionType] = None, director: Director = None,
                  target_selector: Union[int, tuple, Callable] = 1,
                  width=DEFAULT_IMAGE_WIDTH, height=DEFAULT_IMAGE_HEIGHT,
-                 connection: Connection = None, camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
+                 camera: Union[int, str, Camera, cv2.VideoCapture, Any] = None,
                  camera_configuration: CameraConfiguration = None, image_filters: List[types.FunctionType] = None,
                  ovl_camera: bool = False, haar_classifier: str = None, logger_name: str = None):
         """
@@ -66,10 +63,9 @@ class Vision:
         :param threshold: threshold is a shortcut for detecting
         :param target_filters: the list of target_filter functions that remove targets that aren't what you want,
         can also perform grouping, sorting or any other action you want to
-        :param director: a functions that receives a list or a single contour and returns director
+        :param director: a functions that receive a list or a single contour and returns director
         :param width: the width (in pixels) of images taken with the camera
         :param height: the height (in pixels)
-        :param connection: a connection object that passes the result to the connection target
         :param camera: a Camera object (cv2.VideoCapture, ovl.Camera) or source from which to open a camera
         :param camera_configuration: Special camera settings like calibration or offset used for
                                 image correction and various direction calculations.
@@ -84,14 +80,14 @@ class Vision:
                                             "haar_cascade": (haar_classifier,)}
 
             detector = arguments_to_detector(mutually_exclusive_arguments)
-            self.detector = detector
+        self.detector = detector
+
         self.width = width
         self.height = height
         self.target_filters = target_filters or []
         self.director = director or Director(center_directions,
                                              failed_detection=DEFAULT_FAILED_DETECTION_VALUE,
                                              target_selector=target_selector)
-        self.connection = connection
         self.image_filters = image_filters or []
         self.camera = None
         self.camera_port = None
@@ -123,30 +119,6 @@ class Vision:
             return math.inf
         return self.director.target_selector
 
-    def send(self, data: Any, *args, **kwargs) -> Any:
-        """
-        Sends data to the destination using `self.connection`
-
-        :param data: The data to send to the Connection
-        :param args: any other arguments for the send function in your connection
-        :param kwargs: any other named arguments for the connection object
-        :return: Depends on the connection object used, returns its result
-
-        """
-        return self.connection.send(*args, **kwargs, data=data)
-
-    def send_to_location(self, data: Any, network_location: NetworkLocation, *args, **kwargs):
-        """
-        A function that sends data to a specific NetworkLocation
-
-        :param data: the data to be sent
-        :param network_location: information used to send the data to a specific 'location'
-         in the network
-        :return: Depends on the connection object
-
-        """
-        return self.connection.send_to_location(data, network_location, *args, **kwargs)
-
     def get_image(self) -> np.ndarray:
         """
         Gets an image from `self.camera` and applies image filters
@@ -158,7 +130,7 @@ class Vision:
         if self.camera is None:
             raise CameraError("No camera given, (Camera is None)")
         if not self.camera.isOpened():
-            raise CameraError("Camera given is not open (Has it been closed or disconnected?)")
+            raise CameraError("The Vision's camera is not open (Has it been closed or disconnected?)")
         output = self.camera.read()
         if len(output) == 2:
             success, image = output
@@ -184,10 +156,12 @@ class Vision:
         :return: returns the output of the filter function.
 
         """
-        self.logger.info(f'Before "{get_function_name(filter_function)}": {len(targets)}')
-        return filter_function(targets)
+        name = get_function_name(filter_function)
+        self.logger.info(f'Before "{name}": {len(targets)}')
+        filtered_targets = filter_function(targets)
+        return filtered_targets
 
-    def apply_target_filters(self, targets: List[np.ndarray]) -> Tuple[List[np.ndarray], List[float]]:
+    def apply_target_filters(self, targets: Iterable["Target"]) -> Iterable["Target"]:
         """
         Applies all target filters on a list of targets, one after the other.
         Applies the first filter and passes the output to the second filter,
@@ -196,9 +170,7 @@ class Vision:
         :return: a list of all ratios given by the filter functions in order.
 
         """
-        for filter_func in self.target_filters:
-            targets = self.apply_target_filter(filter_func, targets)
-        return targets
+        return list(reduce(apply, self.target_filters, targets))
 
     def apply_image_filters(self, image: np.ndarray) -> np.ndarray:
         """
@@ -211,7 +183,7 @@ class Vision:
         """
         return reduce(apply, self.image_filters, image)
 
-    def get_directions(self, targets: List[np.ndarray], image: np.ndarray) -> Any:
+    def get_directions(self, targets: Iterable["Target"], image: np.ndarray) -> Any:
         """
         Calculates the directions, based on targets found in the given image
 
@@ -260,7 +232,7 @@ class Vision:
         self.camera = camera
         return camera
 
-    def detect(self, image, *args, **kwargs):
+    def detect(self, image, *args, **kwargs) -> Tuple[Iterable["Target"], "np.ndarray"]:
         """
         This is the function that performs processing, detection and filtering on a given image, essentially passing
         the image through the detection related part of the pipeline

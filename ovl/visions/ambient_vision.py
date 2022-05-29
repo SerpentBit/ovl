@@ -4,7 +4,6 @@ from typing import List
 import numpy as np
 
 from . import vision
-from ..connections import connection
 from ..detectors.detector import Detector
 
 
@@ -54,10 +53,6 @@ class AmbientVision:
             self.current_vision = ambient_vision
 
     @property
-    def connection(self) -> connection.Connection:
-        return self.current_vision.connection
-
-    @property
     def detector(self) -> Detector:
         return self.current_vision.detector
 
@@ -101,27 +96,15 @@ class AmbientVision:
         """
         return self.current_vision.detect(image, verbose=verbose, *args, **kwargs)
 
-    def send(self, data, *args, **kwargs):
-        """
-        Sends a given value to the current vision's connection object
-
-        :param data: the data to be sent
-        :param args: any other parameters to the specific connection object
-        :param kwargs:
-        :return: Whatever the underlying connection object returns, usually the parameter data
-        """
-        return self.current_vision.send(data, *args, **kwargs)
-
-    def get_directions(self, targets, image, sorter=None):
+    def get_directions(self, targets, image):
         """
         Returns the directions for the given image and contours using the current vision
 
         :param targets: the final contours detected.
         :param image: the image where the contours were detected in.
-        :param sorter: a sorter function that can be added to be applied before getting directions
         :return: the directions
         """
-        return self.current_vision.get_directions(targets, image, sorter)
+        return self.current_vision.get_directions(targets, image)
 
     def update_vision(self):
         """
