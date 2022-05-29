@@ -1,12 +1,12 @@
+from functools import lru_cache
 from typing import Any, Union
 
-from .connection import Connection
 from ..utils.team_number_to_ip import team_number_to_ip
 
 NetworkTables = None
 
 
-class NetworkTablesConnection(Connection):
+class NetworkTablesConnection:
     """
     Note: In Order to use NetworkTablesConnection you must have pynetworktables installed.
     (It is automatically installed when installing ovl)
@@ -48,10 +48,10 @@ class NetworkTablesConnection(Connection):
         self.roborio_ip = roborio
         self.connection = NetworkTables.initialize(roborio)
         self.table_key = table_key
-        self.table = NetworkTables.getTable(table_name)
-        self.table_cache = {table_name: self.table}
+        self.table = self.get_table(table_name)
         self.table_name = table_name
 
+    @lru_cache
     def get_table(self, table):
         """
         Fetches a table by name, if table exists in cache it returns
@@ -63,18 +63,9 @@ class NetworkTablesConnection(Connection):
         :return: the table
         """
         from networktables import NetworkTables
-        if table is None:
-            table = self.table
-        elif table in self.table:
-            table = self.table_cache[table]
-        else:
-            table_name = table
-            table = NetworkTables.getTable(table)
-            self.table_cache[table_name] = table
-        return table
+        return NetworkTables.getTable(table)
 
-    def send(self, data, table_key: Union[str, Any] = None,
-             table: Union[str, Any] = None, *args, **kwargs) -> None:
+    def set(self, data, table_key: str = None, table: Union[str, Any] = None) -> None:
         """
         A function used to put a value in a given table and key in the connected
         NetworkTable.
@@ -86,11 +77,11 @@ class NetworkTablesConnection(Connection):
         :param table_key: the specific table to read from
         :param table: the table to receive from. Examples are SmartDashboard or Usage. Use "Vision" if you aren't sure
         """
-        table_key = table_key if table_key else self.table_key
+        table_key = table_key or self.table_key
         table = self.get_table(table)
         return table.putValue(table_key, data)
 
-    def receive(self, table_key: str = None, table: str = None, default_value=None, *args, **kwargs) -> Any:
+    def get(self, table_key: str = None, table: str = None, default_value=None) -> Any:
         """
         Gets a value from a specific key and table, can be used to read values shared by
         all computers in the network.
