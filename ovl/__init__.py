@@ -1,4 +1,4 @@
-__version__ = '2023.0.0'
+__version__ = '2022.2.0'
 
 from .camera.camera import Camera
 from .camera.camera_calibration import CameraCalibration
