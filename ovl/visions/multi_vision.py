@@ -176,7 +176,7 @@ class MultiVision:
             if self.pre_iteration_func:
                 self.pre_iteration_func()
 
-            image = await asyncio.to_thread(self.current_vision.get_image)
+            image = await asyncio.get_running_loop().run_in_executor(None, self.current_vision.get_image)
             targets, filtered_image = self.current_vision.detect(image)
             directions = self.current_vision.director.direct(targets, filtered_image)
             if self.is_ambient:
