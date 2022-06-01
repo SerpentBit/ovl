@@ -29,10 +29,6 @@ The following python modules are optional for certain features:
 
 - NetworkTables (pyNetworkTables) for `NetworkTableConnection` (installed automatically)
 
-- Requests (requests) for `HTTPConnection`
-
-- PySerial (pyserial) for `SerialConnection`
-
 OVL is officially supported for python 3.7+ only!
 
 Installation:
@@ -47,7 +43,7 @@ For the full installation of all features use:
 For the frc related features use the frc option:
 `python -m pip install ovl[frc]`
 
-> Note that opencv doesn't come with the precompiled version of
+> Note that ovl doesn't come with the precompiled version of
 > opencv for python automatically. If you wish to compile opencv for yourself -
 > simply refrain from using the cv flag during installation.
 
