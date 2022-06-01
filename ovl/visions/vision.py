@@ -226,7 +226,7 @@ class Vision:
                 self.height = image_height
 
         if not camera.isOpened():
-            raise CameraError(f"Camera did not open correctly! Camera source: {self.camera_port}")
+            raise CameraError(f"Camera did not open correctly! Make sure it's connected, source: {self.camera_port}")
         if camera_configuration is not None:
             configure_camera(camera, camera_configuration)
         self.camera = camera
