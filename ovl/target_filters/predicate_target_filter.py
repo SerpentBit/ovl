@@ -1,13 +1,13 @@
 import functools
-from typing import List
+from typing import Iterable
 
 import numpy as np
 
 from ..partials.reverse_partial import ReversePartial
 
 
-def _loaded_condition(loaded_contour_filter, contour_list: List[np.ndarray]):
-    return list(filter(loaded_contour_filter, contour_list))
+def _loaded_condition(loaded_contour_filter, targets: Iterable[np.ndarray]):
+    return list(filter(loaded_contour_filter, targets))
 
 
 def predicate_target_filter(target_filter):

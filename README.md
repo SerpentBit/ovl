@@ -29,10 +29,6 @@ The following python modules are optional for certain features:
 
 - NetworkTables (pyNetworkTables) for `NetworkTableConnection` (installed automatically)
 
-- Requests (requests) for `HTTPConnection`
-
-- PySerial (pyserial) for `SerialConnection`
-
 OVL is officially supported for python 3.7+ only!
 
 Installation:

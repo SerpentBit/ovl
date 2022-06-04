@@ -24,7 +24,7 @@ def xy_normalized_directions(contours, image: ndarray):
     return contours_.calculate_normalized_screen_space(contours, image)
 
 
-def center_directions(contours, image: ndarray):
+def center_directions(contours, _: ndarray):
     """
     Returns the average center of the contours
     or list of contours that are the final targets
@@ -33,17 +33,17 @@ def center_directions(contours, image: ndarray):
     doesn't calculate any directions, only finds the center
 
     :param contours: the final contours - your targets
-    :param image: the image from which it was found
+    :param _: the image from which it was found
     """
     return contours_.contour_average_center(contours)
 
 
-def target_amount_directions(contours, image: ndarray):
+def target_amount_directions(contours, _: ndarray):
     """
     Counts the amount of successful object detections.
 
     :param contours: the final contours - your targets
-    :param image: the image from which it was found
+    :param _: the image from which it was found
     :return: the amount of targets detected
     """
     return len(contours)

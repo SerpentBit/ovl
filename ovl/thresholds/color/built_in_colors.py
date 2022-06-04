@@ -33,12 +33,12 @@ class HSV(Threshold, enum.Enum):
     def validate(self, *args, **kwargs) -> bool:
         return self.value.validate(*args, **kwargs)
 
-    yellow = Color([20, 100, 100], [55, 255, 255])
-    blue = Color([100, 100, 100], [135, 255, 255])
-    green = Color([35, 100, 100], [75, 255, 255])
-    purple = Color([130, 100, 100], [170, 255, 255])
-    orange = Color([10, 100, 100], [18, 255, 255])
     red = MultiColor([RED_HIGH_HSV, RED_LOW_HSV])
+    orange = Color([9, 50, 50], [21, 255, 255])
+    yellow = Color([24, 50, 50], [34, 255, 255])
+    green = Color([35, 50, 50], [75, 255, 255])
+    blue = Color([90, 50, 50], [123, 255, 255])
+    purple = Color([125, 50, 50], [145, 255, 255])
     white = Color([0, 0, 200], [179, 20, 255])
     black = Color([110, 0, 0], [130, 255, 30])
     grey = Color([0, 0, 0], [179, 50, 195])

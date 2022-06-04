@@ -1,15 +1,11 @@
-__version__ = '2022.1.3'
+__version__ = '2022.2.2'
 
 from .camera.camera import Camera
 from .camera.camera_calibration import CameraCalibration
 from .camera.camera_configuration import CameraConfiguration
 from .camera.camera_properties import CameraProperties
 
-from .connections.connection import Connection
-from .connections.http_connection import HTTPConnection, HTTPRequestTypes
-from .connections.network_location import NetworkLocation
-from .connections.network_tables_connection import NetworkTablesConnection
-from .connections.serial_connection import SerialConnection
+from .networktables_connection.network_tables_connection import NetworkTablesConnection
 
 from .detectors.detector import Detector
 from .detectors.haar_cascade_detector import HaarCascadeDetector

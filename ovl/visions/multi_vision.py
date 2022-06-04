@@ -1,11 +1,17 @@
-from typing import Union, List, Any, Generator, Tuple, Dict
+import asyncio
+import functools
+import logging
+from typing import Union, List, Any, Generator, Dict, Tuple
 
-import numpy as np
+from numpy import ndarray
 
 from .ambient_vision import AmbientVision
-from ..connections.connection import *
-from ..connections.network_location import NetworkLocation
+from ..utils.get_function_name import get_function_name
+from ..utils.constants import BASE_LOGGER, MULTIVISION_LOGGER
 from ..utils.types import VisionLike
+
+logger = logging.getLogger(f"{BASE_LOGGER}.{MULTIVISION_LOGGER}")
+NO_VISIONS_GIVEN_MESSAGE = "No visions were given to the MultiVision object."
 
 
 class MultiVision:
@@ -23,9 +29,9 @@ class MultiVision:
         vision2 = ovl.Vision(....)
         vision3 = ovl.Vision(....)
 
-        update_location = ovl.NetworkLocation(table_key="current_vision")
+        controller_network_connection = ovl.NetworkLocation(table_key="current_vision")
 
-        multi_vision = ovl.MultiVision([vision1, vision2, vision3], connection, update_location)
+        multi_vision = ovl.MultiVision([vision1, vision2, vision3], connection)
 
         for directions, targets, image  in multi_vision.start():
 
@@ -39,90 +45,101 @@ class MultiVision:
 
     """
 
-    def __init__(self, visions: Union[List[VisionLike], Dict[Any, VisionLike]], update_connection: Connection,
-                 update_location: Union[NetworkLocation, None] = None, default_vision=0):
-        self.current = visions[default_vision]
-        self.index = default_vision
+    def __init__(self, visions: Union[List[VisionLike], Dict[Any, VisionLike]], default_vision_index=None):
+        self.pre_iteration_func = None
+        self.post_iteration_func = None
+
         self.visions = visions
-        self.connection = update_connection
-        self.update_location = update_location
-        self.validate_switch_value = {list: self._list_switch_vision,
-                                      dict: self._dict_switch_vision}
+        if len(self.visions) == 0:
+            logger.error(NO_VISIONS_GIVEN_MESSAGE)
+            raise ValueError(NO_VISIONS_GIVEN_MESSAGE)
 
-    def __enter__(self):
-        return self
+        if isinstance(visions, list):
+            default_vision_index = default_vision_index or 0
+            self._validate_vision_index_list(default_vision_index)
+        elif isinstance(visions, dict):
+            default_vision_index = default_vision_index or list(visions.keys())[0]
+            self._validate_vision_index_dictionary(default_vision_index)
+        self.default_vision = self.visions[default_vision_index]
+        self.current_vision = self.default_vision
+        self.default_vision_index = default_vision_index
+        self.upcoming_vision = None
+        self._update_vision_func = None
+        self._update_task = None
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.connection.close()
+    @property
+    @functools.lru_cache()
+    def vision_amount(self) -> int:
+        """
+        Returns the amount of visions in the controller
 
+        :return: the amount of visions
+        """
+        return len(self.visions)
+
+    @property
     def is_ambient(self) -> bool:
         """
          Returns True if the current_vision vision is an Ambient vision object
 
         :return: if the current vision is an AmbientVision
         """
-        return isinstance(self.current, AmbientVision)
+        return isinstance(self.current_vision, AmbientVision)
 
-    def send(self, data, *args, **kwargs) -> Any:
+    def before_iteration(self, func):
         """
-        Sends the value to the target destination of the current_vision vision object
+        Decorator that runs the function before each iteration of the MultiVision loop
 
-        :param data: the data to be sent
-        :return: depends on the connection object
+        :param func: the function to run before each iteration
         """
-        return self.current.send(data=data, *args, **kwargs)
+        self.pre_iteration_func = func
+        return func
 
-    def set_vision(self, index):
+    def after_iteration(self, func):
         """
-        Sets the current to the given index
+        Decorator that runs the function before each iteration of the MultiVision loop
 
-        :param index: the index to set
-        :return: the index
+        :param func: the function to run before each iteration
         """
-        self.current = self.visions[self.index]
-        self.index = index
-        return index
+        self.post_iteration_func = func
+        return func
 
-    def _dict_switch_vision(self, index: Any):
+    def vision_updater(self, update_vision):
         """
-        Switches the current vision to the one given if the visions' container is a dictionary
+        This function is a decorator that can be used to set custom logic to when vision updating occurs, it will be
+        called constantly, but will actually update only once a detection iteration finishes.
+        """
 
-        """
-        return index in self.visions
+        @functools.wraps(update_vision)
+        async def _update_vision():
+            logger.debug("Starting vision update task, task_id: %s", get_function_name(_update_vision))
+            is_update_async = asyncio.iscoroutinefunction(update_vision)
+            while True:
+                current_vision = self.current_vision
+                if is_update_async:
+                    next_vision = await update_vision(current_vision)
+                else:
+                    next_vision = update_vision(current_vision)
+                self.upcoming_vision = next_vision
 
-    def _list_switch_vision(self, index: Any):
-        """
-        Switches the current vision to the one given if the visions' container is a list
-        """
-        return 0 <= index < len(self.visions)
+        self._update_vision_func = _update_vision()
+        return update_vision
 
-    def switch_vision(self, index: Any):
+    def stop_update_task(self):
         """
-        Switches the current vision used to the vision at the given index (can be a key for dictionaries)
+        Stops the update task if it is running
+        """
+        if self._update_task is not None:
+            self._update_task.cancel()
+        else:
+            raise ValueError("No update task is running")
 
-        :param index: the index of the new vision, can be an int if the container of the visions
-         is a list or any immutable object if it is a dictionary
-        :return: the index set (the index given if it is valid and
-        """
-        if self.validate_switch_value[type(self.visions)](index=index):
-            self.set_vision(index)
-            return index
-        return self.index
+    def set_new_vision(self):
+        self.current_vision = self.upcoming_vision or self.current_vision
 
-    def update_current(self) -> int:
+    async def start(self) -> Generator[Tuple[Any, "ndarray", Any], None, None]:
         """
-        Reads the updated current vision from the update network location
-        and then updates the current vision
-
-        :return: the index received
-        """
-        new_idx = self.connection.receive_from_location(network_location=self.update_location or {})
-        self.switch_vision(new_idx)
-        return new_idx
-
-    def start(self, yield_ratios=False) -> Generator[Tuple[List[np.ndarray], np.ndarray, Any], None, None]:
-        """
-        A function that starts an infinite generator that takes an image
+        Start an infinite generator that takes an image
         detects with the current vision and returns the list of targets the image and directions
         and should be used as follows:
 
@@ -150,14 +167,39 @@ class MultiVision:
 
         Note: automatically updates AmbientVision's vision swapping (AmbientVision.update_vision())!
 
-        :param yield_ratios: if True also yields the list of ratios returned from
-        :yields: targets image directions and ratios if yield_ratios if True
+        :yields: targets, image and directions
         """
+        self._update_task = asyncio.create_task(self._update_vision_func)
         while True:
-            self.update_current()
-            image = self.current.get_image()
-            targets, filtered_image = self.current.detect(image, return_ratios=yield_ratios)
-            directions = self.current.director.direct(targets, filtered_image, self.current.camera_configuration)
-            if self.is_ambient():
-                self.current.update_vision()
+            self.set_new_vision()
+
+            if self.pre_iteration_func:
+                self.pre_iteration_func()
+
+            image = await asyncio.get_running_loop().run_in_executor(None, self.current_vision.get_image)
+            targets, filtered_image = self.current_vision.detect(image)
+            directions = self.current_vision.director.direct(targets, filtered_image)
+            if self.is_ambient:
+                self.current_vision.update_vision()
             yield directions, targets, filtered_image
+
+            if self.post_iteration_func:
+                self.post_iteration_func()
+
+    def _validate_vision_index_list(self, index):
+        """
+        Validates the index is in the list of visions
+
+        :param index: the index to validate
+        :return: the index
+        """
+        return 0 <= index < len(self.visions)
+
+    def _validate_vision_index_dictionary(self, index):
+        """
+        Validates the index is a key of a vision in the controller
+
+        :param index: the index to validate
+        :return: the index
+        """
+        return index in self.visions
