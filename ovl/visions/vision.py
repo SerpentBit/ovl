@@ -8,7 +8,6 @@ import cv2
 import numpy as np
 
 from ovl import OMIT_DIMENSION_VALUES, DEFAULT_FAILED_DETECTION_VALUE, VISION_LOGGER
-from utils.types import Target
 from ..camera.camera import Camera, configure_camera
 from ..camera.camera_configuration import CameraConfiguration
 from ..detectors.detector import Detector
@@ -19,6 +18,7 @@ from ..partials.filter_applier import apply
 from ..thresholds.threshold import Threshold
 from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, BASE_LOGGER
 from ..utils.get_function_name import get_function_name
+from ..utils.types import Target
 from ..utils.vision_detector_arguments import arguments_to_detector
 
 logger = getLogger(f"{BASE_LOGGER}.{VISION_LOGGER}")

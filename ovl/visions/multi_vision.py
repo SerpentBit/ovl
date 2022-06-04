@@ -5,8 +5,8 @@ from typing import Union, List, Any, Generator, Dict, Tuple
 
 from numpy import ndarray
 
-from utils.get_function_name import get_function_name
 from .ambient_vision import AmbientVision
+from ..utils.get_function_name import get_function_name
 from ..utils.constants import BASE_LOGGER, MULTIVISION_LOGGER
 from ..utils.types import VisionLike
 
@@ -68,7 +68,7 @@ class MultiVision:
         self._update_task = None
 
     @property
-    @functools.lru_cache
+    @functools.lru_cache()
     def vision_amount(self) -> int:
         """
         Returns the amount of visions in the controller
