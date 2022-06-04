@@ -8,7 +8,6 @@ Subpackages
    :maxdepth: 4
 
    ovl.camera
-   ovl.connections
    ovl.detectors
    ovl.direction_modifiers
    ovl.directions
@@ -16,6 +15,7 @@ Subpackages
    ovl.image_filters
    ovl.image_utilities
    ovl.morphological_functions
+   ovl.networktables_connection
    ovl.ovl_math
    ovl.partials
    ovl.target_filters
