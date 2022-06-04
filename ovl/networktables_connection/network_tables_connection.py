@@ -51,7 +51,7 @@ class NetworkTablesConnection:
         self.table = self.get_table(table_name)
         self.table_name = table_name
 
-    @lru_cache
+    @lru_cache()
     def get_table(self, table):
         """
         Fetches a table by name, if table exists in cache it returns
