@@ -11,6 +11,9 @@ def open_image(image_path, flags=None):
     :param image_path: the path of the image to open
     :param flags: there are multiple flags that can be used to alter how the image is loaded
      https://docs.opencv.org/4.3.0/d4/da8/group__imgcodecs.html#ga288b8b3da0892bd651fce07b3bbd3a56
+
+    :raises: ValueError if the image could not be opened
+    :raises: OSError if the image could not be found, or is not a valid image file
     :return: the opened image or an iterator that opens the list of images given
     """
     if not Path(image_path).is_file():
