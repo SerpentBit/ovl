@@ -2,7 +2,7 @@ from pathlib import Path
 
 import cv2
 
-
+# TODO: Implement fetch image from url
 def open_image(image_path, flags=None):
     """
     Opens an image file, has a more direct error detection to find out problems
