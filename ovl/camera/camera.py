@@ -5,9 +5,10 @@ from typing import Any, Union
 import cv2
 import numpy as np
 
+from api.object_apis import Serializable
+from ovl import CameraProperties
 from .camera_configuration import CameraConfiguration
-from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, DEFAULT_CAMERA_SOURCE, \
-    MAX_OPENCV_CAMERA_PROPERTY, MIN_OPENCV_CAMERA_PROPERTY
+from ..utils.constants import DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH, DEFAULT_CAMERA_SOURCE
 
 
 def configure_camera(camera, configuration, delay=0):
@@ -17,8 +18,8 @@ def configure_camera(camera, configuration, delay=0):
             time.sleep(delay)
 
 
-class Camera:
-    __slots__ = ("stream", "grabbed", "frame", "stopped", "camera_thread", "start_immediately")
+class Camera(Serializable):
+    __slots__ = ("stream", "grabbed", "frame", "stopped", "camera_thread", "start_immediately", "properties")
 
     def __init__(self, source: Union[str, int, cv2.VideoCapture] = DEFAULT_CAMERA_SOURCE,
                  image_width: int = DEFAULT_IMAGE_WIDTH, image_height: int = DEFAULT_IMAGE_HEIGHT,
@@ -40,8 +41,11 @@ class Camera:
         :param start_immediately: The Camera has an inner thread that reads images, this determines if
         it should start immediately or be started by `Camera.start` manually.
         """
-
-        self.stream = cv2.VideoCapture(source)
+        self.source = source
+        if isinstance(source, cv2.VideoCapture):
+            self.stream = source
+        elif isinstance(source, (int, str)):
+            self.stream = cv2.VideoCapture(source)
 
         if image_width:
             self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, image_width)
@@ -51,6 +55,7 @@ class Camera:
         self.stopped = False
         self.camera_thread: Union[None, Thread] = None
         self.start_immediately = start_immediately
+        self.properties = CameraConfiguration(camera_properties={})
         if start_immediately:
             self.start()
 
@@ -137,28 +142,35 @@ class Camera:
         https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html#aeb1644641842e6b104f244f049648f94
 
         import cv2 and use cv2.CAP_PROP_<PROPERTY NAME> or simply use the property id number. The number depends
-        on the property's location f.e CAP_PROP_FRAME_WIDTH is 3
+        on the property's location f.e. CAP_PROP_FRAME_WIDTH is 3
 
         :param property_id: the property id (number)
         :param value: the value to be set, a number
         :return: None
         """
+        if isinstance(property_id, CameraProperties):
+            property_id *= 1
         self.stream.set(property_id, value)
+        self.properties.camera_properties[property_id] = value
 
     def get(self, property_id) -> Any:
         """
         Retrieves the value of a property based on its id
 
         :param property_id: the property number, for more information:
-                        https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html
+                        https://docs.opencv.org/4.6.0/d8/dfe/classcv_1_1VideoCapture.html
+                        Supported properties vary between different cameras and depend on your opencv version.
+                        Common properties are:
+                        CAP_PROP_FRAME_WIDTH (3) - Width of the frames in the video stream.
+                        CAP_PROP_FRAME_HEIGHT (4) - Height of the frames in the video stream.
+                        CAP_PROP_FPS (5) - Frame rate.
+                        you can look at more properties at the opencv documentation and CameraProperties class
+
         :return: the value of the property
         """
-        if isinstance(property_id, int):
-            raise ValueError(
-                f"Given Property id {property_id} was not valid, please refer to the documentation: "
-                f"https://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html")
-        if not MIN_OPENCV_CAMERA_PROPERTY <= type(property_id) <= MAX_OPENCV_CAMERA_PROPERTY:
-            raise ValueError(f"Invalid property id ({property_id}), please refer to the documentation")
+        if isinstance(property_id, CameraProperties):
+            property_id *= 1
+
         return self.stream.get(property_id)
 
     def is_opened(self) -> bool:
@@ -197,10 +209,28 @@ class Camera:
 
     def configure_camera(self, configuration: CameraConfiguration, delay=0):
         """
-        Uses a camera configuration object to configure the camera, can use the configuration_delay parameter to wait after each set.
+        Uses a camera configuration object to configure the camera, can use the configuration_delay parameter to
+         wait after each set.
 
         :param configuration: a `CameraConfiguration` allows to configure a camera
         :param delay:  some properties can have a time configuration_delay in order to take effect,
          a configuration_delay in seconds can be added to wait after each configuration.
         """
         configure_camera(self.stream, configuration=configuration, delay=delay)
+
+    def serialize(self):
+        """
+        Serializes the camera to a dictionary
+
+        :return: a dictionary of the camera's properties
+        """
+        if isinstance(self.source, cv2.VideoCapture):
+            raise ValueError("Missing camera source")
+        return {
+            "properties": self.properties,
+            "source": self.source,
+        }
+
+    @classmethod
+    def deserialize(cls, data):
+        pass

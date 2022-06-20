@@ -10,7 +10,8 @@ class CameraProperties(int, Enum):
     the camera manufacturer and the drivers written in opencv determines what is supported,
     you're encouraged to test what options work for your camera beforehand.
 
-    You can read more about each option at the opencv documentation here:
+    You can read more about each option at the opencv documentation here, be sure that the version matches your opencv:
+    https://docs.opencv.org/4.6.0/d8/dfe/classcv_1_1VideoCapture.html
 
     Examples:
 
