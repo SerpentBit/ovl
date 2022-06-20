@@ -1,3 +1,2 @@
 pynetworktables
 numpy
-sklearn

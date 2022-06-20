@@ -1,9 +1,12 @@
+from functools import lru_cache
+
 import numpy as np
 
 from .contours import contour_center
 from .geometry import slope, x_intersection, y_intersection, distance_between_points
 
 
+@lru_cache(maxsize=1024)
 def image_center(image_dimensions):
     """
     Calculates the center pixels of a given image dimension

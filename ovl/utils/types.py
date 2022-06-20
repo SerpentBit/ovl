@@ -6,6 +6,7 @@ VisionLike = Union["Vision", "AmbientVision"]
 
 
 Target = Union[np.ndarray, Tuple, Any]
+Point = Union[np.ndarray, Tuple, Any]
 
 
 def RangedNumber(start, end):
