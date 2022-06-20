@@ -71,7 +71,7 @@ class Color(Threshold):
 
 
     `Color` can be passed to a `Vision` to threshold binary images
-    Threshold object can be used by themselves using the `color.convert()` method.
+    Threshold object can be used by themselves using the `color.threshold()` method.
 
     NOTE: Threshold objects automatically convert images to HSV (From the default BGR)
 
@@ -102,7 +102,7 @@ class Color(Threshold):
     def threshold(self, image: np.ndarray) -> np.ndarray:
         return cv2.inRange(image, self.low, self.high)
 
-    def convert(self, image: np.ndarray) -> np.ndarray:
+    def threshold(self, image: np.ndarray) -> np.ndarray:
         """
         Converts a given image to hsv and then thresholds and returns the binary mask
 
@@ -147,6 +147,28 @@ class Color(Threshold):
         :rtype: uint8 numpy array
         """
         return self.__high_bound
+
+    def serialize(self) -> Dict[str, Any]:
+        """
+        Serializes the object into a dictionary.
+
+        :return: A dictionary with the object's attributes.
+        :rtype: dict
+        """
+        return {
+            "low": self.low_bound,
+            "high": self.high_bound
+        }
+
+    @classmethod
+    def deserialize(cls, data) -> "Color":
+        """
+        Deserializes the object from a dictionary.
+
+        :param data: A dictionary with the object's attributes.
+        :type data: dict
+        """
+        return cls(data["low"], data["high"])
 
     def __str__(self):
         return self.__repr__()

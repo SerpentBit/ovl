@@ -57,16 +57,16 @@ class MultiColor(Threshold):
             if type(color) in (list, tuple):
                 self.colors[index] = Color(*color)
 
-    def convert(self, image: np.ndarray):
+    def threshold(self, image: np.ndarray):
         """
         Thresholds an image using the color ranges,
         all pixels that are not in the color ranges defined are set to black (0, 0, 0)
         and all others to white (255, 255, 255)
         """
         if self.colors is None:
-            raise ValueError("Cannot convert an image to a binary, no colors given.")
+            raise ValueError("Cannot threshold an image to a binary, no colors given.")
         if len(self.colors) == 0:
-            raise ValueError("Cannot convert an image to binary, no colors given.")
+            raise ValueError("Cannot threshold an image to binary, no colors given.")
         hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         binary_image = self.colors[0].threshold(hsv_image)
         if len(self.colors) < 1:
@@ -83,8 +83,15 @@ class MultiColor(Threshold):
                     return False
         return True
 
+    def serialize(self):
+        return [color.serialize() for color in self.colors]
+
+    @classmethod
+    def deserialize(cls, data):
+        return cls([Color.deserialize(color) for color in data])
+
     def __str__(self):
-        return ', '.join([str(color) for color in self.colors])
+        return repr(self)
 
     def __repr__(self):
-        return 'MultiColor(0)'.format([repr(i) for i in self.colors])
+        return "MultiColor({})".format(self.colors)

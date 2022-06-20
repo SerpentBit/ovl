@@ -51,7 +51,7 @@ class BinaryThreshold(Threshold):
         self.upper_bound = upper_bound
         self.otsu = otsu
 
-    def convert(self, image: np.ndarray) -> np.ndarray:
+    def threshold(self, image: np.ndarray) -> np.ndarray:
         """
         Converts a greyscale image to a binary image using Binary thresholding.
         :param image: an opened image (numpy ndarray)
@@ -68,3 +68,19 @@ class BinaryThreshold(Threshold):
         :return:
         """
         return 0 <= self.threshold <= self.upper_bound <= 255 and is_valid_threshold_type(self.threshold_type)
+
+    def __repr__(self):
+        return f"BinaryThreshold(threshold={self.threshold}," \
+               f" upper_bound={self.upper_bound}, threshold_type={self.threshold_type})"
+
+    def serialize(self):
+        return {
+            'threshold': self.threshold,
+            'upper_bound': self.upper_bound,
+            'threshold_type': self.threshold_type,
+            'otsu': self.otsu
+        }
+
+    @classmethod
+    def deserialize(cls, data):
+        return cls(**data)

@@ -6,8 +6,9 @@ from ovl import __version__
 with open("README.md", "r") as read_me:
     long_description = read_me.read()
 
+SERIALIZATION = []
 PRECOMPILED_OPENCV = ["opencv-python"]
-FRC_EXTRA_PACKAGES = ["pynetworktables"]
+FRC_EXTRA_PACKAGES = ["pynetworktables"] + PRECOMPILED_OPENCV + SERIALIZATION
 
 extra_requirements = {
     "cv": PRECOMPILED_OPENCV,

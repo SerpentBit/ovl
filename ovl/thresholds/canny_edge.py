@@ -26,20 +26,32 @@ class CannyEdge(Threshold):
         """
         return 255 > self.high >= self.low > 0
 
-    def convert(self, image: np.ndarray) -> np.ndarray:
+    def threshold(self, image: np.ndarray) -> np.ndarray:
         return cv2.Canny(image, self.low, self.high, apertureSize=self.aperture_size,
                          L2gradient=self.l2_gradient)
 
     def serialize(self):
         """
-        Serializes the Canny Threshold to a json string
+        Serialize the Canny edge parameters
         """
-        return json.dumps({"low": self.low,
-                           "high": self.high,
-                           "aperture_size": self.aperture_size,
-                           "l2_gradient": self.l2_gradient})
+        return {
+            'low': self.low,
+            'high': self.high,
+            'aperture_size': self.aperture_size,
+            'l2_gradient': self.l2_gradient
+        }
 
     @staticmethod
     def deserialize_canny_threshold(serialized_canny_threshold: str):
-        canny_dictionary = json.loads(serialized_canny_threshold)
-        return CannyEdge(**canny_dictionary)
+        return
+
+    def __repr__(self):
+        return f"CannyEdge(low={self.low}, high={self.high}," \
+               f" aperture_size={self.aperture_size}, l2_gradient={self.l2_gradient})"
+
+    def __str__(self):
+        return repr(self)
+
+    @classmethod
+    def deserialize(cls, data):
+        return cls(**data)

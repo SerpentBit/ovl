@@ -27,8 +27,18 @@ class HSV(Threshold, enum.Enum):
       Purple: [135, 100, 100], [165, 255, 255]
     """
 
-    def convert(self, image):
-        return self.value.convert(image)
+    def __repr__(self):
+        return f"HSV.{self.name}({self.value})"
+
+    def serialize(self):
+        pass
+
+    @classmethod
+    def deserialize(cls, data):
+        pass
+
+    def threshold(self, image):
+        return self.value.threshold(image)
 
     def validate(self, *args, **kwargs) -> bool:
         return self.value.validate(*args, **kwargs)

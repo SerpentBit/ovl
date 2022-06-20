@@ -21,3 +21,15 @@ class HaarCascadeDetector(Detector):
     def detect(self, image: np.ndarray, *args, **kwargs):
         greyscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         return self.classifier.detectMultiScale(greyscale)
+
+    def __repr__(self):
+        return f"HaarCascadeDetector(classifier={self.classifier_source})"
+
+    def serialize(self):
+        return {
+            'classifier': self.classifier_source
+        }
+
+    @classmethod
+    def deserialize(cls, data: dict):
+        return cls(data['classifier'])

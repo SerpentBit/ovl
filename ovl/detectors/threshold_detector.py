@@ -55,7 +55,7 @@ class ThresholdDetector(Detector):
 
         """
         threshold = threshold or self.threshold
-        return threshold.convert(image)
+        return threshold.threshold(image)
 
     def find_contours_in_mask(self, mask: np.ndarray, return_hierarchy=False, apply_morphs=True) -> List[np.ndarray]:
         """
@@ -105,3 +105,17 @@ class ThresholdDetector(Detector):
             return mask
         morphological_functions = morphological_functions or self.morphological_functions
         return reduce(apply, morphological_functions, mask)
+
+    def __repr__(self):
+        return f"<ThresholdDetector {self.threshold}>"
+
+    def serialize(self):
+        return {
+            "threshold": self.threshold.serialize(),
+            "morphological_functions": [m.serialize() for m in self.morphological_functions]
+        }
+
+    @classmethod
+    def deserialize(cls, data):
+        return cls(morphological_functions=data["morphological_functions"],
+                   threshold=data["threshold"])
