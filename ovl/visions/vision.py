@@ -7,6 +7,7 @@ from typing import List, Union, Any, Callable, Tuple, Iterable
 import cv2
 import numpy as np
 
+from api.object_apis import Serializable
 from ovl import OMIT_DIMENSION_VALUES, DEFAULT_FAILED_DETECTION_VALUE, VISION_LOGGER
 from ..camera.camera import Camera, configure_camera
 from ..camera.camera_configuration import CameraConfiguration
@@ -24,7 +25,7 @@ from ..utils.vision_detector_arguments import arguments_to_detector
 logger = getLogger(f"{BASE_LOGGER}.{VISION_LOGGER}")
 
 
-class Vision:
+class Vision(Serializable):
     """
     Vision object represents a computer vision pipeline.
     The pipeline consists of 4 main stages:
@@ -99,13 +100,27 @@ class Vision:
         else:
             self.camera_setup(camera, width, height, camera_configuration, ovl_camera=ovl_camera)
 
+    def serialize(self):
+        return {
+            "detector": self.detector,
+            "detector_type": self.detector.__class__.__name__,
+            "target_filters": self.target_filters,
+            "director": self.director,
+            "width": self.width,
+            "height": self.height,
+            "camera": self.camera,
+            "camera_configuration": self.camera_configuration,
+            "image_filters": self.image_filters,
+            "target_selector": self.target_selector
+        }
+
     def __repr__(self):
-        return str(self)
+        return f"<Vision detector {self.detector} image filters: {self.image_filters} director: {self.director} camera: {self.camera} id: {hex(id(self))}>"
 
     def __str__(self):
         filters = [get_function_name(filter_function) for filter_function in self.target_filters]
         image_filters = [get_function_name(image_filter) for image_filter in self.image_filters]
-        return f"Vision: \n Detector: {self.detector} \n Filters: {filters} \n Image Filters: {image_filters}"
+        return f"<Vision detector: {self.detector} filters: {filters} Image Filters: {image_filters} director: {self.director} id: {hex(id(self))}>"
 
     @property
     def target_selector(self):
