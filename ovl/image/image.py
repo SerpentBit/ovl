@@ -1,6 +1,13 @@
+from functools import lru_cache
+from typing import Union, Tuple
+
+import cv2
 import numpy as np
 
+from .constants import IMAGE_BLUR_CACHE_SIZE
 from .open_image import open_image
+from ..ovl_math.image import distance_from_frame, distance_between_points, image_center
+from ..utils.types import Point
 
 
 # TODO: Add http fetching support
@@ -21,15 +28,6 @@ def source_to_image(source):
 
 # TODO: Create Image class that can be used to manipulate images.
 # TODO: Docstring
-from functools import lru_cache
-from typing import Union, Tuple
-
-import cv2
-import numpy as np
-
-from .constants import IMAGE_BLUR_CACHE_SIZE
-from ..ovl_math.image import distance_from_frame, distance_between_points, image_center
-from utils.types import Point
 
 
 class Image:
@@ -153,4 +151,3 @@ class Image:
         """
         return Image(cv2.rotate(self.image, angle))
     # endregion
-
