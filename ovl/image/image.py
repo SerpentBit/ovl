@@ -4,6 +4,7 @@ from typing import Union, Tuple
 import cv2
 import numpy as np
 
+from image_filters.image_filters import _rotate_image
 from .constants import IMAGE_BLUR_CACHE_SIZE
 from .open_image import open_image
 from ..ovl_math.image import distance_from_frame, distance_between_points, image_center
@@ -140,6 +141,10 @@ class Image:
     def bilateral_blur(self, kernel_size: int = 5, sigma_color: float = 75, sigma_space: float = 75):
         return Image(cv2.bilateralFilter(self.image, kernel_size, sigma_color, sigma_space))
 
+    # endregion
+
+    # region Rotation & Translations
+
     @lru_cache(maxsize=IMAGE_BLUR_CACHE_SIZE)
     def rotate(self, angle: float):
         """
@@ -149,5 +154,5 @@ class Image:
         :param angle: The angle in degrees.
         :return: The rotated image.
         """
-        return Image(cv2.rotate(self.image, angle))
+        return Image(_rotate_image(self.image, angle))
     # endregion

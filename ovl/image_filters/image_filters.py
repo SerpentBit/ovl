@@ -93,8 +93,7 @@ def _rotate_shortcut(image, shortcut_angle):
     return cv2.warpAffine(image, rotation_matrix, (height, width))
 
 
-@image_filter
-def rotate_image(image: np.ndarray, angle: int = 180) -> np.ndarray:
+def _rotate_image(image: np.ndarray, angle: float = 180) -> np.ndarray:
     """
     Rotates an image by a given amount of degrees.
     Note that the rotated image's dimensions will most likely change if
@@ -113,6 +112,9 @@ def rotate_image(image: np.ndarray, angle: int = 180) -> np.ndarray:
         return _rotate_by_angle(image, angle)
 
 
+rotate_image = image_filter(_rotate_image)
+
+
 def _rotate_by_angle(image, angle):
     """
     Rotates the given image by a given angle
@@ -123,7 +125,7 @@ def _rotate_by_angle(image, angle):
 
 
     :param image: the image to be rotated
-    :param angle: the angle of rotation
+    :param angle: the angle of rotation, positive is counter-clockwise and negative is clockwise
     :return: the rotated image
     """
     (height, width) = image.shape[:2]
