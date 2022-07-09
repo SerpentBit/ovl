@@ -1,3 +1,4 @@
+import operator
 from functools import lru_cache
 from typing import Union, Tuple
 
@@ -24,11 +25,19 @@ def source_to_image(source):
     elif isinstance(source, np.ndarray):
         return source
     else:
-        raise ValueError(f"Invalid source type {source}.")
+        raise ValueError(f"Invalid image type {source}.")
 
 
 # TODO: Create Image class that can be used to manipulate images.
 # TODO: Docstring
+
+def _apply_on_image(source, other, func):
+    if isinstance(other, Image):
+        return Image(func(source.image, other.image))
+    elif isinstance(other, np.ndarray):
+        return Image(func(source.image, other))
+    else:
+        raise TypeError(f"Invalid source type {type(source)}, {source}")
 
 
 class Image:
@@ -83,21 +92,10 @@ class Image:
 
     # region Functionalities with other images
     def __add__(self, other):
-        if isinstance(other, Image):
-            return Image(self.image + other.image)
-        elif isinstance(other, np.ndarray):
-            return Image(self.image + other)
-        else:
-            raise TypeError("Can only add images or numpy arrays to images")
+        return _apply_on_image(self, other, operator.add)
 
     def __sub__(self, other):
-        if isinstance(other, Image):
-            return Image(self.image - other.image)
-        elif isinstance(other, np.ndarray):
-            return Image(self.image - other)
-        else:
-            raise TypeError("Can only subtract images or numpy arrays from images")
-
+        return _apply_on_image(self, other, operator.sub)
     # endregion
 
     # region Points
@@ -108,14 +106,12 @@ class Image:
     def distance_from_frame(self, point: Point):
         return distance_from_frame(point, self.dimensions)
 
-    @lru_cache(maxsize=None)
     def distance_from_center(self, point: Point):
         return distance_between_points(point, self.image_center)
 
     # endregion
 
     # region Blurs
-    @lru_cache(maxsize=IMAGE_BLUR_CACHE_SIZE)
     def gaussian_blur(self, kernel: Union[int, Tuple] = 5, sigma_x: float = 0, sigma_y: float = None,
                       border_type: int = None):
         """
@@ -133,11 +129,9 @@ class Image:
             kernel = (kernel, kernel)
         return Image(cv2.GaussianBlur(self.image, kernel, sigma_x, sigma_y, border_type))
 
-    @lru_cache(maxsize=IMAGE_BLUR_CACHE_SIZE)
     def median_blur(self, kernel_size: int = 3):
         return Image(cv2.medianBlur(self.image, kernel_size))
 
-    @lru_cache(maxsize=IMAGE_BLUR_CACHE_SIZE)
     def bilateral_blur(self, kernel_size: int = 5, sigma_color: float = 75, sigma_space: float = 75):
         return Image(cv2.bilateralFilter(self.image, kernel_size, sigma_color, sigma_space))
 
@@ -145,7 +139,6 @@ class Image:
 
     # region Rotation & Translations
 
-    @lru_cache(maxsize=IMAGE_BLUR_CACHE_SIZE)
     def rotate(self, angle: float):
         """
         Rotates the image by the given angle.
