@@ -115,12 +115,13 @@ class Vision(Serializable):
         }
 
     def __repr__(self):
-        return f"<Vision detector {self.detector} image filters: {self.image_filters} director: {self.director} camera: {self.camera} id: {hex(id(self))}>"
-
-    def __str__(self):
         filters = [get_function_name(filter_function) for filter_function in self.target_filters]
         image_filters = [get_function_name(image_filter) for image_filter in self.image_filters]
-        return f"<Vision detector: {self.detector} filters: {filters} Image Filters: {image_filters} director: {self.director} id: {hex(id(self))}>"
+        return f"<Vision detector: {self.detector} filters: {filters} Image Filters: {image_filters}" \
+               f" director: {self.director} id: {hex(id(self))}>"
+
+    def __str__(self):
+        return self.__repr__()
 
     @property
     def target_selector(self):
@@ -172,7 +173,7 @@ class Vision(Serializable):
 
         """
         name = get_function_name(filter_function)
-        self.logger.info(f'Before "{name}": {len(targets)}')
+        self.logger.debug(f'Before "{name}": {len(targets)}')
         filtered_targets = filter_function(targets)
         return filtered_targets
 
