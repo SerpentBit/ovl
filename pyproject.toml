@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "ovl"
+version = "2022.2.2"
+description = "A modular Python package for powerful computer vision pipelines for real-time applications, with a wide array of support features for complex capabilities, all while being easy for beginners yet veratilefor pros"
+authors = ["SerpentBit <serpentbit.ovl@gmail.com>"]
+license = "Apache-2.0"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows"
+]
+repository="https://github.com/SerpentBit/ovl"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+numpy = "^1.23.1"
+opencv-python = { version = "^4.6.0", optional = true }
+pynetworktables = { version = "^2021.0.0", optional = true }
+
+[tool.poetry.dev-dependencies]
+numpy = "^1.23.1"
+behave = "^1.2.6"
+
+
+[tool.poetry.extras]
+frc = ["pynetworktables"]
+cv = ["opencv-python"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
