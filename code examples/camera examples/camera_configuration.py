@@ -1,7 +1,7 @@
 import ovl
 from ovl import CameraConfiguration, CameraProperties
 
-camera = ovl.Camera(0)
+camera = ovl.Camera(0, start_immediately=False)
 
 camera_config = CameraConfiguration({
     CameraProperties.IMAGE_WIDTH: 640,  # set image width to 640 pixels
@@ -12,7 +12,8 @@ camera_config = CameraConfiguration({
 
 camera.configure_camera(camera_config)
 
-camera.set_exposure(-100, configuration_delay=2)  # Setting exposure usually demands a delay for adjustment
+camera.set_exposure(-12, configuration_delay=2)  # Setting exposure usually demands a delay for adjustment
+camera.start()
 
 while True:
     image = camera.get_image()
