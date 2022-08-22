@@ -29,7 +29,7 @@ The following python modules are optional for certain features:
 
 - NetworkTables (pyNetworkTables) for `NetworkTableConnection` (installed automatically)
 
-OVL is officially supported for python 3.7+ only!
+OVL is officially supported for python 3.7+
 
 Installation:
 
