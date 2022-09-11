@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Union
 
 import cv2
 import numpy as np
@@ -9,28 +9,36 @@ from ..utils.constants import DEFAULT_KERNEL_SIZE
 from ..utils.types import RangedNumber
 
 
-def convert_to_hsv(image: np.ndarray) -> np.ndarray:
+def convert_to_hsv(image: np.ndarray, inplace=False) -> np.ndarray:
     """
     Converts an image to hsv - Mainly for beginner use
     
     :param image: image to be converted
+    :param inplace: If the resulting image should be a new image (inplace=False), inplace (inplace=True)
+     or in a given np array (image - pass an np array)
     :return: the converted image
     """
-    return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    if isinstance(inplace, bool):
+        inplace = image if inplace else None
+    return cv2.cvtColor(image, cv2.COLOR_BGR2HSV, dst=inplace)
 
 
 @image_filter
-def sharpen_image(image: np.ndarray, size: tuple = DEFAULT_KERNEL_SIZE) -> np.ndarray:
+def sharpen_image(image: np.ndarray, size: tuple = DEFAULT_KERNEL_SIZE, inplace=False) -> np.ndarray:
     """
     Sharpens an image by preforming convolution it with a sharpening matrix
 
     :param image: the image (numpy array)
     :param size: the size of the sharpening matrix
+    :param inplace: If the resulting image should be a new image (inplace=False), inplace (inplace=True)
+     or in a given np array (image - pass an np array)
     :return: the new sharpened image
     """
 
     kernel = sharpening_kernel(size)
-    return cv2.filter2D(image, -1, kernel)
+    if isinstance(inplace, bool):
+        inplace = image if inplace else None
+    return cv2.filter2D(image, -1, kernel, dst=inplace)
 
 
 @image_filter
@@ -80,7 +88,7 @@ def change_brightness(image: np.ndarray, change: float = 25, hsv_image: bool = F
     return image
 
 
-def _rotate_shortcut(image, shortcut_angle):
+def _rotate_shortcut(image, shortcut_angle, inplace):
     """
     Return a copy of the image rotated 90 degrees to the left (_counter-clockwise)
 
@@ -90,7 +98,7 @@ def _rotate_shortcut(image, shortcut_angle):
     (height, width) = image.shape[:2]
     center = (width / 2, height / 2)
     rotation_matrix = cv2.getRotationMatrix2D(center, shortcut_angle, 1.0)
-    return cv2.warpAffine(image, rotation_matrix, (height, width))
+    return cv2.warpAffine(image, rotation_matrix, (height, width), dst=inplace)
 
 
 @image_filter
@@ -139,7 +147,7 @@ def _rotate_by_angle(image, angle):
 
 @image_filter
 def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None, search_window_size=None,
-                             destination=None):
+                             inplace: Union[np.ndarray, bool] = False):
     """
     Non-local mean denoising is an image noise removal function.
     Non-local mean denoising removes noise by finding matching patterns in other parts of the image
@@ -152,7 +160,7 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
      h maps to h in the greyscale version of the opencv function and to hColor in the color version
     :param template_window_size: size of the template window, should be an odd number
     :param search_window_size: size of the search window
-    :param destination: an image of the same size to place the result
+    :param inplace: an image of the same size to place the result
     :return: the de-noised image, a numpy array
 
     For more information about the implementation please refer to the opencv source code
@@ -163,13 +171,15 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
     paper:
     http://www.ipol.im/pub/art/2011/bcm_nlm/
     """
-    return cv2.fastNlMeansDenoisingColored(image, dst=destination, h=h, hColor=hColor,
+    if isinstance(inplace, bool):
+        inplace = image if inplace else None
+    return cv2.fastNlMeansDenoisingColored(image, dst=inplace, h=h, hColor=hColor,
                                            templateWindowSize=template_window_size,
                                            searchWindowSize=search_window_size)
 
 
 @image_filter
-def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=None, border_type=None, destination=None):
+def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=None, border_type=None, inplace=False):
     """
     An image filter version of cv2.gaussianBlur.
 
@@ -191,13 +201,15 @@ def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=Non
     the larger this is the more further neighbors affect the new value of the window's center
     if this is set to 0 or None then it will take the value of sigma_x
     :param border_type: Specifies image boundaries while kernel is applied on image borders.
-    :param destination: an image to put the result in
+    :param inplace: an image to put the result in
 
     More information on these can be found in the opencv's gaussianBlur function
     https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html#gaussian-filtering
     :return: the blurred image
     """
-    return cv2.GaussianBlur(image, ksize=kernel_size, sigmaX=sigma_x, dst=destination, sigmaY=sigma_y,
+    if isinstance(inplace, bool):
+        inplace = image if inplace else None
+    return cv2.GaussianBlur(image, ksize=kernel_size, sigmaX=sigma_x, dst=inplace, sigmaY=sigma_y,
                             borderType=border_type)
 
 
@@ -221,7 +233,8 @@ def crop_image(image, point: Tuple[int, int], dimensions: Tuple[int, int]):
 
 
 @image_filter
-def undistort(image, camera_matrix, distortion_coefficients, destination=None, new_camera_matrix=None):
+def undistort(image, camera_matrix, distortion_coefficients, inplace: Union[np.ndarray, bool] = None,
+              new_camera_matrix=None):
     """
     Using calculated camera matrix and distortion coefficients can be used to remove distortions caused
     by the camera and manufacturing flaws. Getting the camera matrix and distortion coefficients requires
@@ -233,9 +246,13 @@ def undistort(image, camera_matrix, distortion_coefficients, destination=None, n
     :param image: the ndarray of the image
     :param camera_matrix: the camera matrix that was calculated from the camera calibration
     :param distortion_coefficients: the distortion coefficients that were calculated from the camera calibration
-    :param destination: the image the result should be saved in, None if just return
-    :param new_camera_matrix: the new optimal camera matrix .
+    :param inplace: the image the result should be saved in, None if return a copy, True if rewrite in the same image
+    :param new_camera_matrix: the new optimal camera matrix.
+    :param inplace: write on the original image
     :return: the undistorted image
     """
-    return cv2.undistort(image, camera_matrix, distortion_coefficients, dst=destination,
+    if isinstance(inplace, bool):
+        inplace = image if inplace else None
+
+    return cv2.undistort(image, camera_matrix, distortion_coefficients, dst=inplace,
                          newCameraMatrix=new_camera_matrix)
