@@ -18,7 +18,7 @@ def convert_to_hsv(image: np.ndarray, inplace=False) -> np.ndarray:
      or in a given np array (image - pass an np array)
     :return: the converted image
     """
-    if isinstance(inplace, bool):
+    if type(inplace) == bool:
         inplace = image if inplace else None
     return cv2.cvtColor(image, cv2.COLOR_BGR2HSV, dst=inplace)
 
@@ -36,7 +36,7 @@ def sharpen_image(image: np.ndarray, size: tuple = DEFAULT_KERNEL_SIZE, inplace=
     """
 
     kernel = sharpening_kernel(size)
-    if isinstance(inplace, bool):
+    if type(inplace) == bool:
         inplace = image if inplace else None
     return cv2.filter2D(image, -1, kernel, dst=inplace)
 
@@ -171,7 +171,7 @@ def non_local_mean_denoising(image, h=10, hColor=None, template_window_size=None
     paper:
     http://www.ipol.im/pub/art/2011/bcm_nlm/
     """
-    if isinstance(inplace, bool):
+    if type(inplace) == bool:
         inplace = image if inplace else None
     return cv2.fastNlMeansDenoisingColored(image, dst=inplace, h=h, hColor=hColor,
                                            templateWindowSize=template_window_size,
@@ -207,7 +207,7 @@ def gaussian_blur(image, kernel_size=DEFAULT_KERNEL_SIZE, sigma_x=5, sigma_y=Non
     https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html#gaussian-filtering
     :return: the blurred image
     """
-    if isinstance(inplace, bool):
+    if type(inplace) == bool:
         inplace = image if inplace else None
     return cv2.GaussianBlur(image, ksize=kernel_size, sigmaX=sigma_x, dst=inplace, sigmaY=sigma_y,
                             borderType=border_type)
@@ -251,7 +251,7 @@ def undistort(image, camera_matrix, distortion_coefficients, inplace: Union[np.n
     :param inplace: write on the original image
     :return: the undistorted image
     """
-    if isinstance(inplace, bool):
+    if type(inplace) == bool:
         inplace = image if inplace else None
 
     return cv2.undistort(image, camera_matrix, distortion_coefficients, dst=inplace,
