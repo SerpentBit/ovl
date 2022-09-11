@@ -61,7 +61,7 @@ def adaptive_brightness(image: np.ndarray, brightness: RangedNumber(0, 100) = 50
     else:
         vid = np.where(vid + increase >= 0, vid + increase, 0)
     image[:, :, 2] = vid
-    image = image if hsv else cv2.cvtColor(image, cv2.COLOR_HSV2BGR)
+    image = cv2.cvtColor(image, cv2.COLOR_HSV2BGR) if hsv else image
     return image
 
 
