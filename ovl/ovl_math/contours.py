@@ -5,9 +5,9 @@ from typing import Tuple
 import cv2
 import numpy as np
 
+from ovl.image_filters.image_filters import crop_image
 from ovl.ovl_math.geometry import distance_between_points, law_of_cosine
 from ovl.ovl_math.shape_fill_ratios import circle_fill_ratio
-from ovl.image_filters.image_filters import crop_image
 
 __all__ = [
     "target_size", "open_arc_length", "open_contour_approximation",
@@ -15,12 +15,14 @@ __all__ = [
     "contour_lengths_and_angles", "calculate_normalized_screen_space",
     "circle_rating", "crop_contour_region", "contour_average_color"]
 
+CONTOUR_APPROXIMATION_COEFFICIENT = 0.02
+
 
 def target_size(contours: typing.List[np.ndarray]) -> float:
     """
     Returns the sum of contour areas of a list of contours
     """
-    return sum(list(map(cv2.contourArea, contours)))
+    return sum(map(cv2.contourArea, contours))
 
 
 def open_arc_length(contour: np.ndarray) -> float:
@@ -30,7 +32,8 @@ def open_arc_length(contour: np.ndarray) -> float:
     return cv2.arcLength(contour, False)
 
 
-def open_contour_approximation(contour: np.ndarray, approximation_coefficient: float = 0.02):
+def open_contour_approximation(contour: np.ndarray,
+                               approximation_coefficient: float = CONTOUR_APPROXIMATION_COEFFICIENT):
     """
     Returns the vertices of the approximation of the contour
     NOTE: for "open" (unclosed shape) contours only!
@@ -86,7 +89,7 @@ def contour_average_center(contours) -> Tuple[float, float]:
     return average
 
 
-def contour_approximation(contour, approximation_coefficient=0.02):
+def contour_approximation(contour, approximation_coefficient=CONTOUR_APPROXIMATION_COEFFICIENT):
     """
     Returns the approximation of the contour
 
@@ -99,7 +102,7 @@ def contour_approximation(contour, approximation_coefficient=0.02):
     return approximation
 
 
-def contour_lengths_and_angles(contour, approximation_coefficient=0.02):
+def contour_lengths_and_angles(contour, approximation_coefficient=CONTOUR_APPROXIMATION_COEFFICIENT):
     """
     Returns a list of lengths and angles of a given contour.
 

@@ -13,7 +13,7 @@ def convert_to_hsv(image: np.ndarray, inplace=False) -> np.ndarray:
     """
     Converts an image to hsv - Mainly for beginner use
     
-    :param image: image to be converted
+    :param image: image to be converted from the RGB color space to HSV
     :param inplace: If the resulting image should be a new image (inplace=False), inplace (inplace=True)
      or in a given np array (image - pass an np array)
     :return: the converted image
@@ -102,7 +102,7 @@ def _rotate_shortcut(image, shortcut_angle, inplace):
 
 
 @image_filter
-def rotate_image(image: np.ndarray, angle: int = 180) -> np.ndarray:
+def rotate_image(image: np.ndarray, angle: int = 180, inplace=None) -> np.ndarray:
     """
     Rotates an image by a given amount of degrees.
     Note that the rotated image's dimensions will most likely change if
@@ -115,13 +115,15 @@ def rotate_image(image: np.ndarray, angle: int = 180) -> np.ndarray:
     angle %= 360
     if angle == 0:
         return image
+    if type(inplace) == bool:
+        inplace = image if inplace else None
     if angle % 90 == 0:
-        return _rotate_shortcut(image, angle)
+        return _rotate_shortcut(image, angle, inplace)
     else:
-        return _rotate_by_angle(image, angle)
+        return _rotate_by_angle(image, angle, inplace)
 
 
-def _rotate_by_angle(image, angle):
+def _rotate_by_angle(image, angle, inplace):
     """
     Rotates the given image by a given angle
     The new image will have different dimensions if the rotation angle isn't a multiple of 90
@@ -142,7 +144,7 @@ def _rotate_by_angle(image, angle):
     rotated_image_dimensions = (int((height * sin) + (width * cos)), int((height * cos) + (width * sin)))
     rotation_matrix[0, 2] += (rotated_image_dimensions[0] / 2) - center_xy[0]
     rotation_matrix[1, 2] += (rotated_image_dimensions[1] / 2) - center_xy[1]
-    return cv2.warpAffine(image, rotation_matrix, rotated_image_dimensions)
+    return cv2.warpAffine(image, rotation_matrix, rotated_image_dimensions, dst=inplace)
 
 
 @image_filter

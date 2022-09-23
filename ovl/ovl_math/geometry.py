@@ -85,7 +85,7 @@ def distance_between_points(first_point, second_point):
     :return: Float value of the distance between the 2 points
     :rtype: float
     """
-    return ((first_point[0] - second_point[0]) ** 2 + (first_point[1] - second_point[1]) ** 2) ** 0.5
+    return math.sqrt((first_point[0] - second_point[0]) ** 2 + (first_point[1] - second_point[1]) ** 2)
 
 
 def regular_polygon_angle(side_amount: int) -> float:
