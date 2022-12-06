@@ -46,6 +46,7 @@ For the frc related features use the frc option:
 > Note that ovl doesn't come with the precompiled version of
 > opencv for python automatically. If you wish to compile opencv for yourself -
 > simply refrain from using the cv flag during installation.
+> `python -m pip install ovl`
 
 ## Usage:
 
