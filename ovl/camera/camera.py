@@ -18,11 +18,11 @@ def configure_camera(camera, configuration, delay=0):
 
 
 class Camera:
-    __slots__ = ("stream", "grabbed", "frame", "stopped", "camera_thread", "start_immediately")
+    __slots__ = ("stream", "grabbed", "frame", "stopped", "camera_thread", "start_immediately", "camera_flags")
 
     def __init__(self, source: Union[str, int, cv2.VideoCapture] = DEFAULT_CAMERA_SOURCE,
                  image_width: int = DEFAULT_IMAGE_WIDTH, image_height: int = DEFAULT_IMAGE_HEIGHT,
-                 start_immediately=True):
+                 start_immediately=True, *args):
         """
         Camera connects to and opens a connected camera and on constantly reads image from the camera.
         ovl.Camera is more real-time oriented and operates at a faster rate than opencv's VideoCapture, but is not
@@ -31,7 +31,7 @@ class Camera:
         The connected camera can be opened by using a camera number (index), url of ip camera, device file (/dev/video0)
 
         Note: as a result of increasing fps, Camera is not fit for opening video files or any other
-        definite frame form of video.
+        finite frame form of video.
 
         :param source: The source of the camera, can be a number, a device name or any other valid source
         for the cv2.VideoCapture object.
@@ -39,9 +39,11 @@ class Camera:
         :param image_height: The height of images to be captured in pixels
         :param start_immediately: The Camera has an inner thread that reads images, this determines if
         it should start immediately or be started by `Camera.start` manually.
+        :param args: parameters that are passed to
         """
 
-        self.stream = cv2.VideoCapture(source)
+        self.camera_flags = args
+        self.stream = cv2.VideoCapture(source, *args)
 
         if image_width:
             self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, image_width)
@@ -54,7 +56,7 @@ class Camera:
         if start_immediately:
             self.start()
 
-    def set_exposure(self, exposure_value: float, *, configuration_delay: Union[int, float] = 0) -> bool:
+    def set_exposure(self, exposure_value: float, *, configuration_delay: int | float = 0) -> bool:
         """
         Sets the exposure for the camera.
         Value range depend on the camera some use the value as the exponential negative values or actual number of ms
